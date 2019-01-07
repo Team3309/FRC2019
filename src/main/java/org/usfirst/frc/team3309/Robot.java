@@ -27,6 +27,8 @@ public class Robot extends TimedRobot {
 
         oi = new OI();
 
+
+        Scheduler.initialize();
     }
 
     /*

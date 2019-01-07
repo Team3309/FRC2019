@@ -136,13 +136,13 @@ public class DriveBase extends Subsystem {
         driveRightMaster.set(mode,-right);
     }
 
+    @Override
     public void initDefaultCommand() {
         setDefaultCommand(new DriveBase_DriveManual());
     }
 
     @Override
     public void periodic() {
-        RobotPositionIntegrator.update(Timer.getFPGATimestamp(),getLeftPosition()/12,getRightPosition()/12,getAngularPosition());
     }
 
 }
