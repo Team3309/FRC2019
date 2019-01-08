@@ -1,14 +1,16 @@
 package org.usfirst.frc.team3309.commands;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team3309.Robot;
-import org.usfirst.frc.team4322.commandv2.Command;
+//import org.usfirst.frc.team4322.commandv2.Command;
 
-public class DriveBase_DriveManual extends Command {
+public class Drive_DriveManual extends Command {
 
-    public DriveBase_DriveManual() {
-        require(Robot.driveBase);
-        setInterruptBehavior(InterruptBehavior.Suspend);
+    public Drive_DriveManual() {
+        requires(Robot.drive);
+        setInterruptible(false);
+//        setInterruptBehavior(InterruptBehavior.Suspend);
     }
 
     private static final double highGearWheelNonLinearity = 0.65;
@@ -40,7 +42,7 @@ public class DriveBase_DriveManual extends Command {
     protected void execute() {
         double turn = Robot.oi.getRightJoystick().getXAxis().get();
         double throttle = Robot.oi.getLeftJoystick().getYAxis().get();
-        boolean isHighGear = Robot.driveBase.inHighGear();
+        boolean isHighGear = Robot.drive.inHighGear();
         boolean isQuickTurn = Robot.oi.getRightJoystick().getTrigger().get();
 
         double negInertia = turn - oldTurn;
@@ -107,7 +109,7 @@ public class DriveBase_DriveManual extends Command {
                 quickStopAccumlator = 0.0;
             }
         }
-        Robot.driveBase.setLeftRight(ControlMode.PercentOutput,linearPower+angularPower,linearPower-angularPower);
+        Robot.drive.setLeftRight(ControlMode.PercentOutput,linearPower+angularPower,linearPower-angularPower);
     }
 
     @Override

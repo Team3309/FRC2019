@@ -2,6 +2,7 @@ package org.usfirst.frc.team3309;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team3309.subsystems.*;
 import org.usfirst.frc.team4322.commandv2.Scheduler;
 
@@ -12,9 +13,11 @@ import org.usfirst.frc.team4322.commandv2.Scheduler;
 
 public class Robot extends TimedRobot {
 
-    public static DriveBase driveBase;
+    public static Drive drive;
 
     public static OI oi;
+
+    private Command autoCommand;
 
     /*
      * This function is called when the Robot program starts. use it to initialize your subsystems,
@@ -23,11 +26,11 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
 
-        driveBase = new DriveBase();
+        drive = new Drive();
 
         oi = new OI();
 
-
+        AutoModeExecutor.displayAutos();
         Scheduler.initialize();
     }
 
@@ -54,6 +57,9 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
+        autoCommand = AutoModeExecutor.getAutoSelected();
+        if (autoCommand != null)
+            autoCommand.start();
     }
 
     /*
@@ -70,7 +76,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopInit() {
-
+        if (autoCommand != null)
+            autoCommand.cancel();
     }
 
     /*

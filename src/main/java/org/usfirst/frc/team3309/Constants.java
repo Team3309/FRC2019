@@ -57,7 +57,7 @@ public class Constants {
     //= DRIVEBASE PORT MAPPINGS =
     //===========================
 
-    // These are the CAN IDs for the DriveBase motor controllers.
+    // These are the CAN IDs for the Drive motor controllers.
     public static final int DRIVE_RIGHT_MASTER_TALON_ID = 11;
     public static final int DRIVE_RIGHT_SLAVE_VICTOR_1_ID = 13;
     public static final int DRIVE_RIGHT_SLAVE_VICTOR_2_ID = 15;
@@ -82,4 +82,50 @@ public class Constants {
     public static final double DRIVEBASE_P = 0.0;
     public static final double DRIVEBASE_I = 0.0;
     public static final double DRIVEBASE_D = 0.0;
+
+
+    /* ROBOT PHYSICAL CONSTANTS */
+
+    // Wheels
+    public static final double kDriveWheelTrackWidthInches = 25.54;
+    public static final double kDriveWheelDiameterInches = 3.92820959548 * 0.99;
+    public static final double kDriveWheelRadiusInches = kDriveWheelDiameterInches / 2.0;
+    public static final double kTrackScrubFactor = 1.0;  // Tune me!
+
+    // Tuned dynamics
+    public static final double kRobotLinearInertia = 60.0;  // kg TODO tune
+    public static final double kRobotAngularInertia = 10.0;  // kg m^2 TODO tune
+    public static final double kRobotAngularDrag = 12.0;  // N*m / (rad/sec) TODO tune
+    public static final double kDriveVIntercept = 1.055;  // V
+    public static final double kDriveKv = 0.135;  // V per rad/s
+    public static final double kDriveKa = 0.012;  // V per rad/s^2
+
+    // Geometry
+    public static final double kCenterToFrontBumperDistance = 38.25 / 2.0;
+    public static final double kCenterToRearBumperDistance = 38.25 / 2.0;
+    public static final double kCenterToSideBumperDistance = 33.75 / 2.0;
+
+    // PID gains for drive velocity loop (LOW GEAR)
+    // Units: setpoint, error, and output are in ticks per second.
+    public static final double kDriveLowGearVelocityKp = 0.9;
+    public static final double kDriveLowGearVelocityKi = 0.0;
+    public static final double kDriveLowGearVelocityKd = 10.0;
+    public static final double kDriveLowGearVelocityKf = 0.0;
+    public static final int kDriveLowGearVelocityIZone = 0;
+    public static final double kDriveVoltageRampRate = 0.0;
+
+    // Trajectory constants
+    public static final double kMaxVelocity = 130.0;
+    public static final double kMaxAccel = 130.0;
+    public static final double kMaxCentripetalAccelElevatorDown = 110.0;
+    public static final double kMaxCentripetalAccel = 100.0;
+    public static final double kMaxVoltage = 9.0;
+    public static final double kFirstPathMaxVoltage = 9.0;
+    public static final double kFirstPathMaxAccel = 130.0;
+    public static final double kFirstPathMaxVel = 130.0;
+
+    public static final double kSimpleSwitchMaxAccel = 100.0;
+    public static final double kSimpleSwitchMaxCentripetalAccel = 80.0;
+    public static final double kSimpleSwitchMaxVelocity = 120.0;
+
 }
