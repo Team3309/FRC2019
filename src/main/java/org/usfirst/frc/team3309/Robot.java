@@ -2,8 +2,8 @@ package org.usfirst.frc.team3309;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team3309.subsystems.*;
+import org.usfirst.frc.team4322.commandv2.Command;
 import org.usfirst.frc.team4322.commandv2.Scheduler;
 
 /*
@@ -27,11 +27,15 @@ public class Robot extends TimedRobot {
     public void robotInit() {
 
         drive = new Drive();
+        drive.initDefaultCommand();
 
         oi = new OI();
 
+        oi.getLeftJoystick().getYAxis().setRampFunction(x -> -x);
+        oi.getRightJoystick().getXAxis().setRampFunction(x -> -x);
+
         AutoModeExecutor.displayAutos();
-        Scheduler.initialize();
+
     }
 
     /*
@@ -57,6 +61,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
+        drive.reset();
         autoCommand = AutoModeExecutor.getAutoSelected();
         if (autoCommand != null)
             autoCommand.start();
@@ -68,6 +73,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousPeriodic() {
+
     }
 
     /*
@@ -86,6 +92,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+        Scheduler.update();
     }
 
     /*
@@ -108,7 +115,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotPeriodic() {
-        Scheduler.update();
+
     }
 
     /*
@@ -118,4 +125,5 @@ public class Robot extends TimedRobot {
     public static void main(String[] args) {
         RobotBase.startRobot(Robot::new);
     }
+
 }

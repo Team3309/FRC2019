@@ -1,16 +1,14 @@
 package org.usfirst.frc.team3309.commands;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team3309.Robot;
-//import org.usfirst.frc.team4322.commandv2.Command;
+import org.usfirst.frc.team4322.commandv2.Command;
 
 public class Drive_DriveManual extends Command {
 
     public Drive_DriveManual() {
-        requires(Robot.drive);
-        setInterruptible(false);
-//        setInterruptBehavior(InterruptBehavior.Suspend);
+        require(Robot.drive);
+        setInterruptBehavior(InterruptBehavior.Suspend);
     }
 
     private static final double highGearWheelNonLinearity = 0.65;

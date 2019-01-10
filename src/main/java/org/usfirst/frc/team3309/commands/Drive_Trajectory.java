@@ -3,7 +3,6 @@ package org.usfirst.frc.team3309.commands;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.RobotState;
@@ -14,7 +13,7 @@ import org.usfirst.frc.team3309.lib.trajectory.Trajectory;
 import org.usfirst.frc.team3309.lib.trajectory.TrajectoryIterator;
 import org.usfirst.frc.team3309.lib.trajectory.timing.TimedState;
 import org.usfirst.frc.team3309.lib.util.DriveSignal;
-//import org.usfirst.frc.team4322.commandv2.Command;
+import org.usfirst.frc.team4322.commandv2.Command;
 
 public class Drive_Trajectory extends Command {
 
@@ -29,7 +28,7 @@ public class Drive_Trajectory extends Command {
     }
 
     public Drive_Trajectory(Trajectory<TimedState<Pose2dWithCurvature>> trajectory, boolean mResetPose) {
-        requires(Robot.drive);
+        require(Robot.drive);
 
         mTrajectory = new TrajectoryIterator<>(new TimedView<>(trajectory));
         this.mResetPose = mResetPose;

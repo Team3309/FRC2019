@@ -9,11 +9,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.commands.Drive_DriveManual;
 import org.usfirst.frc.team3309.lib.geometry.Rotation2d;
-//import org.usfirst.frc.team4322.commandv2.Subsystem;
+import org.usfirst.frc.team4322.commandv2.Subsystem;
 
 /*
  * The Drive subsystem. This is the big one.
@@ -67,8 +66,6 @@ public class Drive extends Subsystem {
         addChild(driveRightMaster);
         addChild(shifter);
         addChild(navx);
-
-        setDefaultCommand(new Drive_DriveManual());
     }
 
 

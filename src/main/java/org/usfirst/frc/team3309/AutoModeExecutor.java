@@ -1,17 +1,16 @@
 package org.usfirst.frc.team3309;
 
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team3309.autos.TestPath;
+import org.usfirst.frc.team3309.autos.AutoTestPath;
+import org.usfirst.frc.team4322.commandv2.Command;
 
 public class AutoModeExecutor {
 
     private static SendableChooser<Command> autos = new SendableChooser<>();
 
     public static void displayAutos() {
-
-        autos.addOption("Ramsete Path Test", new TestPath());
+        autos.addOption("Ramsete Path Test", AutoTestPath.to());
 
         SmartDashboard.putData("Autos: ", autos);
     }
