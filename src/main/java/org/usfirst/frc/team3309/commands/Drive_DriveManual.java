@@ -32,6 +32,11 @@ public class Drive_DriveManual extends Command {
     private double quickStopAccumlator = 0.0;
     private double negativeInertiaAccumlator = 0.0;
 
+    @Override
+    protected void initialize() {
+        
+    }
+
     private static double limit(double v, double limit) {
         return (Math.abs(v) < limit) ? v : Math.copySign(limit,v);
     }

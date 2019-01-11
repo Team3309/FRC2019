@@ -2,7 +2,9 @@ package org.usfirst.frc.team3309;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
-import org.usfirst.frc.team3309.subsystems.*;
+import edu.wpi.first.wpilibj.Timer;
+import org.usfirst.frc.team3309.lib.geometry.Pose2d;
+import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team4322.commandv2.Command;
 import org.usfirst.frc.team4322.commandv2.Scheduler;
 
@@ -14,10 +16,12 @@ import org.usfirst.frc.team4322.commandv2.Scheduler;
 public class Robot extends TimedRobot {
 
     public static Drive drive;
+    public static RobotState robotState;
 
     public static OI oi;
 
     private Command autoCommand;
+
 
     /*
      * This function is called when the Robot program starts. use it to initialize your subsystems,
@@ -27,15 +31,12 @@ public class Robot extends TimedRobot {
     public void robotInit() {
 
         drive = new Drive();
-        drive.initDefaultCommand();
+        robotState = new RobotState();
 
         oi = new OI();
 
-        oi.getLeftJoystick().getYAxis().setRampFunction(x -> -x);
-        oi.getRightJoystick().getXAxis().setRampFunction(x -> -x);
-
         AutoModeExecutor.displayAutos();
-
+        Scheduler.initialize();
     }
 
     /*
@@ -49,7 +50,7 @@ public class Robot extends TimedRobot {
 
     /*
      * This function is called every 2 milliseconds while the robot is in disabled.
-     * It should be used to perform peroidic tasks that need to be done while the robot is disabled.
+     * It should be used to perform periodic tasks that need to be done while the robot is disabled.
      */
     @Override
     public void disabledPeriodic() {
@@ -62,9 +63,11 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         drive.reset();
+        robotState.start();
         autoCommand = AutoModeExecutor.getAutoSelected();
-        if (autoCommand != null)
+        if (autoCommand != null) {
             autoCommand.start();
+        }
     }
 
     /*
@@ -73,7 +76,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousPeriodic() {
-
+        Scheduler.update();
+        robotState.outputToSmartDashboard();
     }
 
     /*
@@ -84,6 +88,9 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         if (autoCommand != null)
             autoCommand.cancel();
+        drive.reset();
+        robotState.reset(Timer.getFPGATimestamp(), new Pose2d());
+        drive.initDefaultCommand();
     }
 
     /*
@@ -93,6 +100,8 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.update();
+        robotState.outputToSmartDashboard();
+        drive.outputToSmartdashboard();
     }
 
     /*

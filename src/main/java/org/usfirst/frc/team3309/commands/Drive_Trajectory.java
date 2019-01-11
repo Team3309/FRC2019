@@ -5,7 +5,7 @@ import com.ctre.phoenix.motorcontrol.DemandType;
 import edu.wpi.first.wpilibj.Timer;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
-import org.usfirst.frc.team3309.RobotState;
+import org.usfirst.frc.team3309.lib.geometry.Pose2d;
 import org.usfirst.frc.team3309.lib.geometry.Pose2dWithCurvature;
 import org.usfirst.frc.team3309.lib.planners.DriveMotionPlanner;
 import org.usfirst.frc.team3309.lib.trajectory.TimedView;
@@ -15,9 +15,8 @@ import org.usfirst.frc.team3309.lib.trajectory.timing.TimedState;
 import org.usfirst.frc.team3309.lib.util.DriveSignal;
 import org.usfirst.frc.team4322.commandv2.Command;
 
-public class Drive_Trajectory extends Command {
 
-    private static final RobotState mRobotState = RobotState.getInstance();
+public class Drive_Trajectory extends Command {
 
     private final TrajectoryIterator<TimedState<Pose2dWithCurvature>> mTrajectory;
     private final boolean mResetPose;
@@ -29,7 +28,7 @@ public class Drive_Trajectory extends Command {
 
     public Drive_Trajectory(Trajectory<TimedState<Pose2dWithCurvature>> trajectory, boolean mResetPose) {
         require(Robot.drive);
-
+        setInterruptBehavior(InterruptBehavior.Suspend);
         mTrajectory = new TrajectoryIterator<>(new TimedView<>(trajectory));
         this.mResetPose = mResetPose;
         mMotionPlanner = new DriveMotionPlanner();
@@ -38,7 +37,7 @@ public class Drive_Trajectory extends Command {
     @Override
     public void initialize() {
         if (mResetPose) {
-            mRobotState.reset(Timer.getFPGATimestamp(), mTrajectory.getState().state().getPose());
+            Robot.robotState.reset(Timer.getFPGATimestamp(), mTrajectory.getState().state().getPose());
         }
         mMotionPlanner.reset();
         mMotionPlanner.setTrajectory(mTrajectory);
@@ -46,10 +45,11 @@ public class Drive_Trajectory extends Command {
 
     @Override
     protected void execute() {
-
         super.execute();
         double now = Timer.getFPGATimestamp();
-        DriveMotionPlanner.Output output = mMotionPlanner.update(now, RobotState.getInstance().getFieldToVehicle(now));
+        Pose2d robotPose = Robot.robotState.getFieldToVehicle(now);
+
+        DriveMotionPlanner.Output output = mMotionPlanner.update(now, robotPose);
 
         double leftAccel = Robot.drive.radiansPerSecondToTicksPer100ms(output.left_accel) / 1000.0;
         double rightAccel = Robot.drive.radiansPerSecondToTicksPer100ms(output.right_accel) / 1000.0;
@@ -57,6 +57,8 @@ public class Drive_Trajectory extends Command {
                 Robot.drive.radiansPerSecondToTicksPer100ms(output.right_velocity));
         DriveSignal feedforwardSignal = new DriveSignal(output.left_feedforward_voltage / 12.0,
                 output.right_feedforward_voltage / 12.0);
+
+
 
         double leftFeedforward = feedforwardSignal.getLeft() + Constants.kDriveLowGearVelocityKd * leftAccel / 1023.0;
         double rightFeedforward = feedforwardSignal.getRight() + Constants.kDriveLowGearVelocityKd * rightAccel / 1023.0;

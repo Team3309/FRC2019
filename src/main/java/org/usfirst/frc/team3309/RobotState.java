@@ -1,20 +1,17 @@
 package org.usfirst.frc.team3309;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.lib.geometry.Pose2d;
 import org.usfirst.frc.team3309.lib.geometry.Rotation2d;
 import org.usfirst.frc.team3309.lib.geometry.Twist2d;
 import org.usfirst.frc.team3309.lib.util.InterpolatingDouble;
 import org.usfirst.frc.team3309.lib.util.InterpolatingTreeMap;
+import org.usfirst.frc.team4322.commandv2.Command;
 
 import java.util.Map;
 
-public class RobotState {
-    private static RobotState instance_ = new RobotState();
-
-    public static RobotState getInstance() {
-        return instance_;
-    }
+public class RobotState extends Command {
 
     private static final int kObservationBufferSize = 100;
 
@@ -24,8 +21,39 @@ public class RobotState {
     private Twist2d vehicle_velocity_measured_;
     private double distance_driven_;
 
-    private RobotState() {
+
+    private double left_encoder_prev_distance_ = 0.0;
+    private double right_encoder_prev_distance_ = 0.0;
+
+    public RobotState() {
         reset(0, new Pose2d());
+    }
+
+    @Override
+    protected void initialize() {
+        left_encoder_prev_distance_ = Robot.drive.getLeftEncoderDistance();
+        right_encoder_prev_distance_ = Robot.drive.getRightEncoderDistance();
+    }
+
+    @Override
+    protected void execute() {
+        double timestamp = Timer.getFPGATimestamp();
+        final double left_distance = Robot.drive.getLeftEncoderDistance();
+        final double right_distance = Robot.drive.getRightEncoderDistance();
+        final double delta_left = left_distance - left_encoder_prev_distance_;
+        final double delta_right = right_distance - right_encoder_prev_distance_;
+        final Rotation2d gyro_angle = Rotation2d.fromDegrees(Robot.drive.getAngularPosition());
+        final Twist2d odometry_velocity = generateOdometryFromSensors(
+                delta_left, delta_right, gyro_angle);
+
+        final double leftLinearVelocity = Robot.drive.encoderCountsToInches(Robot.drive.getLeftEncoderVelocity());
+        final double rightLinearVelocity = Robot.drive.encoderCountsToInches(Robot.drive.getRightEncoderVelocity());
+
+        final Twist2d predicted_velocity = Kinematics.forwardKinematics(leftLinearVelocity, rightLinearVelocity);
+        addObservations(timestamp, odometry_velocity,
+                predicted_velocity);
+        left_encoder_prev_distance_ = left_distance;
+        right_encoder_prev_distance_ = right_distance;
     }
 
     /**
@@ -38,6 +66,7 @@ public class RobotState {
         vehicle_velocity_measured_ = Twist2d.identity();
         distance_driven_ = 0.0;
     }
+
 
     public synchronized void resetDistanceDriven() {
         distance_driven_ = 0.0;
@@ -100,5 +129,10 @@ public class RobotState {
         SmartDashboard.putNumber("Robot Pose Y", odometry.getTranslation().y());
         SmartDashboard.putNumber("Robot Pose Theta", odometry.getRotation().getDegrees());
         SmartDashboard.putNumber("Robot Linear Velocity", vehicle_velocity_measured_.dx);
+    }
+
+    @Override
+    protected boolean isFinished() {
+        return false;
     }
 }

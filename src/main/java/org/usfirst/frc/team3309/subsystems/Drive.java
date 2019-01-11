@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.commands.Drive_DriveManual;
 import org.usfirst.frc.team3309.lib.geometry.Rotation2d;
@@ -87,35 +88,34 @@ public class Drive extends Subsystem {
         driveRightMaster.clearMotionProfileTrajectories();
         driveLeftMaster.setSelectedSensorPosition(0, 0, 0);
         driveRightMaster.setSelectedSensorPosition(0, 0, 0);
-        navx.zeroYaw();
+        zeroNavx();
     }
-
 
     public void zeroNavx() {
         navx.zeroYaw();
     }
 
-    public double getPosition() {
-        return (getLeftPosition() + getRightPosition()) / 2.0;
+    public double getEncoderDistance() {
+        return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2.0;
     }
 
-    public double getLeftPosition() {
+    public double getLeftEncoderDistance() {
         return driveLeftMaster.getSelectedSensorPosition(0);
     }
 
-    public double getRightPosition() {
+    public double getRightEncoderDistance() {
         return -driveRightMaster.getSelectedSensorPosition(0);
     }
 
-    public double getVelocity() {
-        return (getLeftVelocity() + getRightVelocity()) / 2.0;
+    public double getEncoderVelocity() {
+        return (getLeftEncoderVelocity() + getRightEncoderVelocity()) / 2.0;
     }
 
-    public int getLeftVelocity() {
+    public int getLeftEncoderVelocity() {
         return driveLeftMaster.getSelectedSensorVelocity(0);
     }
 
-    public double getRightVelocity() {
+    public double getRightEncoderVelocity() {
         return -driveRightMaster.getSelectedSensorVelocity(0);
     }
 
@@ -140,15 +140,15 @@ public class Drive extends Subsystem {
     }
 
     public void setLeftRight(ControlMode mode, double left, double right) {
-        driveLeftMaster.set(mode, left);
-        driveRightMaster.set(mode, -right);
+        driveLeftMaster.set(mode, -left);
+        driveRightMaster.set(mode, right);
     }
 
     public void setLeftRight(ControlMode mode, DemandType demandType,
                              double left, double right,
                              double leftFeedforward, double rightFeedforward) {
-        driveLeftMaster.set(mode, left, demandType, leftFeedforward);
-        driveRightMaster.set(mode, right, demandType, rightFeedforward);
+        driveLeftMaster.set(mode, -left, demandType, -leftFeedforward);
+        driveRightMaster.set(mode, -right, demandType, -rightFeedforward);
     }
 
     @Override
@@ -158,6 +158,12 @@ public class Drive extends Subsystem {
 
     @Override
     public void periodic() {
+    }
+
+    public void outputToSmartdashboard() {
+        SmartDashboard.putNumber("Raw angle", getAngularPosition());
+        SmartDashboard.putNumber("Encoder left", getLeftEncoderDistance());
+        SmartDashboard.putNumber("Encoder right", getRightEncoderDistance());
     }
 
 }

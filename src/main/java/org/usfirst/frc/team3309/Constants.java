@@ -100,10 +100,6 @@ public class Constants {
     public static final double kDriveKv = 0.135;  // V per rad/s
     public static final double kDriveKa = 0.012;  // V per rad/s^2
 
-    // Geometry
-    public static final double kCenterToFrontBumperDistance = 38.25 / 2.0;
-    public static final double kCenterToRearBumperDistance = 38.25 / 2.0;
-    public static final double kCenterToSideBumperDistance = 33.75 / 2.0;
 
     // PID gains for drive velocity loop (LOW GEAR)
     // Units: setpoint, error, and output are in ticks per second.
@@ -117,7 +113,6 @@ public class Constants {
     // Trajectory constants
     public static final double kMaxVelocity = 130.0;
     public static final double kMaxAccel = 130.0;
-    public static final double kMaxCentripetalAccelElevatorDown = 110.0;
     public static final double kMaxCentripetalAccel = 100.0;
     public static final double kMaxVoltage = 9.0;
     public static final double kFirstPathMaxVoltage = 9.0;
@@ -127,5 +122,9 @@ public class Constants {
     public static final double kSimpleSwitchMaxAccel = 100.0;
     public static final double kSimpleSwitchMaxCentripetalAccel = 80.0;
     public static final double kSimpleSwitchMaxVelocity = 120.0;
+
+    public static final double kPathKX = 4.0;  // units/s per unit of error
+    public static final double kPathLookaheadTime = 0.4;  // seconds to look ahead along the path for steering
+    public static final double kPathMinLookaheadDistance = 24.0;  // inches
 
 }

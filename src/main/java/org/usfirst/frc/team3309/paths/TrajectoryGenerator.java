@@ -205,7 +205,7 @@ public class TrajectoryGenerator {
         public final MirroredTrajectory scaleToFenceRight;
         public final MirroredTrajectory fenceToScaleRight;
 
-        private TrajectorySet() {
+        public TrajectorySet() {
             sideStartToNearScale = new MirroredTrajectory(getSideStartToNearScale());
             nearScaleToNearFence = new MirroredTrajectory(getNearScaleToNearFence());
             nearScaleToNearFence2 = new MirroredTrajectory(getNearScaleToNearFence2());
@@ -449,7 +449,7 @@ public class TrajectoryGenerator {
                     kSimpleSwitchMaxVelocity, kSimpleSwitchMaxAccel, kMaxVoltage);
         }
 
-        private Trajectory<TimedState<Pose2dWithCurvature>> getPyramidCubeToSwitch() {
+        public Trajectory<TimedState<Pose2dWithCurvature>> getPyramidCubeToSwitch() {
             List<Pose2d> waypoints = new ArrayList<>();
             waypoints.add(kPyramidCubePose);
             waypoints.add(kRightSwitchPose);

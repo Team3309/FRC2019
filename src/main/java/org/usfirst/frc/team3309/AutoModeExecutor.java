@@ -10,8 +10,8 @@ public class AutoModeExecutor {
     private static SendableChooser<Command> autos = new SendableChooser<>();
 
     public static void displayAutos() {
-        autos.addOption("Ramsete Path Test", AutoTestPath.to());
 
+        autos.setDefaultOption("Ramsete Path Test", AutoTestPath.to());
         SmartDashboard.putData("Autos: ", autos);
     }
 
