@@ -34,7 +34,7 @@ public class Drive_DriveManual extends Command {
 
     @Override
     protected void initialize() {
-        
+
     }
 
     private static double limit(double v, double limit) {
@@ -43,11 +43,13 @@ public class Drive_DriveManual extends Command {
 
     @Override
     protected void execute() {
-        double turn = Robot.oi.getRightJoystick().getXAxis().get();
-        double throttle = Robot.oi.getLeftJoystick().getYAxis().get();
+        double turn = Robot.oi.getDriveController().getRightStick().x();
+        double throttle = Robot.oi.getDriveController().getLeftStick().y();
+//        double turn = Robot.oi.getRightJoystick().getXAxis().get();
+//        double throttle = Robot.oi.getLeftJoystick().getYAxis().get();
         boolean isHighGear = Robot.drive.inHighGear();
-        boolean isQuickTurn = Robot.oi.getRightJoystick().getTrigger().get();
-
+//        boolean isQuickTurn = Robot.oi.getRightJoystick().getTrigger().get();
+        boolean isQuickTurn = Robot.oi.getDriveController().getRb().get();
         double negInertia = turn - oldTurn;
         oldTurn = turn;
 

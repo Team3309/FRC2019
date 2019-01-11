@@ -9,9 +9,12 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.commands.Drive_DriveManual;
+import org.usfirst.frc.team3309.commands.Drive_RobotStateEstimator;
+import org.usfirst.frc.team3309.lib.geometry.Pose2d;
 import org.usfirst.frc.team3309.lib.geometry.Rotation2d;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
@@ -31,7 +34,12 @@ public class Drive extends Subsystem {
 
     private Rotation2d mGyroOffset = Rotation2d.identity();
 
+    private Drive_RobotStateEstimator driveRobotStateEstimator;
+
+
     public Drive() {
+        driveRobotStateEstimator = new Drive_RobotStateEstimator();
+
         driveLeftMaster = new WPI_TalonSRX(Constants.DRIVE_LEFT_MASTER_TALON_ID);
         driveLeftSlave1 = new WPI_VictorSPX(Constants.DRIVE_LEFT_SLAVE_VICTOR_1_ID);
         driveLeftSlave2 = new WPI_VictorSPX(Constants.DRIVE_LEFT_SLAVE_VICTOR_2_ID);
@@ -89,6 +97,8 @@ public class Drive extends Subsystem {
         driveLeftMaster.setSelectedSensorPosition(0, 0, 0);
         driveRightMaster.setSelectedSensorPosition(0, 0, 0);
         zeroNavx();
+        driveRobotStateEstimator.reset(Timer.getFPGATimestamp(), new Pose2d());
+        driveRobotStateEstimator.start();
     }
 
     public void zeroNavx() {
@@ -127,6 +137,10 @@ public class Drive extends Subsystem {
         return navx.getRate();
     }
 
+    public Drive_RobotStateEstimator getRobotStateEstimator() {
+        return driveRobotStateEstimator;
+    }
+
     public void setHighGear() {
         shifter.set(false);
     }
@@ -140,8 +154,8 @@ public class Drive extends Subsystem {
     }
 
     public void setLeftRight(ControlMode mode, double left, double right) {
-        driveLeftMaster.set(mode, -left);
-        driveRightMaster.set(mode, right);
+//        driveLeftMaster.set(mode, -left);
+////        driveRightMaster.set(mode, right);
     }
 
     public void setLeftRight(ControlMode mode, DemandType demandType,
@@ -161,6 +175,7 @@ public class Drive extends Subsystem {
     }
 
     public void outputToSmartdashboard() {
+        driveRobotStateEstimator.outputToSmartDashboard();
         SmartDashboard.putNumber("Raw angle", getAngularPosition());
         SmartDashboard.putNumber("Encoder left", getLeftEncoderDistance());
         SmartDashboard.putNumber("Encoder right", getRightEncoderDistance());

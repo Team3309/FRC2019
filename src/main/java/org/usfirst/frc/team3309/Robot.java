@@ -2,8 +2,6 @@ package org.usfirst.frc.team3309;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
-import org.usfirst.frc.team3309.lib.geometry.Pose2d;
 import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team4322.commandv2.Command;
 import org.usfirst.frc.team4322.commandv2.Scheduler;
@@ -16,7 +14,6 @@ import org.usfirst.frc.team4322.commandv2.Scheduler;
 public class Robot extends TimedRobot {
 
     public static Drive drive;
-    public static RobotState robotState;
 
     public static OI oi;
 
@@ -31,7 +28,6 @@ public class Robot extends TimedRobot {
     public void robotInit() {
 
         drive = new Drive();
-        robotState = new RobotState();
 
         oi = new OI();
 
@@ -63,7 +59,6 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         drive.reset();
-        robotState.start();
         autoCommand = AutoModeExecutor.getAutoSelected();
         if (autoCommand != null) {
             autoCommand.start();
@@ -77,7 +72,6 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousPeriodic() {
         Scheduler.update();
-        robotState.outputToSmartDashboard();
     }
 
     /*
@@ -89,7 +83,6 @@ public class Robot extends TimedRobot {
         if (autoCommand != null)
             autoCommand.cancel();
         drive.reset();
-        robotState.reset(Timer.getFPGATimestamp(), new Pose2d());
         drive.initDefaultCommand();
     }
 
@@ -100,7 +93,6 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.update();
-        robotState.outputToSmartDashboard();
         drive.outputToSmartdashboard();
     }
 

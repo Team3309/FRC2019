@@ -87,8 +87,8 @@ public class Constants {
     /* ROBOT PHYSICAL CONSTANTS */
 
     // Wheels
-    public static final double kDriveWheelTrackWidthInches = 25.54;
-    public static final double kDriveWheelDiameterInches = 3.92820959548 * 0.99;
+    public static final double kDriveWheelTrackWidthInches = 24.9;
+    public static final double kDriveWheelDiameterInches = 6.0;
     public static final double kDriveWheelRadiusInches = kDriveWheelDiameterInches / 2.0;
     public static final double kTrackScrubFactor = 1.0;  // Tune me!
 

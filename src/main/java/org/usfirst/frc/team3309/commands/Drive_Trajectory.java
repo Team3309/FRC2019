@@ -37,7 +37,7 @@ public class Drive_Trajectory extends Command {
     @Override
     public void initialize() {
         if (mResetPose) {
-            Robot.robotState.reset(Timer.getFPGATimestamp(), mTrajectory.getState().state().getPose());
+            Robot.drive.getRobotStateEstimator().reset(Timer.getFPGATimestamp(), mTrajectory.getState().state().getPose());
         }
         mMotionPlanner.reset();
         mMotionPlanner.setTrajectory(mTrajectory);
@@ -47,7 +47,7 @@ public class Drive_Trajectory extends Command {
     protected void execute() {
         super.execute();
         double now = Timer.getFPGATimestamp();
-        Pose2d robotPose = Robot.robotState.getFieldToVehicle(now);
+        Pose2d robotPose = Robot.drive.getRobotStateEstimator().getFieldToVehicle(now);
 
         DriveMotionPlanner.Output output = mMotionPlanner.update(now, robotPose);
 
@@ -57,7 +57,6 @@ public class Drive_Trajectory extends Command {
                 Robot.drive.radiansPerSecondToTicksPer100ms(output.right_velocity));
         DriveSignal feedforwardSignal = new DriveSignal(output.left_feedforward_voltage / 12.0,
                 output.right_feedforward_voltage / 12.0);
-
 
 
         double leftFeedforward = feedforwardSignal.getLeft() + Constants.kDriveLowGearVelocityKd * leftAccel / 1023.0;
