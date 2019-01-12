@@ -79,9 +79,9 @@ public class Constants {
     public static final double DRIVE_ENCODER_COUNTS_PER_REV = 4096*9.6;
     public static final double WHEEL_DIAMETER_INCHES = 6.0;
     public static final double WHEELBASE_INCHES = 3309;
-    public static final double DRIVEBASE_P = 0.0;
-    public static final double DRIVEBASE_I = 0.0;
-    public static final double DRIVEBASE_D = 0.0;
+    public static final double DRIVE_P = 0.019;
+    public static final double DRIVE_I = 0.0006;
+    public static final double DRIVE_D = 0.002;
 
 
     /* ROBOT PHYSICAL CONSTANTS */
@@ -93,8 +93,8 @@ public class Constants {
     public static final double kTrackScrubFactor = 1.0;  // Tune me!
 
     // Tuned dynamics
-    public static final double kRobotLinearInertia = 60.0;  // kg TODO tune
-    public static final double kRobotAngularInertia = 10.0;  // kg m^2 TODO tune
+    public static final double kRobotMass = 60.0;  // kg TODO tune
+    public static final double kRobotMomentOfInertia = 10.0;  // kg m^2 TODO tune
     public static final double kRobotAngularDrag = 12.0;  // N*m / (rad/sec) TODO tune
     public static final double kDriveVIntercept = 1.055;  // V
     public static final double kDriveKv = 0.135;  // V per rad/s
@@ -111,10 +111,10 @@ public class Constants {
     public static final double kDriveVoltageRampRate = 0.0;
 
     // Trajectory constants
-    public static final double kMaxVelocity = 130.0;
-    public static final double kMaxAccel = 130.0;
+    public static final double kMaxVelocity = 190.0;
+    public static final double kMaxAccel = 190.0;
     public static final double kMaxCentripetalAccel = 100.0;
-    public static final double kMaxVoltage = 9.0;
+    public static final double kMaxVoltage = 9.0; // 9.0
     public static final double kFirstPathMaxVoltage = 9.0;
     public static final double kFirstPathMaxAccel = 130.0;
     public static final double kFirstPathMaxVel = 130.0;

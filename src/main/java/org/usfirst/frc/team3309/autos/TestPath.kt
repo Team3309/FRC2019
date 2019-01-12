@@ -22,8 +22,8 @@ object AutoTestPath {
     val testPath: Trajectory<TimedState<Pose2dWithCurvature>>
         get() {
             val waypoints = ArrayList<Pose2d>()
-            waypoints.add(Pose2d(0.0, 0.0, Rotation2d.fromDegrees(180.0)))
-            waypoints.add(Pose2d(Translation2d(70.0, 0.0), Rotation2d.fromDegrees(180.0)))
+            waypoints.add(Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)))
+            waypoints.add(Pose2d(100.0, 0.0, Rotation2d.fromDegrees(0.0)))
             return TrajectoryGenerator.getInstance().generateTrajectory(false,
                     waypoints, Arrays.asList<TimingConstraint<Pose2dWithCurvature>>(CentripetalAccelerationConstraint(Constants.kMaxCentripetalAccel)
             ), Constants.kMaxVelocity, Constants.kMaxAccel, Constants.kMaxVoltage)

@@ -2,6 +2,7 @@ package org.usfirst.frc.team3309.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Kinematics;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.geometry.Pose2d;
@@ -42,18 +43,19 @@ public class Drive_RobotStateEstimator extends Command {
         double timestamp = Timer.getFPGATimestamp();
         final double left_distance = Robot.drive.getLeftEncoderDistance();
         final double right_distance = Robot.drive.getRightEncoderDistance();
-        final double delta_left = left_distance - left_encoder_prev_distance_;
-        final double delta_right = right_distance - right_encoder_prev_distance_;
+        final double delta_left = Robot.drive.encoderCountsToInches(left_distance - left_encoder_prev_distance_);
+        final double delta_right = Robot.drive.encoderCountsToInches(right_distance - right_encoder_prev_distance_);
         final Rotation2d gyro_angle = Rotation2d.fromDegrees(Robot.drive.getAngularPosition());
         final Twist2d odometry_velocity = generateOdometryFromSensors(
                 delta_left, delta_right, gyro_angle);
 
-        final double leftLinearVelocity = Robot.drive.encoderCountsToInches(Robot.drive.getLeftEncoderVelocity());
-        final double rightLinearVelocity = Robot.drive.encoderCountsToInches(Robot.drive.getRightEncoderVelocity());
+        final double leftLinearVelocity = Robot.drive.encoderVelocityToInchesPerSecond(Robot.drive.getLeftEncoderVelocity());
+        final double rightLinearVelocity = Robot.drive.encoderVelocityToInchesPerSecond(Robot.drive.getRightEncoderVelocity());
 
         final Twist2d predicted_velocity = Kinematics.forwardKinematics(leftLinearVelocity, rightLinearVelocity);
         addObservations(timestamp, odometry_velocity,
                 predicted_velocity);
+
         left_encoder_prev_distance_ = left_distance;
         right_encoder_prev_distance_ = right_distance;
     }

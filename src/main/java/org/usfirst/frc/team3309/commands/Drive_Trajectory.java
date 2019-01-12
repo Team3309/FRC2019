@@ -3,6 +3,7 @@ package org.usfirst.frc.team3309.commands;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.geometry.Pose2d;
@@ -32,6 +33,7 @@ public class Drive_Trajectory extends Command {
         mTrajectory = new TrajectoryIterator<>(new TimedView<>(trajectory));
         this.mResetPose = mResetPose;
         mMotionPlanner = new DriveMotionPlanner();
+        mMotionPlanner.setFollowerType(DriveMotionPlanner.FollowerType.NONLINEAR_FEEDBACK);
     }
 
     @Override

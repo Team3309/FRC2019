@@ -12,6 +12,12 @@ public class AutoModeExecutor {
     public static void displayAutos() {
 
         autos.setDefaultOption("Ramsete Path Test", AutoTestPath.to());
+        autos.addOption("No Auto", new Command() {
+            @Override
+            protected boolean isFinished() {
+                return false;
+            }
+        });
         SmartDashboard.putData("Autos: ", autos);
     }
 
