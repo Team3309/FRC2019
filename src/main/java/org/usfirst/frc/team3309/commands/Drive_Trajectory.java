@@ -61,8 +61,8 @@ public class Drive_Trajectory extends Command {
                 output.right_feedforward_voltage / 12.0);
 
 
-        double leftFeedforward = feedforwardSignal.getLeft() + Constants.kDriveLowGearVelocityKd * leftAccel / 1023.0;
-        double rightFeedforward = feedforwardSignal.getRight() + Constants.kDriveLowGearVelocityKd * rightAccel / 1023.0;
+        double leftFeedforward = feedforwardSignal.getLeft() + Constants.DRIVE_D * leftAccel / 1023.0;
+        double rightFeedforward = feedforwardSignal.getRight() + Constants.DRIVE_D * rightAccel / 1023.0;
 
         Robot.drive.setLeftRight(
                 ControlMode.Velocity, DemandType.ArbitraryFeedForward,

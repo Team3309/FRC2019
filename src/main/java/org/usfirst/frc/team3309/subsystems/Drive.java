@@ -52,6 +52,7 @@ public class Drive extends Subsystem {
         //Configure Left Side of Drive
         driveRightMaster.configFactoryDefault();
         driveLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+        driveLeftMaster.configClosedloopRamp(Constants.DRIVE_CLOSED_LOOP_RAMP_RATE, 10);
         driveLeftMaster.config_kP(0, Constants.DRIVE_P, 10);
         driveLeftMaster.config_kD(0, Constants.DRIVE_I, 10);
         driveLeftMaster.config_kF(0, Constants.DRIVE_D, 10);
@@ -63,6 +64,7 @@ public class Drive extends Subsystem {
         //Configure Right Side of Drive
         driveRightMaster.configFactoryDefault();
         driveRightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+        driveRightMaster.configClosedloopRamp(Constants.DRIVE_CLOSED_LOOP_RAMP_RATE, 10);
         driveRightMaster.config_kP(0, Constants.DRIVE_P, 10);
         driveRightMaster.config_kD(0, Constants.DRIVE_I, 10);
         driveRightMaster.config_kF(0, Constants.DRIVE_D, 10);

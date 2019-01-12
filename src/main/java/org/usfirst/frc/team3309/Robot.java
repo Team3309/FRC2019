@@ -1,10 +1,7 @@
 package org.usfirst.frc.team3309;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team4322.commandv2.Command;
 import org.usfirst.frc.team4322.commandv2.Scheduler;
@@ -21,11 +18,6 @@ public class Robot extends TimedRobot {
     public static OI oi;
 
     private Command autoCommand;
-
-    private double prev_velocity;
-    private double prev_time;
-
-    private double max_accel;
 
     /*
      * This function is called when the Robot program starts. use it to initialize your subsystems,
@@ -85,9 +77,8 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         if (autoCommand != null)
             autoCommand.cancel();
+        drive.reset();
         drive.initDefaultCommand();
-        prev_velocity = drive.getEncoderVelocity();
-        prev_time = Timer.getFPGATimestamp();
     }
 
 
@@ -97,23 +88,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-
-        double curTime = Timer.getFPGATimestamp();
-        double delta_time = curTime - prev_time;
-
-        double accel = Robot.drive.encoderVelocityToInchesPerSecond(
-                Robot.drive.getEncoderVelocity() - prev_velocity) / delta_time;
-
-        SmartDashboard.putNumber("Acceleration", accel);
-
-        if (Math.abs(accel) > max_accel) {
-            max_accel = Math.abs(accel);
-            SmartDashboard.putNumber("Max accel", max_accel);
-        }
-
-        prev_velocity = Robot.drive.getEncoderVelocity();
-        prev_time = Timer.getFPGATimestamp();
-
         drive.outputToSmartdashboard();
         Scheduler.update();
     }

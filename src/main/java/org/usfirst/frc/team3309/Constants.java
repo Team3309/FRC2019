@@ -78,10 +78,10 @@ public class Constants {
     // This value being wrong was part of why the robot took a fat L at AVR.
     public static final double DRIVE_ENCODER_COUNTS_PER_REV = 4096*9.6;
     public static final double WHEEL_DIAMETER_INCHES = 6.0;
-    public static final double WHEELBASE_INCHES = 3309;
     public static final double DRIVE_P = 0.019;
     public static final double DRIVE_I = 0.0006;
     public static final double DRIVE_D = 0.002;
+    public static final double DRIVE_CLOSED_LOOP_RAMP_RATE = 0.0;
 
 
     /* ROBOT PHYSICAL CONSTANTS */
@@ -100,28 +100,14 @@ public class Constants {
     public static final double kDriveKv = 0.135;  // V per rad/s
     public static final double kDriveKa = 0.012;  // V per rad/s^2
 
-
-    // PID gains for drive velocity loop (LOW GEAR)
-    // Units: setpoint, error, and output are in ticks per second.
-    public static final double kDriveLowGearVelocityKp = 0.9;
-    public static final double kDriveLowGearVelocityKi = 0.0;
-    public static final double kDriveLowGearVelocityKd = 10.0;
-    public static final double kDriveLowGearVelocityKf = 0.0;
-    public static final int kDriveLowGearVelocityIZone = 0;
-    public static final double kDriveVoltageRampRate = 0.0;
-
     // Trajectory constants
-    public static final double kMaxVelocity = 190.0;
-    public static final double kMaxAccel = 190.0;
+    public static final double kMaxVelocity = 130.0;
+    public static final double kMaxAccel = 130.0;
     public static final double kMaxCentripetalAccel = 100.0;
-    public static final double kMaxVoltage = 9.0; // 9.0
+    public static final double kMaxVoltage = 9.0;
     public static final double kFirstPathMaxVoltage = 9.0;
     public static final double kFirstPathMaxAccel = 130.0;
     public static final double kFirstPathMaxVel = 130.0;
-
-    public static final double kSimpleSwitchMaxAccel = 100.0;
-    public static final double kSimpleSwitchMaxCentripetalAccel = 80.0;
-    public static final double kSimpleSwitchMaxVelocity = 120.0;
 
     public static final double kPathKX = 4.0;  // units/s per unit of error
     public static final double kPathLookaheadTime = 0.4;  // seconds to look ahead along the path for steering
