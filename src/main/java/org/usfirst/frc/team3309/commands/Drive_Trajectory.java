@@ -3,7 +3,6 @@ package org.usfirst.frc.team3309.commands;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.geometry.Pose2d;
@@ -59,7 +58,6 @@ public class Drive_Trajectory extends Command {
                 Robot.drive.radiansPerSecondToTicksPer100ms(output.right_velocity));
         DriveSignal feedforwardSignal = new DriveSignal(output.left_feedforward_voltage / 12.0,
                 output.right_feedforward_voltage / 12.0);
-
 
         double leftFeedforward = feedforwardSignal.getLeft() + Constants.DRIVE_D * leftAccel / 1023.0;
         double rightFeedforward = feedforwardSignal.getRight() + Constants.DRIVE_D * rightAccel / 1023.0;

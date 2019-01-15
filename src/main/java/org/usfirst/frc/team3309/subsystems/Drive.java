@@ -185,6 +185,8 @@ public class Drive extends Subsystem {
         SmartDashboard.putNumber("Raw angle", getAngularPosition());
         SmartDashboard.putNumber("Encoder left", getLeftEncoderDistance());
         SmartDashboard.putNumber("Encoder right", getRightEncoderDistance());
+        SmartDashboard.putNumber("Left encoder velocity", getLeftEncoderVelocity());
+        SmartDashboard.putNumber("Right encoder velocity", getRightEncoderVelocity());
     }
 
 }

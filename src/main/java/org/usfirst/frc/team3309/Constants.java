@@ -101,13 +101,10 @@ public class Constants {
     public static final double kDriveKa = 0.012;  // V per rad/s^2
 
     // Trajectory constants
-    public static final double kMaxVelocity = 130.0;
-    public static final double kMaxAccel = 130.0;
-    public static final double kMaxCentripetalAccel = 100.0;
+    public static final double kMaxVelocity = 190.0; // in / s
+    public static final double kMaxAccel = 190.0;  // in / s^2
+    public static final double kMaxCentripetalAccel = 160.0;
     public static final double kMaxVoltage = 9.0;
-    public static final double kFirstPathMaxVoltage = 9.0;
-    public static final double kFirstPathMaxAccel = 130.0;
-    public static final double kFirstPathMaxVel = 130.0;
 
     public static final double kPathKX = 4.0;  // units/s per unit of error
     public static final double kPathLookaheadTime = 0.4;  // seconds to look ahead along the path for steering
