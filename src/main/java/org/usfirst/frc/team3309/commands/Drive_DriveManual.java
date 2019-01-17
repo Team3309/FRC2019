@@ -38,11 +38,13 @@ public class Drive_DriveManual extends Command {
     }
 
     private static double limit(double v, double limit) {
-        return (Math.abs(v) < limit) ? v : Math.copySign(limit,v);
+        return (Math.abs(v) < limit) ? v : Math.copySign(limit, v);
     }
 
     @Override
     protected void execute() {
+        // Converted to Xbox controller for convenience with testing
+
         double turn = Robot.oi.getDriveController().getRightStick().x();
         double throttle = Robot.oi.getDriveController().getLeftStick().y();
 //        double turn = Robot.oi.getRightJoystick().getXAxis().get();
@@ -114,7 +116,7 @@ public class Drive_DriveManual extends Command {
                 quickStopAccumlator = 0.0;
             }
         }
-        Robot.drive.setLeftRight(ControlMode.PercentOutput,linearPower+angularPower,linearPower-angularPower);
+        Robot.drive.setLeftRight(ControlMode.PercentOutput, linearPower + angularPower, linearPower - angularPower);
     }
 
     @Override

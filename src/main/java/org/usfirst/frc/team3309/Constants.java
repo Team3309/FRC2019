@@ -69,33 +69,23 @@ public class Constants {
     public static final int DRIVE_SHIFTER_PCM_PORT = 7;
 
 
-    //==============================
-    //= DRIVEBASE TUNING CONSTANTS =
-    //==============================
-
-    // There is no logical reason why this is 9.6. it just be like that.
-    // Don't question it, and dont touch it!
-    // This value being wrong was part of why the robot took a fat L at AVR.
+    /* ROBOT PHYSICAL CONSTANTS */
     public static final double DRIVE_ENCODER_COUNTS_PER_REV = 4096*9.6;
     public static final double WHEEL_DIAMETER_INCHES = 6.0;
+    public static final double WHEEL_RADIUS_INCHES = WHEEL_DIAMETER_INCHES / 2.0;
+    public static final double kDriveWheelTrackWidthInches = 24.9;
+    public static final double kTrackScrubFactor = 1.0;  // Tune me!
+
+    /* DRIVEBASE TUNING CONSTANTS */
     public static final double DRIVE_P = 0.019;
     public static final double DRIVE_I = 0.0006;
     public static final double DRIVE_D = 0.002;
     public static final double DRIVE_CLOSED_LOOP_RAMP_RATE = 0.0;
 
-
-    /* ROBOT PHYSICAL CONSTANTS */
-
-    // Wheels
-    public static final double kDriveWheelTrackWidthInches = 24.9;
-    public static final double kDriveWheelDiameterInches = 6.0;
-    public static final double kDriveWheelRadiusInches = kDriveWheelDiameterInches / 2.0;
-    public static final double kTrackScrubFactor = 1.0;  // Tune me!
-
     // Tuned dynamics
-    public static final double kRobotMass = 60.0;  // kg TODO tune
-    public static final double kRobotMomentOfInertia = 10.0;  // kg m^2 TODO tune
-    public static final double kRobotAngularDrag = 12.0;  // N*m / (rad/sec) TODO tune
+    public static final double kRobotMass = 60.0;  // kg
+    public static final double kRobotMomentOfInertia = 10.0;  // kg m^2
+    public static final double kRobotAngularDrag = 12.0;  // N*m / (rad/sec)
     public static final double kDriveVIntercept = 1.055;  // V
     public static final double kDriveKv = 0.135;  // V per rad/s
     public static final double kDriveKa = 0.012;  // V per rad/s^2
@@ -106,6 +96,7 @@ public class Constants {
     public static final double kMaxCentripetalAccel = 160.0;
     public static final double kMaxVoltage = 9.0;
 
+    // Pure pursuit constants
     public static final double kPathKX = 4.0;  // units/s per unit of error
     public static final double kPathLookaheadTime = 0.4;  // seconds to look ahead along the path for steering
     public static final double kPathMinLookaheadDistance = 24.0;  // inches

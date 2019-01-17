@@ -7,6 +7,7 @@ class OI {
 //    var leftJoystick: InputThrustmaster = InputThrustmaster(0, InputThrustmaster.Hand.Left)
 //    var rightJoystick: InputThrustmaster = InputThrustmaster(1, InputThrustmaster.Hand.Right)
 
+    // Converted to Xbox controller for convenience with testing
     var driveController: InputXbox = InputXbox(0)
 
 }

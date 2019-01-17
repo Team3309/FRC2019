@@ -1,6 +1,6 @@
 package org.usfirst.frc.team3309.lib.planners;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.lib.geometry.Pose2d;
 import org.usfirst.frc.team3309.lib.geometry.Pose2dWithCurvature;
 import org.usfirst.frc.team3309.lib.geometry.Rotation2d;
@@ -15,7 +15,6 @@ import org.usfirst.frc.team3309.lib.trajectory.timing.TimingUtil;
 import org.usfirst.frc.team3309.lib.util.CSVWritable;
 import org.usfirst.frc.team3309.lib.util.Units;
 import org.usfirst.frc.team3309.lib.util.Util;
-import org.usfirst.frc.team3309.Constants;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -54,15 +53,15 @@ public class DriveMotionPlanner implements CSVWritable {
     public DriveMotionPlanner() {
         final DCMotorTransmission transmission = new DCMotorTransmission(
                 1.0 / Constants.kDriveKv,
-                Units.inches_to_meters(Constants.kDriveWheelRadiusInches) * Units.inches_to_meters(Constants
-                        .kDriveWheelRadiusInches) * Constants.kRobotMass / (2.0 * Constants.kDriveKa),
+                Units.inches_to_meters(Constants.WHEEL_RADIUS_INCHES) * Units.inches_to_meters(Constants
+                        .WHEEL_RADIUS_INCHES) * Constants.kRobotMass / (2.0 * Constants.kDriveKa),
                 Constants.kDriveVIntercept);
         mModel = new DifferentialDrive(
                 Constants.kRobotMass,
                 Constants.kRobotMomentOfInertia,
                 Constants.kRobotAngularDrag,
-                Units.inches_to_meters(Constants.kDriveWheelDiameterInches / 2.0),
-                Units.inches_to_meters(Constants.kDriveWheelTrackWidthInches / 2.0 * Constants.kTrackScrubFactor),
+                Units.inches_to_meters(Constants.WHEEL_RADIUS_INCHES),
+                Units.inches_to_meters(Constants.WHEEL_RADIUS_INCHES * Constants.kTrackScrubFactor),
                 transmission, transmission
         );
     }

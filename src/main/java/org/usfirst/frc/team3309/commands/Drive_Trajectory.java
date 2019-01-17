@@ -15,7 +15,9 @@ import org.usfirst.frc.team3309.lib.trajectory.timing.TimedState;
 import org.usfirst.frc.team3309.lib.util.DriveSignal;
 import org.usfirst.frc.team4322.commandv2.Command;
 
-
+/*
+*   Follows a trajectory using 254's Ramsete implementation
+* */
 public class Drive_Trajectory extends Command {
 
     private final TrajectoryIterator<TimedState<Pose2dWithCurvature>> mTrajectory;
@@ -26,6 +28,12 @@ public class Drive_Trajectory extends Command {
         this(trajectory, false);
     }
 
+    /*
+    *   @params
+    *       trajectory, the path to follow
+    *       mResetPose, whether to rezero
+    *
+    * */
     public Drive_Trajectory(Trajectory<TimedState<Pose2dWithCurvature>> trajectory, boolean mResetPose) {
         require(Robot.drive);
         setInterruptBehavior(InterruptBehavior.Suspend);

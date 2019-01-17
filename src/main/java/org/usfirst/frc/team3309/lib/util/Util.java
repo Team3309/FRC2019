@@ -61,4 +61,13 @@ public class Util {
         }
         return result;
     }
+
+    public static double sum(double[] arr) {
+        double total = 0.0;
+        for (double i : arr) {
+            total += i;
+        }
+        return total;
+    }
+
 }

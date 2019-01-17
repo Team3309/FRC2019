@@ -32,10 +32,7 @@ public class Drive extends Subsystem {
 
     private AHRS navx;
 
-    private Rotation2d mGyroOffset = Rotation2d.identity();
-
     private Drive_RobotStateEstimator driveRobotStateEstimator;
-
 
     public Drive() {
         driveRobotStateEstimator = new Drive_RobotStateEstimator();
@@ -167,17 +164,22 @@ public class Drive extends Subsystem {
     public void setLeftRight(ControlMode mode, DemandType demandType,
                              double left, double right,
                              double leftFeedforward, double rightFeedforward) {
+        setLeft(mode, left, demandType, leftFeedforward);
+        setRight(mode, right, demandType, rightFeedforward);
+    }
+
+    public void setLeft(ControlMode mode,
+                        double left,
+                        DemandType demandType,
+                        double leftFeedforward) {
         driveLeftMaster.set(mode, left, demandType, leftFeedforward);
+
+    }
+
+    public void setRight(ControlMode mode,
+                         double right, DemandType demandType,
+                         double rightFeedforward) {
         driveRightMaster.set(mode, -right, demandType, -rightFeedforward);
-    }
-
-    @Override
-    public void initDefaultCommand() {
-        setDefaultCommand(new Drive_DriveManual());
-    }
-
-    @Override
-    public void periodic() {
     }
 
     public void outputToSmartdashboard() {
@@ -187,6 +189,52 @@ public class Drive extends Subsystem {
         SmartDashboard.putNumber("Encoder right", getRightEncoderDistance());
         SmartDashboard.putNumber("Left encoder velocity", getLeftEncoderVelocity());
         SmartDashboard.putNumber("Right encoder velocity", getRightEncoderVelocity());
+    }
+
+    @Override
+    public void initDefaultCommand() {
+        setDefaultCommand(new Drive_DriveManual());
+    }
+
+    /*
+     *   Experimental,
+     *   For use in {@code Drive_SelfTune}
+     * */
+
+    public void setSide(DriveSide side, ControlMode mode,
+                        double velocity, DemandType demandType,
+                        double feedforward) {
+        if (side == DriveSide.LEFT) {
+            setLeft(mode, velocity, demandType, feedforward);
+        } else if (side == DriveSide.RIGHT) {
+            setRight(mode, velocity, demandType, feedforward);
+        }
+    }
+
+    public double getClosedLoopError(DriveSide side) {
+        if (side == DriveSide.LEFT) {
+            return driveLeftMaster.getClosedLoopError();
+        } else if (side == DriveSide.RIGHT) {
+            return driveRightMaster.getClosedLoopError();
+        }
+        return 0.0;
+    }
+
+    public void setPIDConstants(DriveSide side, double constants[]) {
+        if (side == DriveSide.LEFT) {
+            driveLeftMaster.config_kP(0, constants[0], 10);
+            driveLeftMaster.config_kI(0, constants[1], 10);
+            driveLeftMaster.config_kD(0, constants[2], 10);
+        } else if (side == DriveSide.RIGHT) {
+            driveRightMaster.config_kP(0, constants[0], 10);
+            driveRightMaster.config_kI(0, constants[1], 10);
+            driveRightMaster.config_kD(0, constants[2], 10);
+        }
+    }
+
+
+    public enum DriveSide {
+        LEFT, RIGHT
     }
 
 }

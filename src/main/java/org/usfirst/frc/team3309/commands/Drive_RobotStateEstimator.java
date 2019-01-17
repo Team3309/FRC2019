@@ -2,8 +2,7 @@ package org.usfirst.frc.team3309.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team3309.Constants;
-import org.usfirst.frc.team3309.Kinematics;
+import org.usfirst.frc.team3309.lib.physics.Kinematics;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.geometry.Pose2d;
 import org.usfirst.frc.team3309.lib.geometry.Rotation2d;
@@ -14,6 +13,9 @@ import org.usfirst.frc.team4322.commandv2.Command;
 
 import java.util.Map;
 
+/*
+* TODO: fix odometry conversions, under true position
+* */
 public class Drive_RobotStateEstimator extends Command {
 
     private static final int kObservationBufferSize = 100;
