@@ -2,7 +2,8 @@ package org.usfirst.frc.team3309;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
-import org.usfirst.frc.team3309.subsystems.*;
+import org.usfirst.frc.team3309.subsystems.Drive;
+import org.usfirst.frc.team4322.commandv2.Command;
 import org.usfirst.frc.team4322.commandv2.Scheduler;
 
 /*
@@ -12,9 +13,11 @@ import org.usfirst.frc.team4322.commandv2.Scheduler;
 
 public class Robot extends TimedRobot {
 
-    public static DriveBase driveBase;
+    public static Drive drive;
 
     public static OI oi;
+
+    private Command autoCommand;
 
     /*
      * This function is called when the Robot program starts. use it to initialize your subsystems,
@@ -23,11 +26,11 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
 
-        driveBase = new DriveBase();
+        drive = new Drive();
 
         oi = new OI();
 
-
+        AutoModeExecutor.displayAutos();
         Scheduler.initialize();
     }
 
@@ -38,14 +41,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         Scheduler.killAllCommands();
-    }
-
-    /*
-     * This function is called every 2 milliseconds while the robot is in disabled.
-     * It should be used to perform peroidic tasks that need to be done while the robot is disabled.
-     */
-    @Override
-    public void disabledPeriodic() {
+        drive.reset();
     }
 
     /*
@@ -54,6 +50,13 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
+        Scheduler.killAllCommands();
+        Scheduler.initialize();
+        drive.reset();
+        autoCommand = AutoModeExecutor.getAutoSelected();
+        if (autoCommand != null) {
+            autoCommand.start();
+        }
     }
 
     /*
@@ -62,6 +65,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousPeriodic() {
+        Scheduler.update();
+        drive.outputToSmartdashboard();
     }
 
     /*
@@ -70,8 +75,12 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopInit() {
-
+        if (autoCommand != null)
+            autoCommand.cancel();
+        drive.reset();
+        drive.initDefaultCommand();
     }
+
 
     /*
      * This function is called every 2 milliseconds while the robot is in autonomous.
@@ -79,6 +88,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+        drive.outputToSmartdashboard();
+        Scheduler.update();
     }
 
     /*
@@ -101,7 +112,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotPeriodic() {
-        Scheduler.update();
+
     }
 
     /*
@@ -111,4 +122,5 @@ public class Robot extends TimedRobot {
     public static void main(String[] args) {
         RobotBase.startRobot(Robot::new);
     }
+
 }

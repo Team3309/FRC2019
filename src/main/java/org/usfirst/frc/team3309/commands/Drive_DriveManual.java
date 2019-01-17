@@ -4,10 +4,10 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team4322.commandv2.Command;
 
-public class DriveBase_DriveManual extends Command {
+public class Drive_DriveManual extends Command {
 
-    public DriveBase_DriveManual() {
-        require(Robot.driveBase);
+    public Drive_DriveManual() {
+        require(Robot.drive);
         setInterruptBehavior(InterruptBehavior.Suspend);
     }
 
@@ -32,17 +32,26 @@ public class DriveBase_DriveManual extends Command {
     private double quickStopAccumlator = 0.0;
     private double negativeInertiaAccumlator = 0.0;
 
+    @Override
+    protected void initialize() {
+
+    }
+
     private static double limit(double v, double limit) {
-        return (Math.abs(v) < limit) ? v : Math.copySign(limit,v);
+        return (Math.abs(v) < limit) ? v : Math.copySign(limit, v);
     }
 
     @Override
     protected void execute() {
-        double turn = Robot.oi.getRightJoystick().getXAxis().get();
-        double throttle = Robot.oi.getLeftJoystick().getYAxis().get();
-        boolean isHighGear = Robot.driveBase.inHighGear();
-        boolean isQuickTurn = Robot.oi.getRightJoystick().getTrigger().get();
+        // Converted to Xbox controller for convenience with testing
 
+        double turn = Robot.oi.getDriveController().getRightStick().x();
+        double throttle = Robot.oi.getDriveController().getLeftStick().y();
+//        double turn = Robot.oi.getRightJoystick().getXAxis().get();
+//        double throttle = Robot.oi.getLeftJoystick().getYAxis().get();
+        boolean isHighGear = Robot.drive.inHighGear();
+//        boolean isQuickTurn = Robot.oi.getRightJoystick().getTrigger().get();
+        boolean isQuickTurn = Robot.oi.getDriveController().getRb().get();
         double negInertia = turn - oldTurn;
         oldTurn = turn;
 
@@ -107,7 +116,7 @@ public class DriveBase_DriveManual extends Command {
                 quickStopAccumlator = 0.0;
             }
         }
-        Robot.driveBase.setLeftRight(ControlMode.PercentOutput,linearPower+angularPower,linearPower-angularPower);
+        Robot.drive.setLeftRight(ControlMode.PercentOutput, linearPower + angularPower, linearPower - angularPower);
     }
 
     @Override

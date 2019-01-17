@@ -10,7 +10,7 @@ public class Drive_SetLowGear extends Command {
 
     @Override
     protected void initialize() {
-        Robot.driveBase.setLowGear();
+        Robot.drive.setLowGear();
     }
 
     @Override
