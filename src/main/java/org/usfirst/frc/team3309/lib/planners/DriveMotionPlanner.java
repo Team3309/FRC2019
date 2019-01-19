@@ -329,7 +329,7 @@ public class DriveMotionPlanner implements CSVWritable {
                         .left, dynamics.voltage.right);
             } else if (mFollowerType == FollowerType.PID) {
                 mOutput = updatePID(dynamics, current_state);
-            } else if (mFollowerType == FollowerType.PURE_PURSUIT){
+            } else if (mFollowerType == FollowerType.PURE_PURSUIT) {
                 mOutput = updatePurePursuit(dynamics, current_state);
             } else if (mFollowerType == FollowerType.NONLINEAR_FEEDBACK) {
                 mOutput = updateNonlinearFeedback(dynamics, current_state);

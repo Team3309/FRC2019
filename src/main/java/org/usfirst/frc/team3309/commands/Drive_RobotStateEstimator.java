@@ -14,8 +14,8 @@ import org.usfirst.frc.team4322.commandv2.Command;
 import java.util.Map;
 
 /*
-* TODO: fix odometry conversions, under true position
-* */
+ * TODO: fix odometry conversions, under true position
+ * */
 public class Drive_RobotStateEstimator extends Command {
 
     private static final int kObservationBufferSize = 100;

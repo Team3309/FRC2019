@@ -1,11 +1,11 @@
 package org.usfirst.frc.team3309.autos
 
 import org.usfirst.frc.team3309.Constants
+import org.usfirst.frc.team3309.commands.Drive_Brake
 import org.usfirst.frc.team3309.commands.Drive_Trajectory
 import org.usfirst.frc.team3309.lib.geometry.Pose2d
 import org.usfirst.frc.team3309.lib.geometry.Pose2dWithCurvature
 import org.usfirst.frc.team3309.lib.geometry.Rotation2d
-import org.usfirst.frc.team3309.lib.geometry.Translation2d
 import org.usfirst.frc.team3309.lib.trajectory.Trajectory
 import org.usfirst.frc.team3309.lib.trajectory.timing.CentripetalAccelerationConstraint
 import org.usfirst.frc.team3309.lib.trajectory.timing.TimedState
@@ -13,9 +13,7 @@ import org.usfirst.frc.team3309.lib.trajectory.timing.TimingConstraint
 import org.usfirst.frc.team3309.paths.TrajectoryGenerator
 import org.usfirst.frc.team4322.commandv2.Command
 import org.usfirst.frc.team4322.commandv2.group
-
-import java.util.ArrayList
-import java.util.Arrays
+import java.util.*
 
 object AutoTestPath {
 
@@ -32,11 +30,11 @@ object AutoTestPath {
     @JvmStatic
     fun to(): Command {
         return group {
-            parallel {
+            sequential {
                 +Drive_Trajectory(testPath)
+                +Drive_Brake()
             }
         }
     }
-
 
 }

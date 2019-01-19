@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/*
+ *   TODO: factor out and move used items to MotionPlanner
+ *
+ * */
 public class TrajectoryGenerator {
 
     private static final double kMaxVelocity = 130.0;

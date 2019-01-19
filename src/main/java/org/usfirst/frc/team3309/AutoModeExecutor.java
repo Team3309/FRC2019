@@ -3,6 +3,7 @@ package org.usfirst.frc.team3309;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.autos.AutoTestPath;
+import org.usfirst.frc.team3309.commands.CharacterizeHighGearTurn;
 import org.usfirst.frc.team4322.commandv2.Command;
 
 public class AutoModeExecutor {
@@ -18,6 +19,8 @@ public class AutoModeExecutor {
                 return false;
             }
         });
+        autos.addOption("Characterize Drive", CharacterizeHighGearTurn.to());
+
         SmartDashboard.putData("Autos: ", autos);
     }
 

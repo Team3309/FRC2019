@@ -1,6 +1,6 @@
 package org.usfirst.frc.team3309
 
-import org.usfirst.frc.team4322.input.InputThrustmaster
+import org.usfirst.frc.team3309.commands.*
 import org.usfirst.frc.team4322.input.InputXbox
 
 class OI {
@@ -8,6 +8,14 @@ class OI {
 //    var rightJoystick: InputThrustmaster = InputThrustmaster(1, InputThrustmaster.Hand.Right)
 
     // Converted to Xbox controller for convenience with testing
-    var driveController: InputXbox = InputXbox(0)
+    var driverController: InputXbox = InputXbox(0)
+
+    init {
+        driverController.b.whenPressed(CharacterizeHighGearTurn.to())
+
+        driverController.rb.whenPressed(Drive_SetLowGear())
+        driverController.rb.whenReleased(Drive_SetHighGear())
+    }
+
 
 }

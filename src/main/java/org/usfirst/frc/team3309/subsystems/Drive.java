@@ -15,7 +15,6 @@ import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.commands.Drive_DriveManual;
 import org.usfirst.frc.team3309.commands.Drive_RobotStateEstimator;
 import org.usfirst.frc.team3309.lib.geometry.Pose2d;
-import org.usfirst.frc.team3309.lib.geometry.Rotation2d;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
 /*
@@ -51,8 +50,8 @@ public class Drive extends Subsystem {
         driveLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
         driveLeftMaster.configClosedloopRamp(Constants.DRIVE_CLOSED_LOOP_RAMP_RATE, 10);
         driveLeftMaster.config_kP(0, Constants.DRIVE_P, 10);
-        driveLeftMaster.config_kD(0, Constants.DRIVE_I, 10);
-        driveLeftMaster.config_kF(0, Constants.DRIVE_D, 10);
+        driveLeftMaster.config_kD(0, Constants.DRIVE_D, 10);
+        driveLeftMaster.config_kF(0, Constants.DRIVE_F, 10);
         driveLeftMaster.setNeutralMode(NeutralMode.Brake);
 
         driveLeftSlave1.follow(driveLeftMaster);
@@ -63,8 +62,8 @@ public class Drive extends Subsystem {
         driveRightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
         driveRightMaster.configClosedloopRamp(Constants.DRIVE_CLOSED_LOOP_RAMP_RATE, 10);
         driveRightMaster.config_kP(0, Constants.DRIVE_P, 10);
-        driveRightMaster.config_kD(0, Constants.DRIVE_I, 10);
-        driveRightMaster.config_kF(0, Constants.DRIVE_D, 10);
+        driveRightMaster.config_kD(0, Constants.DRIVE_D, 10);
+        driveRightMaster.config_kF(0, Constants.DRIVE_F, 10);
         driveRightMaster.setNeutralMode(NeutralMode.Brake);
 
         driveRightSlave1.follow(driveRightMaster);
@@ -157,6 +156,10 @@ public class Drive extends Subsystem {
     }
 
     public void setLeftRight(ControlMode mode, double left, double right) {
+        if (mode == ControlMode.Velocity) {
+            left *= 2.0;
+            right *= 2.0;
+        }
         driveLeftMaster.set(mode, -left);
         driveRightMaster.set(mode, right);
     }
@@ -164,6 +167,10 @@ public class Drive extends Subsystem {
     public void setLeftRight(ControlMode mode, DemandType demandType,
                              double left, double right,
                              double leftFeedforward, double rightFeedforward) {
+        if (mode == ControlMode.Velocity) {
+            left *= 2.0;
+            right *= 2.0;
+        }
         setLeft(mode, left, demandType, leftFeedforward);
         setRight(mode, right, demandType, rightFeedforward);
     }
@@ -174,6 +181,11 @@ public class Drive extends Subsystem {
                         double leftFeedforward) {
         driveLeftMaster.set(mode, left, demandType, leftFeedforward);
 
+    }
+
+    public void setNeutralMode(NeutralMode mode) {
+        driveLeftMaster.setNeutralMode(mode);
+        driveRightMaster.setNeutralMode(mode);
     }
 
     public void setRight(ControlMode mode,
@@ -194,47 +206,6 @@ public class Drive extends Subsystem {
     @Override
     public void initDefaultCommand() {
         setDefaultCommand(new Drive_DriveManual());
-    }
-
-    /*
-     *   Experimental,
-     *   For use in {@code Drive_SelfTune}
-     * */
-
-    public void setSide(DriveSide side, ControlMode mode,
-                        double velocity, DemandType demandType,
-                        double feedforward) {
-        if (side == DriveSide.LEFT) {
-            setLeft(mode, velocity, demandType, feedforward);
-        } else if (side == DriveSide.RIGHT) {
-            setRight(mode, velocity, demandType, feedforward);
-        }
-    }
-
-    public double getClosedLoopError(DriveSide side) {
-        if (side == DriveSide.LEFT) {
-            return driveLeftMaster.getClosedLoopError();
-        } else if (side == DriveSide.RIGHT) {
-            return driveRightMaster.getClosedLoopError();
-        }
-        return 0.0;
-    }
-
-    public void setPIDConstants(DriveSide side, double constants[]) {
-        if (side == DriveSide.LEFT) {
-            driveLeftMaster.config_kP(0, constants[0], 10);
-            driveLeftMaster.config_kI(0, constants[1], 10);
-            driveLeftMaster.config_kD(0, constants[2], 10);
-        } else if (side == DriveSide.RIGHT) {
-            driveRightMaster.config_kP(0, constants[0], 10);
-            driveRightMaster.config_kI(0, constants[1], 10);
-            driveRightMaster.config_kD(0, constants[2], 10);
-        }
-    }
-
-
-    public enum DriveSide {
-        LEFT, RIGHT
     }
 
 }

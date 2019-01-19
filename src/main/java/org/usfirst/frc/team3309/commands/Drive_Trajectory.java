@@ -16,8 +16,8 @@ import org.usfirst.frc.team3309.lib.util.DriveSignal;
 import org.usfirst.frc.team4322.commandv2.Command;
 
 /*
-*   Follows a trajectory using 254's Ramsete implementation
-* */
+ *   Follows a trajectory using 254's Ramsete implementation
+ * */
 public class Drive_Trajectory extends Command {
 
     private final TrajectoryIterator<TimedState<Pose2dWithCurvature>> mTrajectory;
@@ -29,11 +29,11 @@ public class Drive_Trajectory extends Command {
     }
 
     /*
-    *   @params
-    *       trajectory, the path to follow
-    *       mResetPose, whether to rezero
-    *
-    * */
+     *   @params
+     *       trajectory, the path to follow
+     *       mResetPose, whether to rezero
+     *
+     * */
     public Drive_Trajectory(Trajectory<TimedState<Pose2dWithCurvature>> trajectory, boolean mResetPose) {
         require(Robot.drive);
         setInterruptBehavior(InterruptBehavior.Suspend);
@@ -45,6 +45,7 @@ public class Drive_Trajectory extends Command {
 
     @Override
     public void initialize() {
+        Robot.drive.setHighGear();
         if (mResetPose) {
             Robot.drive.getRobotStateEstimator().reset(Timer.getFPGATimestamp(), mTrajectory.getState().state().getPose());
         }
@@ -67,8 +68,8 @@ public class Drive_Trajectory extends Command {
         DriveSignal feedforwardSignal = new DriveSignal(output.left_feedforward_voltage / 12.0,
                 output.right_feedforward_voltage / 12.0);
 
-        double leftFeedforward = feedforwardSignal.getLeft() + Constants.DRIVE_D * leftAccel / 1023.0;
-        double rightFeedforward = feedforwardSignal.getRight() + Constants.DRIVE_D * rightAccel / 1023.0;
+        double leftFeedforward = feedforwardSignal.getLeft() + Constants.DRIVE_F * leftAccel / 1023.0;
+        double rightFeedforward = feedforwardSignal.getRight() + Constants.DRIVE_F * rightAccel / 1023.0;
 
         Robot.drive.setLeftRight(
                 ControlMode.Velocity, DemandType.ArbitraryFeedForward,
