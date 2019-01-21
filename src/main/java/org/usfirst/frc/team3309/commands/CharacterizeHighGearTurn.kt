@@ -27,7 +27,7 @@ object CharacterizeHighGearTurn {
         return group {
             sequential {
                 +CollectVelocityData(velocityData, true, false, true)
-                +WaitCommand(10.0)
+                +WaitCommand(5.0)
                 +CollectAccelerationData(accelerationData, true, false, true)
                 +CalculateConstants(velocityData, accelerationData)
             }

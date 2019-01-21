@@ -9,7 +9,7 @@ public class Drive_Brake extends Command {
 
     @Override
     protected void execute() {
-        Robot.drive.setLeftRight(ControlMode.PercentOutput, 0.0, 0.0);
+        Robot.drive.setLeftRight(ControlMode.Velocity, 0.0, 0.0);
         Robot.drive.setNeutralMode(NeutralMode.Brake);
     }
 

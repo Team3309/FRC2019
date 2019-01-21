@@ -20,7 +20,6 @@ public class Robot extends TimedRobot {
 
     private Command autoCommand;
 
-
     /*
      * This function is called when the Robot program starts. use it to initialize your subsystems,
      * and to set up anything that needs to be initialized with the robot.

@@ -262,8 +262,8 @@ public class DriveMotionPlanner implements CSVWritable {
 
     protected Output updateNonlinearFeedback(DifferentialDrive.DriveDynamics dynamics, Pose2d current_state) {
         // Implements eqn. 5.12 from https://www.dis.uniroma1.it/~labrob/pub/papers/Ramsete01.pdf
-        final double kBeta = 1.81;  // >0., like the P in the PID controller
-        final double kZeta = 0.87;  // Damping coefficient, [0, 1]., like the D in a PID controller
+        final double kBeta = 2.0;  // >0., like the P in the PID controller 1.81
+        final double kZeta = 0.7;  // Damping coefficient, [0, 1]., like the D in a PID controller 0.87
 
         // Compute gain parameter.
         final double k = 2.0 * kZeta * Math.sqrt(kBeta * dynamics.chassis_velocity.linear * dynamics.chassis_velocity

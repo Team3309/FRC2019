@@ -71,7 +71,7 @@ public class Constants {
 
     /* ROBOT PHYSICAL CONSTANTS */
     public static final double DRIVE_ENCODER_COUNTS_PER_REV = 4096 * 9.6;
-    public static final double WHEEL_DIAMETER_INCHES = 6.0;
+    public static final double WHEEL_DIAMETER_INCHES = 6.0; // 6.0
     public static final double WHEEL_RADIUS_INCHES = WHEEL_DIAMETER_INCHES / 2.0;
     public static final double kDriveWheelTrackWidthInches = 24.9;
     public static final double kTrackScrubFactor = 1.0;  // Tune me!
@@ -86,13 +86,15 @@ public class Constants {
     public static final double kRobotMass = 60.0;  // kg
     public static final double kRobotMomentOfInertia = 10.0;  // kg m^2
     public static final double kRobotAngularDrag = 12.0;  // N*m / (rad/sec)
-    public static final double kDriveVIntercept = 1.055;  // V  0.817
-    public static final double kDriveKv = 0.135;  // V per rad/s 0.0239
-    public static final double kDriveKa = 0.012;  // V per rad/s^2 0.00577
+
+    private static final boolean isMarios = true;
+    public static final double kDriveVIntercept =  isMarios ? 1.055 : 1.223;  // V
+    public static final double kDriveKv = isMarios ? 0.135 : 0.022;  // V per rad/s
+    public static final double kDriveKa = isMarios ? 0.012 : 0.0068;  // V per rad/s^2
 
     // Trajectory constants
-    public static final double kMaxVelocity = 100.0; // in / s
-    public static final double kMaxAccel = 130.0;  // in / s^2
+    public static final double kMaxVelocity = 190.0; // in / s
+    public static final double kMaxAccel = 190.0;  // in / s^2
     public static final double kMaxCentripetalAccel = 160.0;
     public static final double kMaxVoltage = 9.0;
 

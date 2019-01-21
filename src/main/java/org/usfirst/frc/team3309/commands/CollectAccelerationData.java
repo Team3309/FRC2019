@@ -13,8 +13,9 @@ import org.usfirst.frc.team4322.commandv2.Command;
 import java.util.List;
 
 public class CollectAccelerationData extends Command {
+
     private static final double kPower = 0.5;
-    private static final double kTotalTime = 2.0; //how long to run the test for
+    private static final double kTotalTime = 6.0; //how long to run the test for
 
     private static Drive mDrive;
 
@@ -51,18 +52,19 @@ public class CollectAccelerationData extends Command {
         } else {
             mDrive.setLowGear();
         }
+        Robot.drive.setNeutralMode(NeutralMode.Coast);
         mStartTime = Timer.getFPGATimestamp();
         mPrevTime = mStartTime;
-    }
-
-    @Override
-    public void execute() {
 
         double reverse = mReverse ? -1.0 : 1.0;
         double leftPower =  reverse * kPower;
         double rightPower = reverse * (mTurn ? -1.0 : 1.0) * kPower;
 
         Robot.drive.setLeftRight(ControlMode.PercentOutput, leftPower, rightPower);
+    }
+
+    @Override
+    public void execute() {
 
         double currentVelocity = (Math.abs(mDrive.getLeftEncoderVelocity()) + Math.abs(mDrive.getRightEncoderVelocity())) / 4096.0 * Math.PI * 10;
         double currentTime = Timer.getFPGATimestamp();
@@ -103,6 +105,7 @@ public class CollectAccelerationData extends Command {
     @Override
     public void end() {
         mDrive.setNeutralMode(NeutralMode.Brake);
+        mDrive.setLeftRight(ControlMode.Velocity, 0.0, 0.0);
         mCSVWriter.flush();
     }
 }
