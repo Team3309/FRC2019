@@ -1,8 +1,8 @@
 plugins {
     id "java"
     id "idea"
-    id "org.jetbrains.kotlin.jvm" version "1.3.11"
-    id "edu.wpi.first.GradleRIO" version "2019.1.1"
+    id "org.jetbrains.kotlin.jvm" version "1.3.20"
+    id "edu.wpi.first.GradleRIO" version "2019.2.1"
 }
 
 allprojects {
@@ -48,7 +48,7 @@ dependencies {
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
     testCompile 'junit:junit:4.12'
-    compile "com.github.Nico1999:4322Utils:2019-1.1"
+    compile "com.github.Nico1999:4322Utils:2019-2.1"
     compile "gov.nist.math:jama:1.0.3"
 }
 
