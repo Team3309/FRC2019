@@ -1,4 +1,4 @@
-package org.usfirst.frc.team3309.commands;
+package org.usfirst.frc.team3309.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;

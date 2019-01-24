@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
-import org.usfirst.frc.team3309.commands.Drive_DriveManual;
-import org.usfirst.frc.team3309.commands.Drive_RobotStateEstimator;
+import org.usfirst.frc.team3309.commands.drive.DriveManual;
+import org.usfirst.frc.team3309.commands.drive.RobotStateEstimator;
 import org.usfirst.frc.team3309.lib.geometry.Pose2d;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
@@ -31,10 +31,10 @@ public class Drive extends Subsystem {
 
     private AHRS navx;
 
-    private Drive_RobotStateEstimator driveRobotStateEstimator;
+    private RobotStateEstimator driveRobotStateEstimator;
 
     public Drive() {
-        driveRobotStateEstimator = new Drive_RobotStateEstimator();
+        driveRobotStateEstimator = new RobotStateEstimator();
 
         driveLeftMaster = new WPI_TalonSRX(Constants.DRIVE_LEFT_MASTER_TALON_ID);
         driveLeftSlave1 = new WPI_VictorSPX(Constants.DRIVE_LEFT_SLAVE_VICTOR_1_ID);
@@ -139,7 +139,7 @@ public class Drive extends Subsystem {
         return navx.getRate();
     }
 
-    public Drive_RobotStateEstimator getRobotStateEstimator() {
+    public RobotStateEstimator getRobotStateEstimator() {
         return driveRobotStateEstimator;
     }
 
@@ -205,7 +205,7 @@ public class Drive extends Subsystem {
 
     @Override
     public void initDefaultCommand() {
-        setDefaultCommand(new Drive_DriveManual());
+        setDefaultCommand(new DriveManual());
     }
 
 }

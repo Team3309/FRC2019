@@ -1,12 +1,12 @@
-package org.usfirst.frc.team3309.commands;
+package org.usfirst.frc.team3309.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team4322.commandv2.Command;
 
-public class Drive_DriveManual extends Command {
+public class DriveManual extends Command {
 
-    public Drive_DriveManual() {
+    public DriveManual() {
         require(Robot.drive);
         setInterruptBehavior(InterruptBehavior.Suspend);
     }

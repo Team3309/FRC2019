@@ -1,5 +1,6 @@
-package org.usfirst.frc.team3309.commands
+package org.usfirst.frc.team3309.commands.drive
 
+import org.usfirst.frc.team3309.commands.WaitCommand
 import org.usfirst.frc.team3309.lib.physics.DriveCharacterization
 import org.usfirst.frc.team4322.commandv2.Command
 import org.usfirst.frc.team4322.commandv2.group

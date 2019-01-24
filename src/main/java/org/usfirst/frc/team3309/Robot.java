@@ -2,8 +2,7 @@ package org.usfirst.frc.team3309;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
-import org.usfirst.frc.team3309.commands.Drive_SetHighGear;
-import org.usfirst.frc.team3309.subsystems.Drive;
+import org.usfirst.frc.team3309.subsystems.*;
 import org.usfirst.frc.team4322.commandv2.Command;
 import org.usfirst.frc.team4322.commandv2.Scheduler;
 
@@ -15,6 +14,12 @@ import org.usfirst.frc.team4322.commandv2.Scheduler;
 public class Robot extends TimedRobot {
 
     public static Drive drive;
+    public static Lift lift;
+    public static CargoIntake cargoIntake;
+    public static PanelIntake panelIntake;
+    public static CargoLauncher cargoLauncher;
+    public static PanelPlacer panelPlacer;
+    public static Arm arm;
 
     public static OI oi;
 
@@ -28,6 +33,12 @@ public class Robot extends TimedRobot {
     public void robotInit() {
 
         drive = new Drive();
+        lift = new Lift();
+        cargoIntake = new CargoIntake();
+        panelIntake = new PanelIntake();
+        cargoLauncher = new CargoLauncher();
+        panelPlacer = new PanelPlacer();
+        arm = new Arm();
 
         oi = new OI();
 

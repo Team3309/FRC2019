@@ -15,6 +15,10 @@ public class Util {
     private Util() {
     }
 
+    public static double clamp(double v, double min, double max) {
+        return limit(v, min, max);
+    }
+
     /**
      * Limits the given input to the given magnitude.
      */
@@ -68,6 +72,25 @@ public class Util {
             total += i;
         }
         return total;
+    }
+
+    /*
+    * @return positive percent error
+    * @param error, current closed loop error
+    * @param goal, goal in loop
+    * */
+    public static double errorToPercent(double error, double goal) {
+        return error / goal * 100;
+    }
+
+    /*
+    * @return boolean of whether percent error is within percent tolerance
+     * @param error, current closed loop error
+     * @param goal, goal in loop
+     * @param tolerance, percent tolerance the percent error must within error
+    * */
+    public static boolean withinTolerance(double error, double goal, double tolerance) {
+        return Math.abs(Util.errorToPercent(error, goal)) < Math.abs(tolerance);
     }
 
 }

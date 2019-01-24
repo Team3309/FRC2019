@@ -1,4 +1,4 @@
-package org.usfirst.frc.team3309.commands;
+package org.usfirst.frc.team3309.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
@@ -18,13 +18,13 @@ import org.usfirst.frc.team4322.commandv2.Command;
 /*
  *   Follows a trajectory using 254's Ramsete implementation
  * */
-public class Drive_Trajectory extends Command {
+public class DriveTrajectory extends Command {
 
     private final TrajectoryIterator<TimedState<Pose2dWithCurvature>> mTrajectory;
     private final boolean mResetPose;
     private DriveMotionPlanner mMotionPlanner;
 
-    public Drive_Trajectory(Trajectory<TimedState<Pose2dWithCurvature>> trajectory) {
+    public DriveTrajectory(Trajectory<TimedState<Pose2dWithCurvature>> trajectory) {
         this(trajectory, false);
     }
 
@@ -34,7 +34,7 @@ public class Drive_Trajectory extends Command {
      *       mResetPose, whether to rezero
      *
      * */
-    public Drive_Trajectory(Trajectory<TimedState<Pose2dWithCurvature>> trajectory, boolean mResetPose) {
+    public DriveTrajectory(Trajectory<TimedState<Pose2dWithCurvature>> trajectory, boolean mResetPose) {
         require(Robot.drive);
         setInterruptBehavior(InterruptBehavior.Suspend);
         mTrajectory = new TrajectoryIterator<>(new TimedView<>(trajectory));

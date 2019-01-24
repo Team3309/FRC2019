@@ -1,11 +1,11 @@
-package org.usfirst.frc.team3309.commands;
+package org.usfirst.frc.team3309.commands.drive;
 
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team4322.commandv2.Command;
 
-public class Drive_SetHighGear extends Command {
+public class SetHighGear extends Command {
 
-    public Drive_SetHighGear() {
+    public SetHighGear() {
     }
 
     @Override

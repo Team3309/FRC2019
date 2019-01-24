@@ -1,11 +1,11 @@
-package org.usfirst.frc.team3309.commands;
+package org.usfirst.frc.team3309.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team4322.commandv2.Command;
 
-public class Drive_Brake extends Command {
+public class DriveBrake extends Command {
 
     @Override
     protected void execute() {

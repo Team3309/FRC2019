@@ -1,6 +1,8 @@
 package org.usfirst.frc.team3309
 
-import org.usfirst.frc.team3309.commands.*
+import org.usfirst.frc.team3309.commands.drive.CharacterizeHighGearTurn
+import org.usfirst.frc.team3309.commands.drive.SetHighGear
+import org.usfirst.frc.team3309.commands.drive.SetLowGear
 import org.usfirst.frc.team4322.input.InputXbox
 
 class OI {
@@ -13,8 +15,8 @@ class OI {
     init {
         driverController.b.whenPressed(CharacterizeHighGearTurn.to())
 
-        driverController.rb.whenPressed(Drive_SetLowGear())
-        driverController.rb.whenReleased(Drive_SetHighGear())
+        driverController.rb.whenPressed(SetLowGear())
+        driverController.rb.whenReleased(SetHighGear())
     }
 
 

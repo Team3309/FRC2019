@@ -1,14 +1,14 @@
-package org.usfirst.frc.team3309.commands;
+package org.usfirst.frc.team3309.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team4322.commandv2.Command;
 
-public class Drive_SetVelocity extends Command {
+public class DriveSetVelocity extends Command {
 
     private final double velocity;
 
-    public Drive_SetVelocity(double velocity) {
+    public DriveSetVelocity(double velocity) {
         require(Robot.drive);
         this.velocity = velocity;
     }

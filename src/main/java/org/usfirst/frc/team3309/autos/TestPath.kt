@@ -1,8 +1,8 @@
 package org.usfirst.frc.team3309.autos
 
 import org.usfirst.frc.team3309.Constants
-import org.usfirst.frc.team3309.commands.Drive_Brake
-import org.usfirst.frc.team3309.commands.Drive_Trajectory
+import org.usfirst.frc.team3309.commands.drive.DriveBrake
+import org.usfirst.frc.team3309.commands.drive.DriveTrajectory
 import org.usfirst.frc.team3309.lib.geometry.Pose2d
 import org.usfirst.frc.team3309.lib.geometry.Pose2dWithCurvature
 import org.usfirst.frc.team3309.lib.geometry.Rotation2d
@@ -31,8 +31,8 @@ object AutoTestPath {
     fun to(): Command {
         return group {
             sequential {
-                +Drive_Trajectory(testPath)
-                +Drive_Brake()
+                +DriveTrajectory(testPath)
+                +DriveBrake()
             }
         }
     }

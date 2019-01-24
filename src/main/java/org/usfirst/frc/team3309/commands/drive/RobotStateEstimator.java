@@ -1,12 +1,12 @@
-package org.usfirst.frc.team3309.commands;
+package org.usfirst.frc.team3309.commands.drive;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team3309.lib.physics.Kinematics;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.geometry.Pose2d;
 import org.usfirst.frc.team3309.lib.geometry.Rotation2d;
 import org.usfirst.frc.team3309.lib.geometry.Twist2d;
+import org.usfirst.frc.team3309.lib.physics.Kinematics;
 import org.usfirst.frc.team3309.lib.util.InterpolatingDouble;
 import org.usfirst.frc.team3309.lib.util.InterpolatingTreeMap;
 import org.usfirst.frc.team4322.commandv2.Command;
@@ -16,7 +16,7 @@ import java.util.Map;
 /*
  * TODO: fix odometry conversions, under true position
  * */
-public class Drive_RobotStateEstimator extends Command {
+public class RobotStateEstimator extends Command {
 
     private static final int kObservationBufferSize = 100;
 
@@ -30,7 +30,7 @@ public class Drive_RobotStateEstimator extends Command {
     private double left_encoder_prev_distance_ = 0.0;
     private double right_encoder_prev_distance_ = 0.0;
 
-    public Drive_RobotStateEstimator() {
+    public RobotStateEstimator() {
         reset(0, new Pose2d());
     }
 
