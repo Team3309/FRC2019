@@ -77,7 +77,13 @@ public class Constants {
     public static final double LIFT_I = 0.0;
     public static final double LIFT_D = 0.0;
 
-    public static final double LIFT_TOLERANCE = 2; // percent tolerance
+    public static final double LIFT_MAX_POSITION = Double.POSITIVE_INFINITY;
+    public static final double LIFT_MIN_POSITION = Double.NEGATIVE_INFINITY;
+
+    public static final double LIFT_BEGIN_SAFE_ZONE = 0;
+    public static final double LIFT_END_SAFE_ZONE = 0;
+
+    public static final double LIFT_NUDGE_SPEED = 0; // manual lift speed
 
     /**
      * Cargo intake mappings
@@ -111,7 +117,14 @@ public class Constants {
     public static final double ARM_I = 0.0;
     public static final double ARM_D = 0.0;
 
+    public static final double ARM_FORWARD_POSITION = 180.0;
+    public static final double ARM_BACK_POSITION = 0.0;
+
     public static final double ARM_TOLERANCE = 2; // percent tolerance
+
+    // TODO: tune min and max
+    public static final double ARM_MAX_ANGLE = Double.POSITIVE_INFINITY;
+    public static final double ARM_MIN_ANGLE = Double.NEGATIVE_INFINITY;
 
     /**
      * ROBOT PHYSICAL CONSTANTS

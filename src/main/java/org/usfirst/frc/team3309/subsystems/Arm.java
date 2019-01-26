@@ -15,7 +15,8 @@ public class Arm extends Subsystem {
         master = new WPI_TalonSRX(Constants.ARM_TALON_ID);
 
         master.configFactoryDefault();
-        master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+        master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+                0, 0);
         master.config_kP(0, Constants.ARM_P);
         master.config_kI(0, Constants.ARM_I);
         master.config_kD(0, Constants.ARM_D);
@@ -24,12 +25,16 @@ public class Arm extends Subsystem {
         addChild(master);
     }
 
-    public void setGoalPosition(double position) {
+    public void setGoalAngle(double position) {
         master.set(ControlMode.Position, position);
     }
 
     public double getClosedLoopError() {
         return master.getClosedLoopError();
+    }
+
+    public void setNeutralMode(NeutralMode mode) {
+        master.setNeutralMode(mode);
     }
 
 

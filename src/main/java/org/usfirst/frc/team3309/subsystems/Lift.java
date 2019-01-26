@@ -18,7 +18,8 @@ public class Lift extends Subsystem {
         slave = new WPI_VictorSPX(Constants.LIFT_SLAVE_VICTOR_ID);
 
         master.configFactoryDefault();
-        master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+        master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+                0, 0);
 
         master.config_kP(0, Constants.LIFT_P);
         master.config_kI(0, Constants.LIFT_I);
@@ -38,9 +39,12 @@ public class Lift extends Subsystem {
         return master.getClosedLoopError();
     }
 
-
     public double getEncoderDistance() {
         return master.getSelectedSensorPosition();
+    }
+
+    public void setNeutralMode(NeutralMode mode) {
+        master.setNeutralMode(mode);
     }
 
 }

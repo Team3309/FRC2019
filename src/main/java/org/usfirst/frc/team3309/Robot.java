@@ -20,8 +20,7 @@ public class Robot extends TimedRobot {
     public static CargoLauncher cargoLauncher;
     public static PanelPlacer panelPlacer;
     public static Arm arm;
-
-    public static OI oi;
+    public static Vision vision;
 
     private Command autoCommand;
 
@@ -39,8 +38,7 @@ public class Robot extends TimedRobot {
         cargoLauncher = new CargoLauncher();
         panelPlacer = new PanelPlacer();
         arm = new Arm();
-
-        oi = new OI();
+        vision = new Vision();
 
         AutoModeExecutor.displayAutos();
         Scheduler.initialize();

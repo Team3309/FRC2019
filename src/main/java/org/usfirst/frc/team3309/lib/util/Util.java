@@ -93,4 +93,13 @@ public class Util {
         return Math.abs(Util.errorToPercent(error, goal)) < Math.abs(tolerance);
     }
 
+    /*
+    * @return whether value is inclusively within limits
+    * @param min, minimum value threshold
+    * @param max, maximum value threshold
+    * */
+    public static boolean within(double value, double min, double max) {
+        return (value >= min) && (value <= max);
+    }
+
 }

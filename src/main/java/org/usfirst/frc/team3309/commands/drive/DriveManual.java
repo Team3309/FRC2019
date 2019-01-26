@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import org.usfirst.frc.team3309.OI;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team4322.commandv2.Command;
 
@@ -45,13 +46,13 @@ public class DriveManual extends Command {
     protected void execute() {
         // Converted to Xbox controller for convenience with testing
 
-        double turn = Robot.oi.getDriverController().getRightStick().x();
-        double throttle = Robot.oi.getDriverController().getLeftStick().y();
+        double turn = OI.INSTANCE.getDriverController().getRightStick().x();
+        double throttle = OI.INSTANCE.getDriverController().getLeftStick().y();
 //        double turn = Robot.oi.getRightJoystick().getXAxis().get();
 //        double throttle = Robot.oi.getLeftJoystick().getYAxis().get();
         boolean isHighGear = Robot.drive.inHighGear();
 //        boolean isQuickTurn = Robot.oi.getRightJoystick().getTrigger().get();
-        boolean isQuickTurn = Robot.oi.getDriverController().getRb().get();
+        boolean isQuickTurn = OI.INSTANCE.getDriverController().getRb().get();
         double negInertia = turn - oldTurn;
         oldTurn = turn;
 
