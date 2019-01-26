@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3309;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import org.usfirst.frc.team3309.subsystems.*;
@@ -30,7 +31,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-
         drive = new Drive();
         lift = new Lift();
         cargoIntake = new CargoIntake();
@@ -39,6 +39,8 @@ public class Robot extends TimedRobot {
         panelPlacer = new PanelPlacer();
         arm = new Arm();
         vision = new Vision();
+
+        CameraServer.getInstance().startAutomaticCapture(0).setFPS(15);
 
         AutoModeExecutor.displayAutos();
         Scheduler.initialize();

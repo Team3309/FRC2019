@@ -57,7 +57,7 @@ public class CollectAccelerationData extends Command {
         mPrevTime = mStartTime;
 
         double reverse = mReverse ? -1.0 : 1.0;
-        double leftPower =  reverse * kPower;
+        double leftPower = reverse * kPower;
         double rightPower = reverse * (mTurn ? -1.0 : 1.0) * kPower;
 
         Robot.drive.setLeftRight(ControlMode.PercentOutput, leftPower, rightPower);

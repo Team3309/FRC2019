@@ -92,16 +92,21 @@ public class Constants {
     public static final int CARGO_INTAKE_SOLENOID_A = 0;
     public static final int CARGO_INTAKE_SOLENOID_B = 0;
 
+    public static final double CARGO_INTAKE_ROLLERS_MIN_POWER = 0.1;
     /**
      * Panel intake mappings
      */
     public static final int PANEL_INTAKE_VICTOR_ID = 0;
     public static final int PANEL_INTAKE_SOLENOID_ID = 0;
 
+    public static final double PANEL_INTAKE_MIN_POWER = 0.1;
+
     /**
      * Cargo launcher mappings
      */
     public static final int CARGO_LAUNCHER_VICTOR_ID = 0;
+
+    public static final double CARGO_LAUNCHER_ROLLERS_MIN_POWER = 0.1;
 
     /**
      * Panel placer mappings
@@ -117,7 +122,8 @@ public class Constants {
     public static final double ARM_I = 0.0;
     public static final double ARM_D = 0.0;
 
-    public static final double ARM_FORWARD_POSITION = 180.0;
+    // TODO: tune forward and back goal positions
+    public static final double ARM_FORWARD_POSITION = 0.0;
     public static final double ARM_BACK_POSITION = 0.0;
 
     public static final double ARM_TOLERANCE = 2; // percent tolerance

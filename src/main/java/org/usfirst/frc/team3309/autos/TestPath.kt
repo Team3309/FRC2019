@@ -17,7 +17,7 @@ import java.util.*
 
 object AutoTestPath {
 
-    val testPath: Trajectory<TimedState<Pose2dWithCurvature>>
+    private val testPath: Trajectory<TimedState<Pose2dWithCurvature>>
         get() {
             val waypoints = ArrayList<Pose2d>()
             waypoints.add(Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)))

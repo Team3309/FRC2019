@@ -1,16 +1,13 @@
-package org.usfirst.frc.team3309.commands.drive;
+package org.usfirst.frc.team3309.commands;
 
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team4322.commandv2.Command;
 
-public class SetLowGear extends Command {
-
-    public SetLowGear() {
-    }
+public class TogglePipeline extends Command {
 
     @Override
-    protected void initialize() {
-        Robot.drive.setLowGear();
+    protected void execute() {
+        Robot.vision.setPipeline(1 - Robot.vision.getPipeline());
     }
 
     @Override
@@ -18,3 +15,4 @@ public class SetLowGear extends Command {
         return true;
     }
 }
+

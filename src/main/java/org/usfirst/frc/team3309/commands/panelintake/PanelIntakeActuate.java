@@ -5,16 +5,16 @@ import org.usfirst.frc.team4322.commandv2.Command;
 
 public class PanelIntakeActuate extends Command {
 
-    private boolean on;
+    private boolean down;
 
-    public PanelIntakeActuate(boolean on) {
-        this.on = on;
+    public PanelIntakeActuate(boolean down) {
+        this.down = down;
     }
 
     @Override
     protected void initialize() {
         require(Robot.panelIntake);
-        Robot.panelIntake.setSolenoid(on);
+        Robot.panelIntake.setSolenoid(down);
     }
 
     @Override

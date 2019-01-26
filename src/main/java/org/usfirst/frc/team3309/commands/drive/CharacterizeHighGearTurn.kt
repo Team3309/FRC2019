@@ -8,7 +8,7 @@ import org.usfirst.frc.team4322.commandv2.group
 object CharacterizeHighGearTurn {
 
     class CalculateConstants(private val velocityData: ArrayList<DriveCharacterization.VelocityDataPoint>,
-                             private val accelerationData: ArrayList<DriveCharacterization.AccelerationDataPoint>): Command() {
+                             private val accelerationData: ArrayList<DriveCharacterization.AccelerationDataPoint>) : Command() {
 
         override fun execute() {
             val constants = DriveCharacterization.characterizeDrive(velocityData, accelerationData)

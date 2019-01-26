@@ -7,7 +7,8 @@ public enum AssemblyPosition {
     CARGO_HIGH(0.0, false),
     PANEL_LOW(0.0, false),
     PANEL_MIDDLE(0.0, false),
-    PANEL_HIGH(0.0, false);
+    PANEL_HIGH(0.0, false),
+    HOME(0.0, false);
 
     private double liftPosition;
     private boolean forwardArm;

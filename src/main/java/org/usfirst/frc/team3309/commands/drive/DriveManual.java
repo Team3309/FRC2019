@@ -46,13 +46,12 @@ public class DriveManual extends Command {
     protected void execute() {
         // Converted to Xbox controller for convenience with testing
 
-        double turn = OI.INSTANCE.getDriverController().getRightStick().x();
-        double throttle = OI.INSTANCE.getDriverController().getLeftStick().y();
-//        double turn = Robot.oi.getRightJoystick().getXAxis().get();
-//        double throttle = Robot.oi.getLeftJoystick().getYAxis().get();
+        double turn = OI.INSTANCE.getRightJoystick().getXAxis().get();
+        double throttle = OI.INSTANCE.getLeftJoystick().getYAxis().get();
+
         boolean isHighGear = Robot.drive.inHighGear();
 //        boolean isQuickTurn = Robot.oi.getRightJoystick().getTrigger().get();
-        boolean isQuickTurn = OI.INSTANCE.getDriverController().getRb().get();
+        boolean isQuickTurn = OI.INSTANCE.getRightJoystick().getTrigger().get();
         double negInertia = turn - oldTurn;
         oldTurn = turn;
 
@@ -117,11 +116,21 @@ public class DriveManual extends Command {
                 quickStopAccumlator = 0.0;
             }
         }
-        Robot.drive.setLeftRight(ControlMode.PercentOutput, linearPower + angularPower, linearPower - angularPower);
+
+        if (OI.INSTANCE.getLeftJoystick().getKnobCluster().getBottom().get()) {
+            angularPower += Robot.vision.getAngularPower();
+        }
+
+        double leftPower = linearPower + angularPower;
+        double rightPower = linearPower - angularPower;
+
+        Robot.drive.setLeftRight(ControlMode.PercentOutput, leftPower, rightPower);
     }
 
     @Override
     protected boolean isFinished() {
         return false;
     }
+
+
 }
