@@ -1,25 +1,26 @@
 package org.usfirst.frc.team3309.commands.cargointake;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.usfirst.frc.team3309.Robot;
+import org.usfirst.frc.team3309.subsystems.CargoIntake;
 import org.usfirst.frc.team4322.commandv2.Command;
 
 public class CargoIntakeActuate extends Command {
 
-    private DoubleSolenoid.Value value;
+    private CargoIntake.CargoIntakePosition position;
 
-    public CargoIntakeActuate(DoubleSolenoid.Value value) {
+    public CargoIntakeActuate(CargoIntake.CargoIntakePosition position) {
         require(Robot.cargoIntake);
-        this.value = value;
+        this.position = position;
     }
 
     @Override
     protected void execute() {
-        Robot.cargoIntake.setSolenoid(value);
+        Robot.cargoIntake.setPosition(position);
     }
 
     @Override
     protected boolean isFinished() {
         return true;
     }
+
 }

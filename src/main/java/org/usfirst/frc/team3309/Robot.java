@@ -15,12 +15,11 @@ import org.usfirst.frc.team4322.commandv2.Scheduler;
 public class Robot extends TimedRobot {
 
     public static Drive drive;
-    public static Lift lift;
+    public static Elevator elevator;
     public static CargoIntake cargoIntake;
     public static PanelIntake panelIntake;
-    public static CargoLauncher cargoLauncher;
-    public static PanelPlacer panelPlacer;
-    public static Arm arm;
+    public static CargoHolder cargoHolder;
+    public static PanelHolder panelHolder;
     public static Vision vision;
 
     private Command autoCommand;
@@ -32,12 +31,11 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         drive = new Drive();
-        lift = new Lift();
+        elevator = new Elevator();
         cargoIntake = new CargoIntake();
         panelIntake = new PanelIntake();
-        cargoLauncher = new CargoLauncher();
-        panelPlacer = new PanelPlacer();
-        arm = new Arm();
+        cargoHolder = new CargoHolder();
+        panelHolder = new PanelHolder();
         vision = new Vision();
 
         CameraServer.getInstance().startAutomaticCapture(0).setFPS(15);

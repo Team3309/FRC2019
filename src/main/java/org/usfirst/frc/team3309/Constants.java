@@ -52,7 +52,6 @@ public class Constants {
         }
     }
 
-
     /*
      * Drive mappings
      * */
@@ -68,7 +67,7 @@ public class Constants {
     public static final int DRIVE_SHIFTER_PCM_PORT = 7;
 
     /**
-     * Lift Mappings
+     * Elevator Mappings
      */
     public static final int LIFT_MASTER_TALON_ID = 0;
     public static final int LIFT_SLAVE_VICTOR_ID = 0;
@@ -77,60 +76,57 @@ public class Constants {
     public static final double LIFT_I = 0.0;
     public static final double LIFT_D = 0.0;
 
-    public static final double LIFT_MAX_POSITION = Double.POSITIVE_INFINITY;
-    public static final double LIFT_MIN_POSITION = Double.NEGATIVE_INFINITY;
+    // max position used for conversions (encoder counts)
+    public static final double LIFT_COUNTS_FOR_LENGTH = 1;
 
+    // [0, 1], minimum value where it is safe to rotate arm
     public static final double LIFT_BEGIN_SAFE_ZONE = 0;
+
+    // [0, 1], maximum value where it is safe to rotate arm
     public static final double LIFT_END_SAFE_ZONE = 0;
 
-    public static final double LIFT_NUDGE_SPEED = 0; // manual lift speed
+    // [0, 1], manual elevator speed
+    public static final double LIFT_NUDGE_SPEED = 0;
+
+    public static final int WRIST_TALON_ID = 0;
+
+    public static final double WRIST_P = 0.0;
+    public static final double WRIST_I = 0.0;
+    public static final double WRIST_D = 0.0;
+
+    // max wrist position used for conversions (encoder counts)
+    public static final double WRIST_COUNTS_FOR_FULL_ROTATION = 0.0;
 
     /**
      * Cargo intake mappings
      */
     public static final int CARGO_INTAKE_VICTOR_ID = 0;
-    public static final int CARGO_INTAKE_SOLENOID_A = 0;
-    public static final int CARGO_INTAKE_SOLENOID_B = 0;
+    public static final int CARGO_INTAKE_SOLENOID_ID = 0;
 
     public static final double CARGO_INTAKE_ROLLERS_MIN_POWER = 0.1;
+
     /**
      * Panel intake mappings
      */
     public static final int PANEL_INTAKE_VICTOR_ID = 0;
-    public static final int PANEL_INTAKE_SOLENOID_ID = 0;
+    public static final int PANEL_INTAKE_HOLDER_ID = 0;
+    public static final int PANEL_INTAKE_SENSOR_PORT = 0;
 
     public static final double PANEL_INTAKE_MIN_POWER = 0.1;
 
     /**
      * Cargo launcher mappings
      */
-    public static final int CARGO_LAUNCHER_VICTOR_ID = 0;
+    public static final int CARGO_HOLDER_VICTOR_ID = 0;
+    public static final int CARGO_HOLDER_BUMPER_PORT = 0;
 
     public static final double CARGO_LAUNCHER_ROLLERS_MIN_POWER = 0.1;
 
     /**
      * Panel placer mappings
      */
-    public static final int PANEL_PLACER_FINGER_SOLENOID_ID = 0;
-    public static final int PANEL_PLACER_TELESCOPING_SOLENOID_ID = 0;
-
-    /**
-     * Arm mappings and turning constants
-     */
-    public static final int ARM_TALON_ID = 0;
-    public static final double ARM_P = 0.0;
-    public static final double ARM_I = 0.0;
-    public static final double ARM_D = 0.0;
-
-    // TODO: tune forward and back goal positions
-    public static final double ARM_FORWARD_POSITION = 0.0;
-    public static final double ARM_BACK_POSITION = 0.0;
-
-    public static final double ARM_TOLERANCE = 2; // percent tolerance
-
-    // TODO: tune min and max
-    public static final double ARM_MAX_ANGLE = Double.POSITIVE_INFINITY;
-    public static final double ARM_MIN_ANGLE = Double.NEGATIVE_INFINITY;
+    public static final int PANEL_HOLDER_EXTENDING_SOLENOID_ID = 0;
+    public static final int PANEL_HOLDER_TELESCOPING_SOLENOID_ID = 0;
 
     /**
      * ROBOT PHYSICAL CONSTANTS

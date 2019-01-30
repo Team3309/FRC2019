@@ -1,20 +1,21 @@
 package org.usfirst.frc.team3309.commands.panelintake;
 
 import org.usfirst.frc.team3309.Robot;
+import org.usfirst.frc.team3309.subsystems.PanelIntake;
 import org.usfirst.frc.team4322.commandv2.Command;
 
 public class PanelIntakeActuate extends Command {
 
-    private boolean down;
+    private PanelIntake.PanelIntakePosition position;
 
-    public PanelIntakeActuate(boolean down) {
-        this.down = down;
+    public PanelIntakeActuate(PanelIntake.PanelIntakePosition position) {
+        require(Robot.panelIntake);
+        this.position = position;
     }
 
     @Override
-    protected void initialize() {
-        require(Robot.panelIntake);
-        Robot.panelIntake.setSolenoid(down);
+    protected void execute() {
+        Robot.panelIntake.setPosition(position);
     }
 
     @Override

@@ -33,8 +33,8 @@ public class CheesyDriveHelper {
     private double mQuickStopAccumlator = 0.0;
     private double mNegInertiaAccumlator = 0.0;
 
-    public DriveSignal cheesyDrive(double throttle, double wheel, boolean isQuickTurn,
-                                   boolean isHighGear) {
+    public DriveSignal update(double throttle, double wheel, boolean isQuickTurn,
+                              boolean isHighGear, boolean isAutoTurn) {
 
         wheel = handleDeadband(wheel, kWheelDeadband);
         throttle = handleDeadband(throttle, kThrottleDeadband);
@@ -118,22 +118,25 @@ public class CheesyDriveHelper {
         }
 
         rightPwm = leftPwm = linearPower;
-        leftPwm += angularPower;
-        rightPwm -= angularPower;
+        if (!isAutoTurn) {
+            leftPwm += angularPower;
+            rightPwm -= angularPower;
 
-        if (leftPwm > 1.0) {
-            rightPwm -= overPower * (leftPwm - 1.0);
-            leftPwm = 1.0;
-        } else if (rightPwm > 1.0) {
-            leftPwm -= overPower * (rightPwm - 1.0);
-            rightPwm = 1.0;
-        } else if (leftPwm < -1.0) {
-            rightPwm += overPower * (-1.0 - leftPwm);
-            leftPwm = -1.0;
-        } else if (rightPwm < -1.0) {
-            leftPwm += overPower * (-1.0 - rightPwm);
-            rightPwm = -1.0;
+            if (leftPwm > 1.0) {
+                rightPwm -= overPower * (leftPwm - 1.0);
+                leftPwm = 1.0;
+            } else if (rightPwm > 1.0) {
+                leftPwm -= overPower * (rightPwm - 1.0);
+                rightPwm = 1.0;
+            } else if (leftPwm < -1.0) {
+                rightPwm += overPower * (-1.0 - leftPwm);
+                leftPwm = -1.0;
+            } else if (rightPwm < -1.0) {
+                leftPwm += overPower * (-1.0 - rightPwm);
+                rightPwm = -1.0;
+            }
         }
+
         return new DriveSignal(leftPwm, rightPwm);
     }
 

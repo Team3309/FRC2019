@@ -1,20 +1,20 @@
-package org.usfirst.frc.team3309.commands.cargolauncher;
+package org.usfirst.frc.team3309.commands.cargoholder;
 
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team4322.commandv2.Command;
 
-public class CargoLauncherSetPower extends Command {
+public class CargoHolderSetPower extends Command {
 
     private double power;
 
-    public CargoLauncherSetPower(double power) {
-        require(Robot.cargoLauncher);
+    public CargoHolderSetPower(double power) {
+        require(Robot.cargoHolder);
         this.power = power;
     }
 
     @Override
     protected void initialize() {
-        Robot.cargoLauncher.setPower(power);
+        Robot.cargoHolder.setPower(power);
     }
 
     @Override

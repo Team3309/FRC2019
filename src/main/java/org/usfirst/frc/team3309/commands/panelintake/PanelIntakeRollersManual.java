@@ -1,4 +1,4 @@
-package org.usfirst.frc.team3309.commands.cargointake;
+package org.usfirst.frc.team3309.commands.panelintake;
 
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.OI;
@@ -6,10 +6,10 @@ import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team4322.commandv2.Command;
 
-public class CargoIntakeManual extends Command {
+public class PanelIntakeRollersManual extends Command {
 
-    public CargoIntakeManual() {
-        require(Robot.cargoIntake);
+    public PanelIntakeRollersManual() {
+        require(Robot.panelIntake);
     }
 
     @Override
@@ -17,14 +17,13 @@ public class CargoIntakeManual extends Command {
         double powerOut = OI.INSTANCE.getOperatorController().lt();
         double powerIn = OI.INSTANCE.getOperatorController().rt();
 
-        double power = Util.signedMax(powerOut, powerIn, Constants.CARGO_INTAKE_ROLLERS_MIN_POWER);
+        double power = Util.signedMax(powerOut, powerIn, Constants.PANEL_INTAKE_MIN_POWER);
 
-        Robot.cargoIntake.setPower(power);
+        Robot.panelIntake.setPower(power);
     }
 
     @Override
     protected boolean isFinished() {
         return false;
     }
-
 }

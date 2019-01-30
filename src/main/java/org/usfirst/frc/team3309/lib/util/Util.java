@@ -102,4 +102,22 @@ public class Util {
         return (value >= min) && (value <= max);
     }
 
+    /*
+     * @return a if larger, -b if larger, min if the largest
+     * @param a, first value to check
+     * @param b, second value to check
+     * @param min, minimum threshold
+     * */
+    public static double signedMax(double a, double b, double min) {
+        if (a > min) {
+            return a;
+        } else if (b > min) {
+            return -b;
+        } else {
+            return min;
+        }
+    }
+
 }
+
+

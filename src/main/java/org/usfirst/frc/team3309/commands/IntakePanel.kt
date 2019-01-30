@@ -1,0 +1,30 @@
+package org.usfirst.frc.team3309.commands
+
+import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeActuate
+import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeRollersManual
+import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeSetRollers
+import org.usfirst.frc.team3309.subsystems.Elevator
+import org.usfirst.frc.team3309.subsystems.PanelHolder
+import org.usfirst.frc.team3309.subsystems.PanelIntake
+import org.usfirst.frc.team4322.commandv2.Command
+import org.usfirst.frc.team4322.commandv2.group
+
+fun IntakePanel(): Command {
+    return group {
+        parallel {
+            +PanelIntakeActuate(PanelIntake.PanelIntakePosition.Down)
+            +PanelIntakeRollersManual()
+            sequential {
+                +WaitUntilPanelIsIn()
+                +PanelIntakeActuate(PanelIntake.PanelIntakePosition.Up)
+                +PanelHolderActuate(PanelHolder.PanelHolderPosition.GrabPanel)
+                parallel {
+                    +PanelIntakeSetRollers(0.2, true)
+                    +Elevate(Elevator.CarriagePosition.PanelLow)
+                }
+                +PanelIntakeSetRollers(0.0, false)
+            }
+        }
+
+    }
+}

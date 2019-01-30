@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3309
 
+import org.usfirst.frc.team3309.commands.TogglePipeline
 import org.usfirst.frc.team3309.commands.drive.DriveSetHighGear
 import org.usfirst.frc.team3309.commands.drive.DriveSetLowGear
 import org.usfirst.frc.team4322.input.InputThrustmaster
@@ -16,7 +17,7 @@ object OI {
         leftJoystick.trigger.whenPressed(DriveSetLowGear())
         leftJoystick.trigger.whenReleased(DriveSetHighGear())
 
-
+        rightJoystick.knobCluster.bottom.whenPressed(TogglePipeline())
     }
 
 }
