@@ -18,7 +18,6 @@ public class Elevator extends Subsystem {
     private WristFacing wristGoal;
 
     public Elevator() {
-        // enable limit switch
         liftMaster = createMaster(
                 Constants.LIFT_MASTER_TALON_ID,
                 Constants.LIFT_P,
@@ -51,7 +50,7 @@ public class Elevator extends Subsystem {
         carriageGoal = Util.clamp(carriagePosition, 0, 1);
         wristGoal = wristFacing;
 
-        // TODO: integrate wrist with collision avoidance
+        // TODO: integrate wrist through collision avoidance
         boolean withinSafeZone = Util.within(getLiftPosition(),
                 Constants.LIFT_BEGIN_SAFE_ZONE,
                 Constants.LIFT_END_SAFE_ZONE);
@@ -86,7 +85,6 @@ public class Elevator extends Subsystem {
         return encoderCounts / Constants.LIFT_COUNTS_FOR_LENGTH;
     }
 
-    // valid with winch?
     private double liftGoalToEncoderCounts(double liftGoal) {
         return liftGoal * Constants.LIFT_COUNTS_FOR_LENGTH;
     }
@@ -103,6 +101,8 @@ public class Elevator extends Subsystem {
         CargoLow(PanelLow.getLiftPosition() + Constants.PANEL_CARGO_OFFSET),
         CargoMiddle(PanelMiddle.getLiftPosition() + Constants.PANEL_CARGO_OFFSET),
         CargoHigh(PanelHigh.getLiftPosition() + Constants.PANEL_CARGO_OFFSET),
+        FeederStation(0.0),
+        CargoOnShip(0.0),
         Home(0.0);
 
         private double liftPosition;

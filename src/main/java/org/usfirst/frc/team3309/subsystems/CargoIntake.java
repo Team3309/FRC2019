@@ -18,8 +18,8 @@ public class CargoIntake extends Subsystem {
 
         intakeMotor.configFactoryDefault();
 
-        addChild("CargoIntakeMotor", intakeMotor);
-        addChild("CargoIntakeSolenoid", solenoid);
+        addChild(intakeMotor);
+        addChild(solenoid);
     }
 
     public void setPower(double power) {
@@ -27,25 +27,31 @@ public class CargoIntake extends Subsystem {
     }
 
     public void setPosition(CargoIntakePosition position) {
-        if (position == CargoIntakePosition.Extended) {
-            solenoid.set(true);
-        } else {
-            solenoid.set(false);
-        }
+       solenoid.set(position.get());
     }
 
     public CargoIntakePosition getPosition() {
-        if (solenoid.get()) {
-            return CargoIntakePosition.Extended;
-        } else {
-            return CargoIntakePosition.Stowed;
-        }
+       if (solenoid.get() == CargoIntakePosition.Stowed.get()) {
+           return CargoIntakePosition.Stowed;
+       } else {
+           return CargoIntakePosition.Extended;
+       }
     }
 
-    // TODO; wrap values, then check in getPosition
     public enum CargoIntakePosition {
-        Stowed,
-        Extended
+        Stowed(false),
+        Extended(true);
+
+        private boolean value;
+
+        CargoIntakePosition(boolean value) {
+            this.value = value;
+        }
+
+        public boolean get() {
+            return value;
+        }
+
     }
 
 }

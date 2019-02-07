@@ -123,6 +123,14 @@ public class Robot extends TimedRobot {
 
     }
 
+    public static boolean hasCargo() {
+        return cargoHolder.isBumperPressed();
+    }
+
+    public static boolean hasPanel() {
+        return panelHolder.isBumperPressed();
+    }
+
     /*
      * This is the main function, which is where every java program starts.
      * All we do here is insert the code that is used to start up the rest of the robot code.
