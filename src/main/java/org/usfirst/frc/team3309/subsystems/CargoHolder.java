@@ -8,19 +8,22 @@ import org.usfirst.frc.team4322.commandv2.Subsystem;
 
 public class CargoHolder extends Subsystem {
 
-    private WPI_VictorSPX launcherMotor;
+    private WPI_VictorSPX motor;
 
     private DigitalInput bumperSensor;
 
     public CargoHolder() {
         bumperSensor = new DigitalInput(Constants.CARGO_HOLDER_BUMPER_PORT);
-        launcherMotor = new WPI_VictorSPX(Constants.CARGO_HOLDER_VICTOR_ID);
+        motor = new WPI_VictorSPX(Constants.CARGO_HOLDER_VICTOR_ID);
 
-        launcherMotor.configFactoryDefault();
+        motor.configFactoryDefault();
+
+        addChild(bumperSensor);
+        addChild(  motor);
     }
 
     public void setPower(double power) {
-        launcherMotor.set(ControlMode.PercentOutput, power);
+        motor.set(ControlMode.PercentOutput, power);
     }
 
     public boolean isBumperPressed() {

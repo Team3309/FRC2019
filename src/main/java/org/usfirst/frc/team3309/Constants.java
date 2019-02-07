@@ -12,7 +12,6 @@ import java.util.Arrays;
  */
 public class Constants {
 
-
     /*
      * These MAC_ADDR values are just unique IDs for each of the roboRIO's used in 2018
      * They are used to identify which robot the code is running on, because some values are specific to each robot.
@@ -96,6 +95,9 @@ public class Constants {
 
     // max wrist position used for conversions (encoder counts)
     public static final double WRIST_COUNTS_FOR_FULL_ROTATION = 0.0;
+
+    // difference between cargo and panel in rocket [0, 1]
+    public static final double PANEL_CARGO_OFFSET = 0.0;
 
     /**
      * Cargo intake mappings

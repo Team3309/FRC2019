@@ -12,6 +12,9 @@ public class PanelHolder extends Subsystem {
     public PanelHolder() {
         jointedSolenoid = new Solenoid(Constants.PANEL_HOLDER_EXTENDING_SOLENOID_ID);
         extendingSolenoid = new Solenoid(Constants.PANEL_HOLDER_TELESCOPING_SOLENOID_ID);
+
+        addChild(jointedSolenoid);
+        addChild(extendingSolenoid);
     }
 
     /*

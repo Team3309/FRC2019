@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Timer;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.OI;
 import org.usfirst.frc.team3309.Robot;
+import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team3309.subsystems.Elevator;
 import org.usfirst.frc.team4322.commandv2.Command;
 
@@ -35,8 +36,9 @@ public class Elevate extends Command {
         double curTime = Timer.getFPGATimestamp();
         double deltaTime = curTime - prevTime;
 
+        // clamp to a slightly lower level
         double offset = Constants.LIFT_NUDGE_SPEED * deltaTime * OI.INSTANCE.getOperatorController().getLeftStick().y();
-        double goalPosition = carriagePosition.getLiftPosition() + offset;
+        double goalPosition = Util.clamp(carriagePosition.getLiftPosition() + offset, 0.0, 0.8);
 
         Robot.elevator.setPosition(goalPosition, wristFacing);
     }

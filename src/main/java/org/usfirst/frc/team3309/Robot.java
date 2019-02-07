@@ -61,7 +61,6 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         Scheduler.killAllCommands();
-        Scheduler.initialize();
         drive.reset();
         autoCommand = AutoModeExecutor.getAutoSelected();
         if (autoCommand != null) {
@@ -76,7 +75,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousPeriodic() {
         Scheduler.update();
-        drive.outputToSmartdashboard();
+        drive.outputToDashboard();
     }
 
     /*
@@ -88,7 +87,6 @@ public class Robot extends TimedRobot {
         if (autoCommand != null)
             autoCommand.cancel();
         drive.reset();
-        drive.initDefaultCommand();
     }
 
 
@@ -98,7 +96,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        drive.outputToSmartdashboard();
+        drive.outputToDashboard();
         Scheduler.update();
     }
 

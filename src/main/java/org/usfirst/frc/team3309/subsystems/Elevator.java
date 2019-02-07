@@ -1,8 +1,6 @@
 package org.usfirst.frc.team3309.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import org.usfirst.frc.team3309.Constants;
@@ -13,24 +11,27 @@ public class Elevator extends Subsystem {
 
     private WPI_TalonSRX liftMaster;
     private WPI_VictorSPX liftSlave;
+
     private WPI_TalonSRX wristMaster;
 
     private double carriageGoal;
     private WristFacing wristGoal;
 
     public Elevator() {
+        // enable limit switch
         liftMaster = createMaster(
                 Constants.LIFT_MASTER_TALON_ID,
                 Constants.LIFT_P,
                 Constants.LIFT_I,
                 Constants.LIFT_D);
+        liftMaster.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+        liftMaster.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
         liftSlave = new WPI_VictorSPX(Constants.LIFT_SLAVE_VICTOR_ID);
         wristMaster = createMaster(
                 Constants.WRIST_TALON_ID,
                 Constants.WRIST_P,
                 Constants.WRIST_I,
                 Constants.WRIST_D);
-
         liftSlave.follow(liftMaster);
     }
 
@@ -85,6 +86,7 @@ public class Elevator extends Subsystem {
         return encoderCounts / Constants.LIFT_COUNTS_FOR_LENGTH;
     }
 
+    // valid with winch?
     private double liftGoalToEncoderCounts(double liftGoal) {
         return liftGoal * Constants.LIFT_COUNTS_FOR_LENGTH;
     }
@@ -95,12 +97,12 @@ public class Elevator extends Subsystem {
 
     public enum CarriagePosition {
 
-        CargoLow(0.0),
-        CargoMiddle(0.0),
-        CargoHigh(0.0),
         PanelLow(0.0),
         PanelMiddle(0.0),
         PanelHigh(0.0),
+        CargoLow(PanelLow.getLiftPosition() + Constants.PANEL_CARGO_OFFSET),
+        CargoMiddle(PanelMiddle.getLiftPosition() + Constants.PANEL_CARGO_OFFSET),
+        CargoHigh(PanelHigh.getLiftPosition() + Constants.PANEL_CARGO_OFFSET),
         Home(0.0);
 
         private double liftPosition;

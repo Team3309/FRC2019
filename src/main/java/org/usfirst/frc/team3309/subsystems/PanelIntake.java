@@ -22,6 +22,10 @@ public class PanelIntake extends Subsystem {
         solenoid = new Solenoid(Constants.PANEL_INTAKE_HOLDER_ID);
 
         intakeMotor.configFactoryDefault();
+
+        addChild(sharpSensor);
+        addChild(intakeMotor);
+        addChild(solenoid);
     }
 
     public void setPosition(PanelIntakePosition position) {
@@ -49,7 +53,7 @@ public class PanelIntake extends Subsystem {
     }
 
     public boolean hasPanel() {
-        return sharpSensor.getAverageVoltage() > 0.7;
+        return sharpSensor.getAverageValue() > 0.0;
     }
 
     public enum PanelIntakePosition {

@@ -17,6 +17,9 @@ public class CargoIntake extends Subsystem {
         solenoid = new Solenoid(Constants.CARGO_INTAKE_SOLENOID_ID);
 
         intakeMotor.configFactoryDefault();
+
+        addChild("CargoIntakeMotor", intakeMotor);
+        addChild("CargoIntakeSolenoid", solenoid);
     }
 
     public void setPower(double power) {
@@ -39,6 +42,7 @@ public class CargoIntake extends Subsystem {
         }
     }
 
+    // TODO; wrap values, then check in getPosition
     public enum CargoIntakePosition {
         Stowed,
         Extended
