@@ -1,7 +1,7 @@
 package org.usfirst.frc.team3309.commands
 
 import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeActuate
-import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeRollersManual
+import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeManual
 import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeSetRollers
 import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeStopRollers
 import org.usfirst.frc.team3309.subsystems.Elevator
@@ -14,7 +14,7 @@ fun IntakePanel(): Command {
     return group {
         parallel {
             +PanelIntakeActuate(PanelIntake.PanelIntakePosition.Down)
-            +PanelIntakeRollersManual()
+            +PanelIntakeManual()
             sequential {
                 +WaitUntilPanelIsIn()
                 +PanelIntakeActuate(PanelIntake.PanelIntakePosition.Up)

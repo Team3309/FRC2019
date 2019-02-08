@@ -114,7 +114,7 @@ public class Util {
         } else if (b > min) {
             return -b;
         } else {
-            return min;
+            return 0.0;
         }
     }
 

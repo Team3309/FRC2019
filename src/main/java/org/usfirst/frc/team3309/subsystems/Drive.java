@@ -156,10 +156,6 @@ public class Drive extends Subsystem {
     }
 
     public void setLeftRight(ControlMode mode, double left, double right) {
-        if (mode == ControlMode.Velocity) {
-            left *= 2.0;
-            right *= 2.0;
-        }
         driveLeftMaster.set(mode, -left);
         driveRightMaster.set(mode, right);
     }
@@ -167,10 +163,6 @@ public class Drive extends Subsystem {
     public void setLeftRight(ControlMode mode, DemandType demandType,
                              double left, double right,
                              double leftFeedforward, double rightFeedforward) {
-        if (mode == ControlMode.Velocity) {
-            left *= 2.0;
-            right *= 2.0;
-        }
         setLeft(mode, left, demandType, leftFeedforward);
         setRight(mode, right, demandType, rightFeedforward);
     }
@@ -194,7 +186,7 @@ public class Drive extends Subsystem {
         driveRightMaster.set(mode, -right, demandType, -rightFeedforward);
     }
 
-    public void outputToSmartdashboard() {
+    public void outputToDashboard() {
         driveRobotStateEstimator.outputToSmartDashboard();
         SmartDashboard.putNumber("Raw angle", getAngularPosition());
         SmartDashboard.putNumber("Encoder left", getLeftEncoderDistance());

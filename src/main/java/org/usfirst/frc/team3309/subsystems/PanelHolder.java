@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3309.subsystems;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
@@ -9,9 +10,15 @@ public class PanelHolder extends Subsystem {
     private Solenoid jointedSolenoid;
     private Solenoid extendingSolenoid;
 
+    private DigitalInput bumperSensor;
+
     public PanelHolder() {
         jointedSolenoid = new Solenoid(Constants.PANEL_HOLDER_EXTENDING_SOLENOID_ID);
         extendingSolenoid = new Solenoid(Constants.PANEL_HOLDER_TELESCOPING_SOLENOID_ID);
+        bumperSensor = new DigitalInput(Constants.PANEL_HOLDER_BUMPER_SENSOR_PORT);
+        addChild(jointedSolenoid);
+        addChild(extendingSolenoid);
+        addChild(bumperSensor);
     }
 
     /*
@@ -52,7 +59,7 @@ public class PanelHolder extends Subsystem {
 
     public JointedPosition getJointedPosition() {
         boolean isPointing = jointedSolenoid.get();
-        if (isPointing) {
+        if (isPointing == JointedPosition.PointingOutwards.get()) {
             return JointedPosition.PointingOutwards;
         } else {
             return JointedPosition.Vertical;
@@ -61,7 +68,7 @@ public class PanelHolder extends Subsystem {
 
     public ExtendedPosition getExtendedPosition() {
         boolean isExtended = extendingSolenoid.get();
-        if (isExtended) {
+        if (isExtended == ExtendedPosition.ExtendedOutwards.get()) {
             return ExtendedPosition.ExtendedOutwards;
         } else {
             return ExtendedPosition.RetractedInwards;
@@ -69,19 +76,15 @@ public class PanelHolder extends Subsystem {
     }
 
     private void setJointedSolenoid(JointedPosition position) {
-        if (position == JointedPosition.PointingOutwards) {
-            jointedSolenoid.set(true);
-        } else if (position == JointedPosition.Vertical) {
-            jointedSolenoid.set(false);
-        }
+        jointedSolenoid.set(position.get());
     }
 
     private void setExtendingSolenoid(ExtendedPosition position) {
-        if (position == ExtendedPosition.ExtendedOutwards) {
-            extendingSolenoid.set(true);
-        } else if (position == ExtendedPosition.RetractedInwards) {
-            extendingSolenoid.set(false);
-        }
+       extendingSolenoid.set(position.get());
+    }
+
+    public boolean isBumperPressed() {
+        return bumperSensor.get();
     }
 
     public enum PanelHolderPosition {
@@ -92,13 +95,33 @@ public class PanelHolder extends Subsystem {
     }
 
     public enum JointedPosition {
-        PointingOutwards,
-        Vertical,
+        PointingOutwards(true),
+        Vertical(false);
+
+        private boolean value;
+
+        JointedPosition(boolean value) {
+            this.value = value;
+        }
+
+        public boolean get() {
+            return value;
+        }
     }
 
     public enum ExtendedPosition {
-        ExtendedOutwards,
-        RetractedInwards,
+        ExtendedOutwards(true),
+        RetractedInwards(false);
+
+        private boolean value;
+
+        ExtendedPosition(boolean value){
+            this.value = value;
+        }
+
+        public boolean get(){
+            return value;
+        }
     }
 
 }

@@ -6,9 +6,9 @@ import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team4322.commandv2.Command;
 
-public class PanelIntakeRollersManual extends Command {
+public class PanelIntakeManual extends Command {
 
-    public PanelIntakeRollersManual() {
+    public PanelIntakeManual() {
         require(Robot.panelIntake);
     }
 
