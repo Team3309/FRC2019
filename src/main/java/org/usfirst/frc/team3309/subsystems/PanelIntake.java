@@ -19,7 +19,7 @@ public class PanelIntake extends Subsystem {
     public PanelIntake() {
         sharpSensor = new AnalogInput(Constants.PANEL_INTAKE_SENSOR_PORT);
         intakeMotor = new WPI_VictorSPX(Constants.PANEL_INTAKE_VICTOR_ID);
-        solenoid = new Solenoid(Constants.PANEL_INTAKE_HOLDER_ID);
+        solenoid = new Solenoid(Constants.PANEL_INTAKE_SOLENOID_ID);
 
         intakeMotor.configFactoryDefault();
 
