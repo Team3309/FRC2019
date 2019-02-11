@@ -68,8 +68,8 @@ public class Constants {
     /**
      * Elevator Mappings
      */
-    public static final int LIFT_MASTER_TALON_ID = 0;
-    public static final int LIFT_SLAVE_VICTOR_ID = 0;
+    public static final int LIFT_MASTER_TALON_ID = 20;
+    public static final int LIFT_SLAVE_VICTOR_ID = 21;
 
     public static final double LIFT_P = 0.0;
     public static final double LIFT_I = 0.0;
@@ -87,7 +87,7 @@ public class Constants {
     // [0, 1], manual elevator speed
     public static final double LIFT_NUDGE_SPEED = 0;
 
-    public static final int WRIST_TALON_ID = 0;
+    public static final int WRIST_TALON_ID = 22;
 
     public static final double WRIST_P = 0.0;
     public static final double WRIST_I = 0.0;
@@ -102,16 +102,16 @@ public class Constants {
     /**
      * Cargo intake mappings
      */
-    public static final int CARGO_INTAKE_VICTOR_ID = 0;
-    public static final int CARGO_INTAKE_SOLENOID_ID = 0;
+    public static final int CARGO_INTAKE_VICTOR_ID = 30;
+    public static final int CARGO_INTAKE_SOLENOID_ID = 6;
 
     public static final double CARGO_INTAKE_ROLLERS_MIN_POWER = 0.1;
 
     /**
      * Panel intake mappings
      */
-    public static final int PANEL_INTAKE_VICTOR_ID = 0;
-    public static final int PANEL_INTAKE_HOLDER_ID = 0;
+    public static final int PANEL_INTAKE_VICTOR_ID = 40;
+    public static final int PANEL_INTAKE_SOLENOID_ID = 5;
     public static final int PANEL_INTAKE_SENSOR_PORT = 0;
 
     public static final double PANEL_INTAKE_MIN_POWER = 0.1;
@@ -119,17 +119,17 @@ public class Constants {
     /**
      * Cargo launcher mappings
      */
-    public static final int CARGO_HOLDER_VICTOR_ID = 0;
-    public static final int CARGO_HOLDER_BUMPER_PORT = 0;
+    public static final int CARGO_HOLDER_VICTOR_ID = 50;
+    public static final int CARGO_HOLDER_BUMPER_PORT = 1;
 
     public static final double CARGO_LAUNCHER_ROLLERS_MIN_POWER = 0.1;
 
     /**
      * Panel placer mappings
      */
-    public static final int PANEL_HOLDER_EXTENDING_SOLENOID_ID = 0;
-    public static final int PANEL_HOLDER_TELESCOPING_SOLENOID_ID = 0;
-    public static final int PANEL_HOLDER_BUMPER_SENSOR_PORT = 0;
+    public static final int PANEL_HOLDER_EXTENDING_SOLENOID_ID = 4;
+    public static final int PANEL_HOLDER_TELESCOPING_SOLENOID_ID = 3;
+    public static final int PANEL_HOLDER_BUMPER_SENSOR_PORT = 2;
 
     /**
      * ROBOT PHYSICAL CONSTANTS
