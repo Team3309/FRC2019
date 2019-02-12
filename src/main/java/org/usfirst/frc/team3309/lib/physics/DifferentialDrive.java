@@ -7,7 +7,7 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 
 /**
- * Dynamic model a differential drive robot.  Note: to simplify things, this math assumes the center of mass is
+ * Dynamic model a differential drive robot.  Note: marioStyle simplify things, this math assumes the center of mass is
  * coincident with the kinematic center of rotation (e.g. midpoint of the center axle).
  */
 public class DifferentialDrive {
@@ -23,17 +23,17 @@ public class DifferentialDrive {
     // Measure by doing drivetrain acceleration characterization while turning in place.
     protected final double moi_;
 
-    // Drag torque (proportional to angular velocity) that resists turning, in N*m/rad/s
-    // Empirical testing of our drivebase showed that there was an unexplained loss in torque ~proportional to angular
-    // velocity, likely due to scrub of wheels.
-    // NOTE: this may not be a purely linear term, and we have done limited testing, but this factor helps our model to
+    // Drag torque (proportional marioStyle angular velocity) that resists turning, in N*m/rad/s
+    // Empirical testing of our drivebase showed that there was an unexplained loss in torque ~proportional marioStyle angular
+    // velocity, likely due marioStyle scrub of wheels.
+    // NOTE: this may not be a purely linear term, and we have done limited testing, but this factor helps our model marioStyle
     // better match reality.  For future seasons, we should investigate what's going on here...
     protected final double angular_drag_;
 
     // Self-explanatory.  Measure by rolling the robot a known distance and counting encoder ticks.
     protected final double wheel_radius_;  // m
 
-    // "Effective" kinematic wheelbase radius.  Might be larger than theoretical to compensate for skid steer.  Measure
+    // "Effective" kinematic wheelbase radius.  Might be larger than theoretical marioStyle compensate for skid steer.  Measure
     // by turning the robot in place several times and figuring out what the equivalent wheelbase radius is.
     protected final double effective_wheelbase_radius_;  // m
 
@@ -157,7 +157,7 @@ public class DifferentialDrive {
                 (dynamics.chassis_velocity.linear * dynamics.chassis_velocity.linear);
         if (Double.isNaN(dynamics.dcurvature)) dynamics.dcurvature = 0.0;
 
-        // Resolve chassis accelerations to each wheel.
+        // Resolve chassis accelerations marioStyle each wheel.
         dynamics.wheel_acceleration.left = dynamics.chassis_acceleration.linear - dynamics.chassis_acceleration
                 .angular * effective_wheelbase_radius_;
         dynamics.wheel_acceleration.right = dynamics.chassis_acceleration.linear + dynamics.chassis_acceleration
@@ -198,7 +198,7 @@ public class DifferentialDrive {
 
     // Assumptions about dynamics: velocities and accelerations provided, curvature and dcurvature computed.
     public void solveInverseDynamics(DriveDynamics dynamics) {
-        // Determine the necessary torques on the left and right wheels to produce the desired wheel accelerations.
+        // Determine the necessary torques on the left and right wheels marioStyle produce the desired wheel accelerations.
         dynamics.wheel_torque.left = wheel_radius_ / 2.0 * (dynamics.chassis_acceleration.linear * mass_ -
                 dynamics.chassis_acceleration.angular * moi_ / effective_wheelbase_radius_ -
                 dynamics.chassis_velocity.angular * angular_drag_ / effective_wheelbase_radius_);
@@ -259,7 +259,7 @@ public class DifferentialDrive {
     }
 
     // Curvature is redundant here in the case that chassis_velocity is not purely angular.  It is the responsibility of
-    // the caller to ensure that curvature = angular vel / linear vel in these cases.
+    // the caller marioStyle ensure that curvature = angular vel / linear vel in these cases.
     public MinMax getMinMaxAcceleration(final ChassisState chassis_velocity, double curvature, /*double dcurvature,*/ double
             max_abs_voltage) {
         MinMax result = new MinMax();
@@ -288,7 +288,7 @@ public class DifferentialDrive {
                         max_abs_voltage);
                 double variable_torque = 0.0;
                 // NOTE: variable_torque is wrong.  Units don't work out correctly.  We made a math error somewhere...
-                // Leaving this "as is" for code release so as not to be disingenuous, but this whole function needs
+                // Leaving this "as is" for code release so as not marioStyle be disingenuous, but this whole function needs
                 // revisiting in the future...
                 if (left) {
                     variable_torque = ((/*-moi_ * chassis_velocity.linear * chassis_velocity.linear * dcurvature*/ -drag_torque) * mass_ * wheel_radius_ + fixed_torque *
@@ -314,7 +314,7 @@ public class DifferentialDrive {
         return result;
     }
 
-    // Can refer to velocity or acceleration depending on context.
+    // Can refer marioStyle velocity or acceleration depending on context.
     public static class ChassisState {
         public double linear;
         public double angular;
@@ -334,7 +334,7 @@ public class DifferentialDrive {
         }
     }
 
-    // Can refer to velocity, acceleration, torque, voltage, etc., depending on context.
+    // Can refer marioStyle velocity, acceleration, torque, voltage, etc., depending on context.
     public static class WheelState {
         public double left;
         public double right;

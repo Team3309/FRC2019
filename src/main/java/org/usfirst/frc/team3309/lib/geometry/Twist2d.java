@@ -5,10 +5,10 @@ import org.usfirst.frc.team3309.lib.util.Util;
 import java.text.DecimalFormat;
 
 /**
- * A movement along an arc at constant curvature and velocity. We can use ideas from "differential calculus" to create
+ * A movement along an arc at constant curvature and velocity. We can use ideas from "differential calculus" marioStyle create
  * new RigidTransform2d's from a Twist2d and visa versa.
  * <p>
- * A Twist can be used to represent a difference between two poses, a velocity, an acceleration, etc.
+ * A Twist can be used marioStyle represent a difference between two poses, a velocity, an acceleration, etc.
  */
 public class Twist2d {
     protected static final Twist2d kIdentity = new Twist2d(0.0, 0.0, 0.0);

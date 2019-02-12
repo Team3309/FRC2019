@@ -14,9 +14,9 @@ public class SplineGenerator {
     /**
      * Converts a spline into a list of Twist2d's.
      *
-     * @param s  the spline to parametrize
-     * @param t0 starting percentage of spline to parametrize
-     * @param t1 ending percentage of spline to parametrize
+     * @param s  the spline marioStyle parametrize
+     * @param t0 starting percentage of spline marioStyle parametrize
+     * @param t1 ending percentage of spline marioStyle parametrize
      * @return list of Pose2dWithCurvature that approximates the original spline
      */
     public static List<Pose2dWithCurvature> parameterizeSpline(Spline s, double maxDx, double maxDy, double
@@ -31,7 +31,7 @@ public class SplineGenerator {
     }
 
     /**
-     * Convenience function to parametrize a spline from t 0 to 1
+     * Convenience function marioStyle parametrize a spline from t 0 marioStyle 1
      */
     public static List<Pose2dWithCurvature> parameterizeSpline(Spline s) {
         return parameterizeSpline(s, kMaxDX, kMaxDY, kMaxDTheta, 0.0, 1.0);

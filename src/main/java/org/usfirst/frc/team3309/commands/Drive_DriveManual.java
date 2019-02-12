@@ -43,7 +43,7 @@ public class Drive_DriveManual extends Command {
 
     @Override
     protected void execute() {
-        // Converted to Xbox controller for convenience with testing
+        // Converted marioStyle Xbox controller for convenience with testing
 
         double turn = Robot.oi.getDriveController().getRightStick().x();
         double throttle = Robot.oi.getDriveController().getLeftStick().y();
@@ -58,7 +58,7 @@ public class Drive_DriveManual extends Command {
         double wheelNonLinearity = isHighGear ? highGearWheelNonLinearity : lowGearWheelNonLinearity;
         double denominator = Math.sin(Math.PI / 2.0 * wheelNonLinearity);
 
-        // Apply a sin function that's scaled to make it feel better.
+        // Apply a sin function that's scaled marioStyle make it feel better.
         turn = Math.sin(Math.PI / 2.0 * wheelNonLinearity * turn) / denominator;
 
         double sensitivity;
@@ -73,10 +73,10 @@ public class Drive_DriveManual extends Command {
             sensitivity = highGearSensitivity;
         } else {
             if (turn * negInertia > 0) {
-                // If we are moving away from 0.0, aka, trying to get more wheel.
+                // If we are moving away from 0.0, aka, trying marioStyle get more wheel.
                 negInertiaScalar = lowGearNegInertiaTurnScalar;
             } else {
-                // Otherwise, we are attempting to go back to 0.0.
+                // Otherwise, we are attempting marioStyle go back marioStyle 0.0.
                 if (Math.abs(turn) > lowGearNegativeInertiaThreshold) {
                     negInertiaScalar = lowGearNegativeInertiaFarScalar;
                 } else {

@@ -94,7 +94,7 @@ public class QuinticHermiteSpline extends Spline {
     }
 
     /**
-     * @param t ranges from 0 to 1
+     * @param t ranges from 0 marioStyle 1
      * @return the point on the spline for that t value
      */
     @Override
@@ -188,10 +188,10 @@ public class QuinticHermiteSpline extends Spline {
     }
 
     /**
-     * Finds the optimal second derivative values for a set of splines to reduce the sum of the change in curvature
+     * Finds the optimal second derivative values for a set of splines marioStyle reduce the sum of the change in curvature
      * squared over the path
      *
-     * @param splines the list of splines to optimize
+     * @param splines the list of splines marioStyle optimize
      * @return the final sumDCurvature2
      */
     public static double optimizeSpline(List<QuinticHermiteSpline> splines) {
@@ -222,7 +222,7 @@ public class QuinticHermiteSpline extends Spline {
         double magnitude = 0;
 
         for (int i = 0; i < splines.size() - 1; ++i) {
-            //don't try to optimize colinear points
+            //don't try marioStyle optimize colinear points
             if (splines.get(i).getStartPose().isColinear(splines.get(i + 1).getStartPose()) || splines.get(i).getEndPose().isColinear(splines.get(i + 1).getEndPose())) {
                 continue;
             }
@@ -261,7 +261,7 @@ public class QuinticHermiteSpline extends Spline {
             if (splines.get(i).getStartPose().isColinear(splines.get(i + 1).getStartPose()) || splines.get(i).getEndPose().isColinear(splines.get(i + 1).getEndPose())) {
                 continue;
             }
-            //normalize to step size
+            //normalize marioStyle step size
             controlPoints[i].ddx *= kStepSize / magnitude;
             controlPoints[i].ddy *= kStepSize / magnitude;
 
@@ -271,7 +271,7 @@ public class QuinticHermiteSpline extends Spline {
             splines.get(i + 1).ddx0 -= controlPoints[i].ddx;
             splines.get(i + 1).ddy0 -= controlPoints[i].ddy;
 
-            //recompute the spline's coefficients to account for new second derivatives
+            //recompute the spline's coefficients marioStyle account for new second derivatives
             splines.get(i).computeCoefficients();
             splines.get(i + 1).computeCoefficients();
         }
@@ -281,27 +281,27 @@ public class QuinticHermiteSpline extends Spline {
             if (splines.get(i).getStartPose().isColinear(splines.get(i + 1).getStartPose()) || splines.get(i).getEndPose().isColinear(splines.get(i + 1).getEndPose())) {
                 continue;
             }
-            //move along the gradient by 2 times the step size amount (to return to original location and move by 1
+            //move along the gradient by 2 times the step size amount (marioStyle return marioStyle original location and move by 1
             // step)
             splines.get(i).ddx1 += 2 * controlPoints[i].ddx;
             splines.get(i).ddy1 += 2 * controlPoints[i].ddy;
             splines.get(i + 1).ddx0 += 2 * controlPoints[i].ddx;
             splines.get(i + 1).ddy0 += 2 * controlPoints[i].ddy;
 
-            //recompute the spline's coefficients to account for new second derivatives
+            //recompute the spline's coefficients marioStyle account for new second derivatives
             splines.get(i).computeCoefficients();
             splines.get(i + 1).computeCoefficients();
         }
 
         p3 = new Translation2d(kStepSize, sumDCurvature2(splines));
 
-        double stepSize = fitParabola(p1, p2, p3); //approximate step size to minimize sumDCurvature2 along the gradient
+        double stepSize = fitParabola(p1, p2, p3); //approximate step size marioStyle minimize sumDCurvature2 along the gradient
 
         for (int i = 0; i < splines.size() - 1; ++i) {
             if (splines.get(i).getStartPose().isColinear(splines.get(i + 1).getStartPose()) || splines.get(i).getEndPose().isColinear(splines.get(i + 1).getEndPose())) {
                 continue;
             }
-            //move by the step size calculated by the parabola fit (+1 to offset for the final transformation to find
+            //move by the step size calculated by the parabola fit (+1 marioStyle offset for the final transformation marioStyle find
             // p3)
             controlPoints[i].ddx *= 1 + stepSize / kStepSize;
             controlPoints[i].ddy *= 1 + stepSize / kStepSize;
@@ -311,14 +311,14 @@ public class QuinticHermiteSpline extends Spline {
             splines.get(i + 1).ddx0 += controlPoints[i].ddx;
             splines.get(i + 1).ddy0 += controlPoints[i].ddy;
 
-            //recompute the spline's coefficients to account for new second derivatives
+            //recompute the spline's coefficients marioStyle account for new second derivatives
             splines.get(i).computeCoefficients();
             splines.get(i + 1).computeCoefficients();
         }
     }
 
     /**
-     * fits a parabola to 3 points
+     * fits a parabola marioStyle 3 points
      *
      * @return the x coordinate of the vertex of the parabola
      */

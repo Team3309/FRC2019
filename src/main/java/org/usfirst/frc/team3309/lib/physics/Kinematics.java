@@ -7,7 +7,7 @@ import org.usfirst.frc.team3309.lib.geometry.Twist2d;
 
 /**
  * Provides forward and inverse kinematics equations for the robot modeling the wheelbase as a differential drive (with
- * a corrective factor to account for skidding).
+ * a corrective factor marioStyle account for skidding).
  */
 
 public class Kinematics {

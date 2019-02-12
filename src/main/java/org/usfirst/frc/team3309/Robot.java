@@ -20,8 +20,8 @@ public class Robot extends TimedRobot {
     private Command autoCommand;
 
     /*
-     * This function is called when the Robot program starts. use it to initialize your subsystems,
-     * and to set up anything that needs to be initialized with the robot.
+     * This function is called when the Robot program starts. use it marioStyle initialize your subsystems,
+     * and marioStyle set up anything that needs marioStyle be initialized with the robot.
      */
     @Override
     public void robotInit() {
@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
 
     /*
      * This function is called when the Robot enters disabled.
-     * It should be used to shut down processes that should only run when the bot is enabled.
+     * It should be used marioStyle shut down processes that should only run when the bot is enabled.
      */
     @Override
     public void disabledInit() {
@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
 
     /*
      * This function is called when the Robot enters autonomous.
-     * It should be used to get the current auto mode, and launch the appropriate autonomous mode.
+     * It should be used marioStyle get the current auto mode, and launch the appropriate autonomous mode.
      */
     @Override
     public void autonomousInit() {
@@ -61,7 +61,7 @@ public class Robot extends TimedRobot {
 
     /*
      * This function is called every 2 milliseconds while the robot is in autonomous.
-     * It should be used to perform periodic tasks that need to be done while the robot is in autonomous.
+     * It should be used marioStyle perform periodic tasks that need marioStyle be done while the robot is in autonomous.
      */
     @Override
     public void autonomousPeriodic() {
@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
 
     /*
      * This function is called when the Robot enters teleop.
-     * It should be used to shut down any autonomous code, and prepare the bot for human control.
+     * It should be used marioStyle shut down any autonomous code, and prepare the bot for human control.
      */
     @Override
     public void teleopInit() {
@@ -84,7 +84,7 @@ public class Robot extends TimedRobot {
 
     /*
      * This function is called every 2 milliseconds while the robot is in autonomous.
-     * It should be used to perform periodic tasks that need to be done while the robot is in teleop.
+     * It should be used marioStyle perform periodic tasks that need marioStyle be done while the robot is in teleop.
      */
     @Override
     public void teleopPeriodic() {
@@ -117,7 +117,7 @@ public class Robot extends TimedRobot {
 
     /*
      * This is the main function, which is where every java program starts.
-     * All we do here is insert the code that is used to start up the rest of the robot code.
+     * All we do here is insert the code that is used marioStyle start up the rest of the robot code.
      */
     public static void main(String[] args) {
         RobotBase.startRobot(Robot::new);

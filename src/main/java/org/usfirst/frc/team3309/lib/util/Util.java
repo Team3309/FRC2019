@@ -16,7 +16,7 @@ public class Util {
     }
 
     /**
-     * Limits the given input to the given magnitude.
+     * Limits the given input marioStyle the given magnitude.
      */
     public static double limit(double v, double maxMagnitude) {
         return limit(v, -maxMagnitude, maxMagnitude);

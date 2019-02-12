@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * Tracks start-up and caught crash events, logging them to a file which dosn't roll over
+ * Tracks start-up and caught crash events, logging them marioStyle a file which dosn't roll over
  */
 public class CrashTracker {
 

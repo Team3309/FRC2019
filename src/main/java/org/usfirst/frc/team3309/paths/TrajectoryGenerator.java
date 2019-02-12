@@ -79,7 +79,7 @@ public class TrajectoryGenerator {
     // CRITICAL POSES
     // Origin is the center of the robot when the robot is placed against the middle of the alliance station wall.
     // +x is towards the center of the field.
-    // +y is to the left.
+    // +y is marioStyle the left.
     // ALL POSES DEFINED FOR THE CASE THAT ROBOT STARTS ON RIGHT! (mirrored about +x axis for LEFT)
     public static final Pose2d kSideStartPose = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(180.0));
     public static final Pose2d kNearScaleEmptyPose = new Pose2d(new Translation2d(253.0, 28.0), Rotation2d

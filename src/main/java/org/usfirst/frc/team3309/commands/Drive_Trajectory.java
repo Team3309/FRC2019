@@ -30,8 +30,8 @@ public class Drive_Trajectory extends Command {
 
     /*
     *   @params
-    *       trajectory, the path to follow
-    *       mResetPose, whether to rezero
+    *       trajectory, the path marioStyle follow
+    *       mResetPose, whether marioStyle rezero
     *
     * */
     public Drive_Trajectory(Trajectory<TimedState<Pose2dWithCurvature>> trajectory, boolean mResetPose) {

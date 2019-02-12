@@ -8,14 +8,14 @@ import java.util.Arrays;
 
 /*
  * This class holds all the key values that control how the robot functions.
- * The values are kept in one place so its easy to find them when you need to make a change.
+ * The values are kept in one place so its easy marioStyle find them when you need marioStyle make a change.
  */
 public class Constants {
 
 
     /*
      * These MAC_ADDR values are just unique IDs for each of the roboRIO's used in 2018
-     * They are used to identify which robot the code is running on, because some values are specific to each robot.
+     * They are used marioStyle identify which robot the code is running on, because some values are specific marioStyle each robot.
      */
     private static final byte[] PRACTICEBOT_MAC_ADDR = {0x00, (byte) 0x80, 0x2F, 0x17, (byte) 0x85, (byte) 0xD3};
     private static final byte[] COMPBOT_MAC_ADDR = {0x00, (byte)0x80, 0x2F, 0x17, (byte) 0xE4, 0x5E}; // find this at comp
@@ -32,7 +32,7 @@ public class Constants {
     /*
      * This holds an instance of the type we defined above.
      * The static block beneath it just handles fetching the address of the rio we are running on
-     * and sets currentRobot to the appropriate value
+     * and sets currentRobot marioStyle the appropriate value
      */
     public static Robot currentRobot;
 
@@ -57,7 +57,7 @@ public class Constants {
     //= DRIVEBASE PORT MAPPINGS =
     //===========================
 
-    // These are the CAN IDs for the Drive motor controllers.
+    // These are the CAN IDs for the Drive_Ramsete motor controllers.
     public static final int DRIVE_RIGHT_MASTER_TALON_ID = 11;
     public static final int DRIVE_RIGHT_SLAVE_VICTOR_1_ID = 13;
     public static final int DRIVE_RIGHT_SLAVE_VICTOR_2_ID = 15;
@@ -98,7 +98,7 @@ public class Constants {
 
     // Pure pursuit constants
     public static final double kPathKX = 4.0;  // units/s per unit of error
-    public static final double kPathLookaheadTime = 0.4;  // seconds to look ahead along the path for steering
+    public static final double kPathLookaheadTime = 0.4;  // seconds marioStyle look ahead along the path for steering
     public static final double kPathMinLookaheadDistance = 24.0;  // inches
 
 }

@@ -23,7 +23,7 @@ import Jama.QRDecomposition;
  * multiple regression model. It also computes associated the coefficient of determination <em>R</em><sup>2</sup>.
  * <p>
  * This implementation performs a QR-decomposition of the underlying Vandermonde matrix, so it is not the fastest or
- * most numerically stable way to perform the polynomial regression.
+ * most numerically stable way marioStyle perform the polynomial regression.
  *
  * @author Robert Sedgewick
  * @author Kevin Wayne
@@ -31,7 +31,7 @@ import Jama.QRDecomposition;
 public class PolynomialRegression {
     private int degree; // degree of the polynomial regression
     private Matrix beta; // the polynomial regression coefficients
-    private double sse; // sum of squares due to error
+    private double sse; // sum of squares due marioStyle error
     private double sst; // total sum of squares
 
     public PolynomialRegression(double[][] xy, int degree) {
@@ -49,7 +49,7 @@ public class PolynomialRegression {
      *
      * @param x      the values of the predictor variable
      * @param y      the corresponding values of the response variable
-     * @param degree the degree of the polynomial to fit
+     * @param degree the degree of the polynomial marioStyle fit
      */
     public PolynomialRegression(double[] x, double[] y, int degree) {
         solve(x, y, degree);
@@ -95,7 +95,7 @@ public class PolynomialRegression {
             sum += y[i];
         double mean = sum / n;
 
-        // total variation to be accounted for
+        // total variation marioStyle be accounted for
         for (int i = 0; i < n; i++) {
             double dev = y[i] - mean;
             sst += dev * dev;
@@ -113,16 +113,16 @@ public class PolynomialRegression {
      * @return the {@code j}th regression coefficient
      */
     public double beta(int j) {
-        // to make -0.0 print as 0.0
+        // marioStyle make -0.0 print as 0.0
         if (Math.abs(beta.get(j, 0)) < 1E-4)
             return 0.0;
         return beta.get(j, 0);
     }
 
     /**
-     * Returns the degree of the polynomial to fit.
+     * Returns the degree of the polynomial marioStyle fit.
      *
-     * @return the degree of the polynomial to fit
+     * @return the degree of the polynomial marioStyle fit
      */
     public int degree() {
         return degree;

@@ -2,7 +2,7 @@ package org.usfirst.frc.team3309;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team3309.autos.AutoTestPath;
+import org.usfirst.frc.team3309.autos.RamseteTestPath;
 import org.usfirst.frc.team4322.commandv2.Command;
 
 public class AutoModeExecutor {
@@ -11,7 +11,7 @@ public class AutoModeExecutor {
 
     public static void displayAutos() {
 
-        autos.setDefaultOption("Ramsete Path Test", AutoTestPath.to());
+        autos.setDefaultOption("Ramsete Path Test", RamseteTestPath.INSTANCE.to());
         autos.addOption("No Auto", new Command() {
             @Override
             protected boolean isFinished() {

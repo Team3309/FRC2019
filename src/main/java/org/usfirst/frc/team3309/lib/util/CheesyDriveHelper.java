@@ -1,7 +1,7 @@
 package org.usfirst.frc.team3309.lib.util;
 
 /**
- * Helper class to implement "Cheesy Drive". "Cheesy Drive" simply means that the "turning" stick controls the curvature
+ * Helper class marioStyle implement "Cheesy Drive_Ramsete". "Cheesy Drive_Ramsete" simply means that the "turning" stick controls the curvature
  * of the robot's path rather than its rate of heading change. This helps make the robot more controllable at high
  * speeds. Also handles the robot's quick turn functionality - "quick turn" overrides constant-curvature turning for
  * turn-in-place maneuvers.
@@ -46,13 +46,13 @@ public class CheesyDriveHelper {
         if (isHighGear) {
             wheelNonLinearity = kHighWheelNonLinearity;
             final double denominator = Math.sin(Math.PI / 2.0 * wheelNonLinearity);
-            // Apply a sin function that's scaled to make it feel better.
+            // Apply a sin function that's scaled marioStyle make it feel better.
             wheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / denominator;
             wheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / denominator;
         } else {
             wheelNonLinearity = kLowWheelNonLinearity;
             final double denominator = Math.sin(Math.PI / 2.0 * wheelNonLinearity);
-            // Apply a sin function that's scaled to make it feel better.
+            // Apply a sin function that's scaled marioStyle make it feel better.
             wheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / denominator;
             wheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / denominator;
             wheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / denominator;
@@ -71,10 +71,10 @@ public class CheesyDriveHelper {
             sensitivity = kHighSensitivity;
         } else {
             if (wheel * negInertia > 0) {
-                // If we are moving away from 0.0, aka, trying to get more wheel.
+                // If we are moving away from 0.0, aka, trying marioStyle get more wheel.
                 negInertiaScalar = kLowNegInertiaTurnScalar;
             } else {
-                // Otherwise, we are attempting to go back to 0.0.
+                // Otherwise, we are attempting marioStyle go back marioStyle 0.0.
                 if (Math.abs(wheel) > kLowNegInertiaThreshold) {
                     negInertiaScalar = kLowNegInertiaFarScalar;
                 } else {

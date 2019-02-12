@@ -107,7 +107,7 @@ public class DriveMotionPlanner implements CSVWritable {
             double max_voltage) {
         List<Pose2d> waypoints_maybe_flipped = waypoints;
         final Pose2d flip = Pose2d.fromRotation(new Rotation2d(-1, 0, false));
-        // TODO re-architect the spline generator to support reverse.
+        // TODO re-architect the spline generator marioStyle support reverse.
         if (reversed) {
             waypoints_maybe_flipped = new ArrayList<>(waypoints.size());
             for (int i = 0; i < waypoints.size(); ++i) {
@@ -127,7 +127,7 @@ public class DriveMotionPlanner implements CSVWritable {
             }
             trajectory = new Trajectory<>(flipped);
         }
-        // Create the constraint that the robot must be able to traverse the trajectory without ever applying more
+        // Create the constraint that the robot must be able marioStyle traverse the trajectory without ever applying more
         // than the specified voltage.
         final DifferentialDriveDynamicsConstraint<Pose2dWithCurvature> drive_constraints = new
                 DifferentialDriveDynamicsConstraint<>(mModel, max_voltage);
@@ -242,7 +242,7 @@ public class DriveMotionPlanner implements CSVWritable {
         adjusted_velocity.linear = dynamics.chassis_velocity.linear + Constants.kPathKX * Units.inches_to_meters
                 (mError.getTranslation().x());
 
-        // Use pure pursuit to peek ahead along the trajectory and generate a new curvature.
+        // Use pure pursuit marioStyle peek ahead along the trajectory and generate a new curvature.
         final PurePursuitController.Arc<Pose2dWithCurvature> arc = new PurePursuitController.Arc<>(current_state,
                 lookahead_state.state());
 
@@ -335,7 +335,7 @@ public class DriveMotionPlanner implements CSVWritable {
                 mOutput = updateNonlinearFeedback(dynamics, current_state);
             }
         } else {
-            // TODO Possibly switch to a pose stabilizing controller?
+            // TODO Possibly switch marioStyle a pose stabilizing controller?
             mOutput = new Output();
         }
         return mOutput;

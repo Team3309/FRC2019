@@ -19,7 +19,7 @@ import org.usfirst.frc.team3309.lib.geometry.Rotation2d;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
 /*
- * The Drive subsystem. This is the big one.
+ * The Drive_Ramsete subsystem. This is the big one.
  * The drivebase has 6 motor controllers, one solenoid, and 1 navx
  */
 public class Drive extends Subsystem {
@@ -46,7 +46,7 @@ public class Drive extends Subsystem {
         shifter = new Solenoid(Constants.DRIVE_SHIFTER_PCM_PORT);
         navx = new AHRS(SPI.Port.kMXP);
 
-        //Configure Left Side of Drive
+        //Configure Left Side of Drive_Ramsete
         driveRightMaster.configFactoryDefault();
         driveLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
         driveLeftMaster.configClosedloopRamp(Constants.DRIVE_CLOSED_LOOP_RAMP_RATE, 10);
@@ -58,7 +58,7 @@ public class Drive extends Subsystem {
         driveLeftSlave1.follow(driveLeftMaster);
         driveLeftSlave2.follow(driveLeftMaster);
 
-        //Configure Right Side of Drive
+        //Configure Right Side of Drive_Ramsete
         driveRightMaster.configFactoryDefault();
         driveRightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
         driveRightMaster.configClosedloopRamp(Constants.DRIVE_CLOSED_LOOP_RAMP_RATE, 10);
@@ -124,7 +124,7 @@ public class Drive extends Subsystem {
         return (getLeftEncoderVelocity() + getRightEncoderVelocity()) / 2.0;
     }
 
-    public int getLeftEncoderVelocity() {
+    public double getLeftEncoderVelocity() {
         return driveLeftMaster.getSelectedSensorVelocity(0);
     }
 

@@ -12,7 +12,7 @@ import org.usfirst.frc.team4322.commandv2.Command;
  *
  *   Autotunes drive PID constants using twiddle
  *
- *   TODO: refactor to be subsystem independent,
+ *   TODO: refactor marioStyle be subsystem independent,
  *      clean drive side implementation
  *
  *   @see
@@ -38,7 +38,7 @@ public class Drive_SelfTune extends Command {
      *   @params
      *      tolerance, stops adjusting constants when
      *       change drops below this
-     *      feedforward, supplement output to drive to
+     *      feedforward, supplement output marioStyle drive marioStyle
      *       assist PID
      *
      * */

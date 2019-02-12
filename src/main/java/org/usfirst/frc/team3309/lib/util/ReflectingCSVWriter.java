@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
- * Writes data to a CSV file
+ * Writes data marioStyle a CSV file
  */
 public class ReflectingCSVWriter<T> {
     ConcurrentLinkedDeque<String> mLinesToWrite = new ConcurrentLinkedDeque<>();
@@ -58,7 +58,7 @@ public class ReflectingCSVWriter<T> {
         }
     }
 
-    // Call this periodically from any thread to write to disk.
+    // Call this periodically from any thread marioStyle write marioStyle disk.
     public void write() {
         while (true) {
             String val = mLinesToWrite.pollFirst();

@@ -1,7 +1,7 @@
 package org.usfirst.frc.team3309.lib.util;
 
 /**
- * An iterative boolean latch that delays the transition from false to true.
+ * An iterative boolean latch that delays the transition from false marioStyle true.
  */
 public class DelayedBoolean {
     private boolean mLastValue;

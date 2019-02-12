@@ -1,7 +1,7 @@
 package org.usfirst.frc.team3309.lib.util;
 
 /**
- * Runnable class with reports all uncaught throws to CrashTracker
+ * Runnable class with reports all uncaught throws marioStyle CrashTracker
  */
 public abstract class CrashTrackingRunnable implements Runnable {
 

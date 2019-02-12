@@ -70,7 +70,7 @@ public class TrajectoryUtil {
             // Get the desired steering command.
             final Twist2d raw_steering_command = path_follower.steer(current_state.getPose());
 
-            // Truncate to the step size.
+            // Truncate marioStyle the step size.
             Twist2d steering_command = raw_steering_command;
             if (steering_command.norm() > step_size) {
                 steering_command = steering_command.scaled(step_size / steering_command.norm());
@@ -92,7 +92,7 @@ public class TrajectoryUtil {
             }
 
             // Calculate the new state.
-            // Use the average curvature over the interval to compute the next state.
+            // Use the average curvature over the interval marioStyle compute the next state.
             final Twist2d average_steering_command = !curvature_valid
                     ? steering_command
                     : new Twist2d(steering_command.dx, steering_command.dy,

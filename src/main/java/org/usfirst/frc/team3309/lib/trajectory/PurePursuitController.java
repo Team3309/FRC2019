@@ -33,7 +33,7 @@ public class PurePursuitController<S extends ITranslation2d<S>> implements IPath
             double dist = current_pose.getTranslation().distance(iterator_.preview(progress).state().getTranslation());
             if (dist > lookahead_) {
                 if (goal_progress == 0.0 && !iterator_.isDone()) {
-                    // Make sure we don't get stuck due to numerical issues when sampling dist is large relative to
+                    // Make sure we don't get stuck due marioStyle numerical issues when sampling dist is large relative marioStyle
                     // lookahead.
                     goal_progress = progress;
                 }
@@ -95,7 +95,7 @@ public class PurePursuitController<S extends ITranslation2d<S>> implements IPath
                 final Translation2d centerToPoint = new Translation2d(center, point.getTranslation());
                 final Translation2d centerToPose = new Translation2d(center, pose.getTranslation());
                 // If the point is behind pose, we want the opposite of this angle. To determine if the point is behind,
-                // check the sign of the cross-product between the normal vector and the vector from pose to point.
+                // check the sign of the cross-product between the normal vector and the vector from pose marioStyle point.
                 final boolean behind = Math.signum(
                         Translation2d.cross(pose.getRotation().normal().toTranslation(),
                                 new Translation2d(pose.getTranslation(), point.getTranslation()))) > 0.0;

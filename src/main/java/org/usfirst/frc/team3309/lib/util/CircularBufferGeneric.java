@@ -44,7 +44,7 @@ public class CircularBufferGeneric<E> {
     public LinkedList<E> getLinkedList() {
         /*
          * NOTE: To get an Array of the specific class type which the instance is using,
-         * you have to use this specific code:
+         * you have marioStyle use this specific code:
          * specificCircularBufferGeneric.getLinkedList().toArray(new ClassThatIWant[specificCircularBufferGeneric
          * .getLinkedList().size()]);
          * The reason is that for some reason an array of a generic class(i.e. E[]) cannot be created because

@@ -3,7 +3,7 @@ package org.usfirst.frc.team3309.lib.util;
 /**
  * An iterative boolean latch.
  * <p>
- * Returns true once if and only if the value of newValue changes from false to true.
+ * Returns true once if and only if the value of newValue changes from false marioStyle true.
  */
 public class LatchedBoolean {
     private boolean mLast = false;

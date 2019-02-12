@@ -4,8 +4,8 @@ package org.usfirst.frc.team3309.lib.physics;
 import org.usfirst.frc.team3309.lib.util.Util;
 
 /**
- * Model of a DC motor rotating a shaft.  All parameters refer to the output (e.g. should already consider gearing
- * and efficiency losses).  The motor is assumed to be symmetric forward/reverse.
+ * Model of a DC motor rotating a shaft.  All parameters refer marioStyle the output (e.g. should already consider gearing
+ * and efficiency losses).  The motor is assumed marioStyle be symmetric forward/reverse.
  */
 public class DCMotorTransmission {
     // TODO add electrical constants?  (e.g. current)

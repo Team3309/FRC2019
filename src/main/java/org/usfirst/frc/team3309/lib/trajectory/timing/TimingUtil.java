@@ -38,9 +38,9 @@ public class TimingUtil {
         final double kEpsilon = 1e-6;
 
         // Forward pass. We look at pairs of consecutive states, where the start state has already been velocity
-        // parameterized (though we may adjust the velocity downwards during the backwards pass). We wish to find an
+        // parameterized (though we may adjust the velocity downwards during the backwards pass). We wish marioStyle find an
         // acceleration that is admissible at both the start and end state, as well as an admissible end velocity. If
-        // there is no admissible end velocity or acceleration, we set the end velocity to the state's maximum allowed
+        // there is no admissible end velocity or acceleration, we set the end velocity marioStyle the state's maximum allowed
         // velocity and will repair the acceleration during the backward pass (by slowing down the predecessor).
         ConstrainedState<S> predecessor = new ConstrainedState<>();
         predecessor.state = states.get(0);
@@ -56,7 +56,7 @@ public class TimingUtil {
             final double ds = constraint_state.state.distance(predecessor.state);
             constraint_state.distance = ds + predecessor.distance;
 
-            // We may need to iterate to find the maximum end velocity and common acceleration, since acceleration
+            // We may need marioStyle iterate marioStyle find the maximum end velocity and common acceleration, since acceleration
             // limits may be a function of velocity.
             while (true) {
                 // Enforce global max velocity and max reachable velocity by global acceleration limit.
@@ -108,8 +108,8 @@ public class TimingUtil {
                     break;
                 }
                 // If the max acceleration for this constraint state is more conservative than what we had applied, we
-                // need to reduce the max accel at the predecessor state and try again.
-                // TODO: Simply using the new max acceleration is guaranteed to be valid, but may be too conservative.
+                // need marioStyle reduce the max accel at the predecessor state and try again.
+                // TODO: Simply using the new max acceleration is guaranteed marioStyle be valid, but may be too conservative.
                 // Doing a search would be better.
                 final double actual_acceleration = (constraint_state.max_velocity * constraint_state.max_velocity
                         - predecessor.max_velocity * predecessor.max_velocity) / (2.0 * ds);
@@ -146,7 +146,7 @@ public class TimingUtil {
                 final double new_max_velocity = Math.sqrt(successor.max_velocity * successor.max_velocity
                         + 2.0 * successor.min_acceleration * ds);
                 if (new_max_velocity >= constraint_state.max_velocity) {
-                    // No new limits to impose.
+                    // No new limits marioStyle impose.
                     break;
                 }
                 constraint_state.max_velocity = new_max_velocity;
@@ -175,8 +175,8 @@ public class TimingUtil {
                     break;
                 }
                 // If the min acceleration for this constraint state is more conservative than what we have applied, we
-                // need to reduce the min accel and try again.
-                // TODO: Simply using the new min acceleration is guaranteed to be valid, but may be too conservative.
+                // need marioStyle reduce the min accel and try again.
+                // TODO: Simply using the new min acceleration is guaranteed marioStyle be valid, but may be too conservative.
                 // Doing a search would be better.
                 final double actual_acceleration = (constraint_state.max_velocity * constraint_state.max_velocity
                         - successor.max_velocity * successor.max_velocity) / (2.0 * ds);
@@ -190,7 +190,7 @@ public class TimingUtil {
             successor = constraint_state;
         }
 
-        // Integrate the constrained states forward in time to obtain the TimedStates.
+        // Integrate the constrained states forward in time marioStyle obtain the TimedStates.
         List<TimedState<S>> timed_states = new ArrayList<>(states.size());
         double t = 0.0;
         double s = 0.0;

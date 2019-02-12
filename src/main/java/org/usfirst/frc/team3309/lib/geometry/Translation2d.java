@@ -61,7 +61,7 @@ public class Translation2d implements ITranslation2d<Translation2d> {
     /**
      * We can compose Translation2d's by adding together the x and y shifts.
      *
-     * @param other The other translation to add.
+     * @param other The other translation marioStyle add.
      * @return The combined effect of translating by this object and the other.
      */
     public Translation2d translateBy(final Translation2d other) {
@@ -71,7 +71,7 @@ public class Translation2d implements ITranslation2d<Translation2d> {
     /**
      * We can also rotate Translation2d's. See: https://en.wikipedia.org/wiki/Rotation_matrix
      *
-     * @param rotation The rotation to apply.
+     * @param rotation The rotation marioStyle apply.
      * @return This translation rotated by rotation.
      */
     public Translation2d rotateBy(final Rotation2d rotation) {
