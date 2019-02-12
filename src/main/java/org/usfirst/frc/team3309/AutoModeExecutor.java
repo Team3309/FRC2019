@@ -10,7 +10,6 @@ public class AutoModeExecutor {
     private static SendableChooser<Command> autos = new SendableChooser<>();
 
     public static void displayAutos() {
-
         autos.setDefaultOption("Ramsete Path Test", RamseteTestPath.INSTANCE.to());
         autos.addOption("No Auto", new Command() {
             @Override
