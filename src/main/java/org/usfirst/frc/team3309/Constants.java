@@ -130,7 +130,7 @@ public class Constants {
     public static final int PANEL_HOLDER_EXTENDING_SOLENOID_ID = 4;
     public static final int PANEL_HOLDER_TELESCOPING_SOLENOID_ID = 3;
     public static final int PANEL_HOLDER_BUMPER_SENSOR_PORT = 2;
-  
+
     /**
      * Climber mappings
      * */
