@@ -132,6 +132,12 @@ public class Constants {
     public static final int PANEL_HOLDER_BUMPER_SENSOR_PORT = 2;
 
     /**
+     * Climber mappings
+     * */
+    public static final int CLIMBER_TALON_ID = 60;
+    public static final int CLIMBER_LATCHING_SOLENOID_ID = 2;
+
+    /**
      * ROBOT PHYSICAL CONSTANTS
      */
     public static final double DRIVE_ENCODER_COUNTS_PER_REV = 4096 * 9.6;
