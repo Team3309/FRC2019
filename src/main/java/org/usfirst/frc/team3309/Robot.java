@@ -20,6 +20,7 @@ public class Robot extends TimedRobot {
     public static PanelIntake panelIntake;
     public static CargoHolder cargoHolder;
     public static PanelHolder panelHolder;
+    public static Climber climber;
     public static Vision vision;
 
     private Command autoCommand;
@@ -36,6 +37,7 @@ public class Robot extends TimedRobot {
         panelIntake = new PanelIntake();
         cargoHolder = new CargoHolder();
         panelHolder = new PanelHolder();
+        climber = new Climber();
         vision = new Vision();
 
         CameraServer.getInstance().startAutomaticCapture(0).setFPS(15);
