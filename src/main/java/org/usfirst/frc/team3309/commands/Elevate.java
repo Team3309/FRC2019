@@ -38,28 +38,34 @@ public class Elevate extends Command {
             switch (level) {
                 case Home:
                     carriagePosition = Elevator.CarriagePosition.Home;
+                    break;
                 case CargoOnShip:
                     carriagePosition = Elevator.CarriagePosition.CargoOnShip;
+                    break;
                 case FeederStation:
                     carriagePosition = Elevator.CarriagePosition.FeederStation;
+                    break;
                 case Low:
                     if (Robot.hasCargo()) {
                         carriagePosition = Elevator.CarriagePosition.CargoLow;
                     } else if (Robot.hasPanel()) {
                         carriagePosition = Elevator.CarriagePosition.PanelLow;
                     }
+                    break;
                 case Middle:
                     if (Robot.hasCargo()) {
                         carriagePosition = Elevator.CarriagePosition.CargoMiddle;
                     } else if (Robot.hasPanel()) {
                         carriagePosition = Elevator.CarriagePosition.PanelMiddle;
                     }
+                    break;
                 case High:
                     if (Robot.hasCargo()) {
                         carriagePosition = Elevator.CarriagePosition.CargoHigh;
                     } else if (Robot.hasPanel()) {
                         carriagePosition = Elevator.CarriagePosition.PanelHigh;
                     }
+                    break;
             }
         }
     }
