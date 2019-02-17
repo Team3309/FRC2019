@@ -17,7 +17,7 @@ public class Constants {
      * They are used to identify which robot the code is running on, because some values are specific to each robot.
      */
     private static final byte[] PRACTICEBOT_MAC_ADDR = {0x00, (byte) 0x80, 0x2F, 0x17, (byte) 0x85, (byte) 0xD3};
-    private static final byte[] COMPBOT_MAC_ADDR = {0x00, (byte) 0x80, 0x2F, 0x17, (byte) 0xE4, 0x5E}; // find this at comp
+    private static final byte[] COMPBOT_MAC_ADDR = {0x00, (byte) 0x80, 0x2F, 0x22, (byte) 0xAE, (byte) 0x85}; // find this at comp
 
     /*
      * This enum defines a type with 2 values, PRACTICE and COMPETITION
@@ -55,12 +55,12 @@ public class Constants {
      * Drive mappings
      * */
     // These are the CAN IDs for the Drive motor controllers.
-    public static final int DRIVE_RIGHT_MASTER_TALON_ID = 11;
-    public static final int DRIVE_RIGHT_SLAVE_VICTOR_1_ID = 13;
-    public static final int DRIVE_RIGHT_SLAVE_VICTOR_2_ID = 15;
-    public static final int DRIVE_LEFT_MASTER_TALON_ID = 10;
-    public static final int DRIVE_LEFT_SLAVE_VICTOR_1_ID = 12;
-    public static final int DRIVE_LEFT_SLAVE_VICTOR_2_ID = 14;
+    public static final int DRIVE_RIGHT_MASTER_TALON_ID = 7;
+    public static final int DRIVE_RIGHT_SLAVE_VICTOR_1_ID = 8;
+    public static final int DRIVE_RIGHT_SLAVE_VICTOR_2_ID = 9;
+    public static final int DRIVE_LEFT_MASTER_TALON_ID = 1;
+    public static final int DRIVE_LEFT_SLAVE_VICTOR_1_ID = 2;
+    public static final int DRIVE_LEFT_SLAVE_VICTOR_2_ID = 3;
 
     // This is the PCM solenoid port that the gearbox shifter is connected
     public static final int DRIVE_SHIFTER_PCM_PORT = 7;
@@ -68,8 +68,8 @@ public class Constants {
     /**
      * Elevator Mappings
      */
-    public static final int LIFT_MASTER_TALON_ID = 20;
-    public static final int LIFT_SLAVE_VICTOR_ID = 21;
+    public static final int LIFT_MASTER_TALON_ID = 6;
+    public static final int LIFT_SLAVE_VICTOR_ID = 10;
 
     public static final double LIFT_P = 0.0;
     public static final double LIFT_I = 0.0;
@@ -87,7 +87,7 @@ public class Constants {
     // [0, 1], manual elevator speed
     public static final double LIFT_NUDGE_SPEED = 0;
 
-    public static final int WRIST_TALON_ID = 22;
+    public static final int WRIST_TALON_ID = -1;
 
     public static final double WRIST_P = 0.0;
     public static final double WRIST_I = 0.0;
@@ -102,7 +102,7 @@ public class Constants {
     /**
      * Cargo intake mappings
      */
-    public static final int CARGO_INTAKE_VICTOR_ID = 30;
+    public static final int CARGO_INTAKE_VICTOR_ID = 5;
     public static final int CARGO_INTAKE_SOLENOID_ID = 6;
 
     public static final double CARGO_INTAKE_ROLLERS_MIN_POWER = 0.1;
@@ -110,7 +110,7 @@ public class Constants {
     /**
      * Panel intake mappings
      */
-    public static final int PANEL_INTAKE_VICTOR_ID = 40;
+    public static final int PANEL_INTAKE_VICTOR_ID = 11;
     public static final int PANEL_INTAKE_SOLENOID_ID = 5;
     public static final int PANEL_INTAKE_SENSOR_PORT = 0;
 
@@ -119,7 +119,7 @@ public class Constants {
     /**
      * Cargo launcher mappings
      */
-    public static final int CARGO_HOLDER_VICTOR_ID = 50;
+    public static final int CARGO_HOLDER_VICTOR_ID = 4;
     public static final int CARGO_HOLDER_BUMPER_PORT = 1;
 
     public static final double CARGO_LAUNCHER_ROLLERS_MIN_POWER = 0.1;
@@ -134,7 +134,7 @@ public class Constants {
     /**
      * Climber mappings
      * */
-    public static final int CLIMBER_TALON_ID = 60;
+    public static final int CLIMBER_TALON_ID = 12;
     public static final int CLIMBER_LATCHING_SOLENOID_ID = 2;
 
     /**

@@ -4,6 +4,7 @@ import org.usfirst.frc.team3309.commands.*
 import org.usfirst.frc.team3309.commands.drive.DriveSetHighGear
 import org.usfirst.frc.team3309.commands.drive.DriveSetLowGear
 import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeActuate
+import org.usfirst.frc.team3309.subsystems.Climber
 import org.usfirst.frc.team3309.subsystems.Elevator
 import org.usfirst.frc.team3309.subsystems.PanelHolder
 import org.usfirst.frc.team4322.input.InputThrustmaster
@@ -34,6 +35,9 @@ object OI {
 
         operatorController.rb.whenPressed(PanelHolderActuate(PanelHolder.PanelHolderPosition.PlacePanel))
         operatorController.rb.whenReleased(PanelHolderActuate(PanelHolder.PanelHolderPosition.ReleasePanel))
+
+        operatorController.start.whenPressed(ReleaseLatch(Climber.ClimberLatchPosition.Released))
+        operatorController.back.whenPressed(WinchClimber(Climber.ClimberAngle.Extended))
     }
 
 }
