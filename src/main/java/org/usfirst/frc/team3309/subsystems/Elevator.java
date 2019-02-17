@@ -12,7 +12,7 @@ public class Elevator extends Subsystem {
     private WPI_TalonSRX liftMaster;
     private WPI_VictorSPX liftSlave;
 
-    private WPI_TalonSRX wristMaster;
+   // private WPI_TalonSRX wristMaster;
 
     private double carriageGoal;
     private WristFacing wristGoal;
@@ -26,11 +26,11 @@ public class Elevator extends Subsystem {
         liftMaster.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
         liftMaster.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
         liftSlave = new WPI_VictorSPX(Constants.LIFT_SLAVE_VICTOR_ID);
-        wristMaster = createMaster(
+      /*  wristMaster = createMaster(
                 Constants.WRIST_TALON_ID,
                 Constants.WRIST_P,
                 Constants.WRIST_I,
-                Constants.WRIST_D);
+                Constants.WRIST_D);*/
         liftSlave.follow(liftMaster);
     }
 
