@@ -3,6 +3,7 @@ package org.usfirst.frc.team3309.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
@@ -19,7 +20,13 @@ public class CargoHolder extends Subsystem {
         motor.configFactoryDefault();
 
         addChild(bumperSensor);
-        addChild(  motor);
+        addChild(motor);
+    }
+
+    public void outputToDashboard() {
+        SmartDashboard.putBoolean("CH bumper sensor", isBumperPressed());
+        SmartDashboard.putNumber("CH motor power", motor.getMotorOutputPercent());
+        SmartDashboard.putNumber("CH motor voltage", motor.getMotorOutputVoltage());
     }
 
     public void setPower(double power) {

@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
@@ -23,12 +24,28 @@ public class Climber extends Subsystem {
         winchMotor.setNeutralMode(NeutralMode.Brake);
     }
 
+    public void outputToDashboard() {
+        SmartDashboard.putNumber("Climber position", winchMotor.getSelectedSensorPosition());
+        SmartDashboard.putNumber("Climber goal", winchMotor.getClosedLoopTarget());
+        SmartDashboard.putNumber("Climber closed loop error", winchMotor.getClosedLoopError());
+        SmartDashboard.putString("Climber latch position", getLatchPosition().toString());
+        SmartDashboard.putBoolean("Climber raw latch postion", getLatchPosition().value);
+    }
+
     public void setAngle(ClimberAngle angle) {
         winchMotor.set(ControlMode.Position, angle.get());
     }
 
     public void setPosition(ClimberLatchPosition position) {
         latchingSolenoid.set(position.get());
+    }
+
+    public ClimberLatchPosition getLatchPosition() {
+        if (latchingSolenoid.get() == ClimberLatchPosition.Latched.value) {
+            return ClimberLatchPosition.Latched;
+        } else {
+            return ClimberLatchPosition.Released;
+        }
     }
 
     public enum ClimberAngle {

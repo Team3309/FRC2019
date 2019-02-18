@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
@@ -38,6 +39,12 @@ public class PanelIntake extends Subsystem {
         } else {
             return PanelIntakePosition.Down;
         }
+    }
+
+    public void outputToDashboard() {
+        SmartDashboard.putString("PI position", getPosition().toString());
+        SmartDashboard.putBoolean("PI position raw", getPosition().value);
+        SmartDashboard.putBoolean("PI has panel", hasPanel());
     }
 
     private void setSolenoid(boolean on) {
