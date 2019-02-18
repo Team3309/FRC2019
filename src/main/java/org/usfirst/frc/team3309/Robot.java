@@ -42,7 +42,6 @@ public class Robot extends TimedRobot {
         vision = new Vision();
 
         CameraServer.getInstance().startAutomaticCapture(0).setFPS(15);
-        new Compressor().start();
         AutoModeExecutor.displayAutos();
         Scheduler.initialize();
     }
