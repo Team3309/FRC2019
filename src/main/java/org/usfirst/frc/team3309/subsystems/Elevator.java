@@ -3,6 +3,7 @@ package org.usfirst.frc.team3309.subsystems;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
@@ -12,7 +13,7 @@ public class Elevator extends Subsystem {
     private WPI_TalonSRX liftMaster;
     private WPI_VictorSPX liftSlave;
 
-   // private WPI_TalonSRX wristMaster;
+    // private WPI_TalonSRX wristMaster;
 
     private double carriageGoal;
     private WristFacing wristGoal;
@@ -58,6 +59,15 @@ public class Elevator extends Subsystem {
         double rawLiftGoal = liftGoalToEncoderCounts(carriageGoal);
 
         liftMaster.set(ControlMode.Position, rawLiftGoal);
+    }
+
+    public void outputToDashboard() {
+        SmartDashboard.putNumber("Lift goal carriage position", carriageGoal);
+        SmartDashboard.putNumber("Lift position", getLiftPosition());
+        SmartDashboard.putNumber("Lift closed loop error", liftMaster.getClosedLoopError());
+        SmartDashboard.putNumber("Lift position raw", liftMaster.getSelectedSensorPosition());
+        SmartDashboard.putNumber("Lift power", liftMaster.getMotorOutputPercent());
+        SmartDashboard.putNumber("Lift voltage", liftMaster.getMotorOutputVoltage());
     }
 
     public void setPosition(CarriagePosition position, WristFacing wristFacing) {

@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import org.usfirst.frc.team3309.subsystems.*;
@@ -41,7 +42,7 @@ public class Robot extends TimedRobot {
         vision = new Vision();
 
         CameraServer.getInstance().startAutomaticCapture(0).setFPS(15);
-
+        new Compressor().start();
         AutoModeExecutor.displayAutos();
         Scheduler.initialize();
     }
@@ -122,7 +123,13 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotPeriodic() {
-
+        drive.outputToDashboard();
+        elevator.outputToDashboard();
+        panelHolder.outputToDashboard();
+        panelIntake.outputToDashboard();
+        cargoIntake.outputToDashboard();
+        cargoIntake.outputToDashboard();
+        climber.outputToDashboard();
     }
 
     public static boolean hasCargo() {

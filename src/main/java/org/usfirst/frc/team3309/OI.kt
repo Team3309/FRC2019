@@ -21,23 +21,23 @@ object OI {
         leftJoystick.trigger.whenPressed(DriveSetLowGear())
         leftJoystick.trigger.whenReleased(DriveSetHighGear())
 
-        rightJoystick.knobCluster.bottom.whenPressed(TogglePipeline())
-
-        operatorController.dPad.up.whenPressed(Elevate(Elevate.Level.Low))
-        operatorController.dPad.right.whenPressed(Elevate(Elevate.Level.Middle))
-        operatorController.dPad.down.whenPressed(Elevate(Elevate.Level.High))
-        operatorController.dPad.left.whenPressed(Elevate(Elevate.Level.CargoOnShip))
-
-        operatorController.b.whenPressed(IntakeCargo())
-        operatorController.a.whenPressed(IntakePanel())
-        operatorController.y.whenPressed(Elevate(Elevate.Level.Home))
-        operatorController.x.whenPressed(Elevate(Elevate.Level.FeederStation))
-
-        operatorController.rb.whenPressed(PanelHolderActuate(PanelHolder.PanelHolderPosition.PlacePanel))
-        operatorController.rb.whenReleased(PanelHolderActuate(PanelHolder.PanelHolderPosition.ReleasePanel))
-
-        operatorController.start.whenPressed(ReleaseLatch(Climber.ClimberLatchPosition.Released))
-        operatorController.back.whenPressed(WinchClimber(Climber.ClimberAngle.Extended))
+//        rightJoystick.knobCluster.bottom.whenPressed(TogglePipeline())
+//
+//        operatorController.dPad.up.whenPressed(Elevate(Elevate.Level.Low))
+//        operatorController.dPad.right.whenPressed(Elevate(Elevate.Level.Middle))
+//        operatorController.dPad.down.whenPressed(Elevate(Elevate.Level.High))
+//        operatorController.dPad.left.whenPressed(Elevate(Elevate.Level.CargoOnShip))
+//
+//        operatorController.b.whenPressed(IntakeCargo())
+//        operatorController.a.whenPressed(IntakePanel())
+//        operatorController.y.whenPressed(Elevate(Elevate.Level.Home))
+//        operatorController.x.whenPressed(Elevate(Elevate.Level.FeederStation))
+//
+//        operatorController.rb.whenPressed(PanelHolderActuate(PanelHolder.PanelHolderPosition.PlacePanel))
+//        operatorController.rb.whenReleased(PanelHolderActuate(PanelHolder.PanelHolderPosition.ReleasePanel))
+//
+//        operatorController.start.whenPressed(ReleaseLatch(Climber.ClimberLatchPosition.Released))
+//        operatorController.back.whenPressed(WinchClimber(Climber.ClimberAngle.Extended))
     }
 
 }
