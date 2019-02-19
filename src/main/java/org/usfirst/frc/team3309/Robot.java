@@ -49,6 +49,7 @@ public class Robot extends CommandV2Robot {
 
         // TODO: needs to use limelight stream
         CameraServer.getInstance().startAutomaticCapture(0).setFPS(15);
+
         AutoModeExecutor.displayAutos();
 
         // TODO: flip every joystick?
