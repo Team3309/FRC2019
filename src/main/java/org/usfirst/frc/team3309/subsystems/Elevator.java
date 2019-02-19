@@ -32,8 +32,7 @@ public class Elevator extends Subsystem {
         // TODO: uncap when safe
         liftMaster.configFactoryDefault();
         liftMaster.configPeakOutputForward(0.9);
-        liftMaster.configPeakOutputReverse(-0.2);
-//        liftMaster.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+        liftMaster.configPeakOutputReverse(-0.2);//        liftMaster.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
 //        liftMaster.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
         liftSlave = new WPI_VictorSPX(Constants.ELEVATOR_SLAVE_VICTOR_ID);
       /*  wristMaster = createMaster(
