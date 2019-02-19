@@ -11,6 +11,7 @@ import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team3309.subsystems.*;
 import org.usfirst.frc.team4322.commandv2.Command;
 import org.usfirst.frc.team4322.commandv2.Scheduler;
+import org.usfirst.frc.team4322.logging.RobotLogger;
 
 /*
  * This is the Robot class.
@@ -49,6 +50,7 @@ public class Robot extends TimedRobot {
         CameraServer.getInstance().startAutomaticCapture(0).setFPS(15);
         AutoModeExecutor.displayAutos();
         Scheduler.initialize();
+        RobotLogger.INSTANCE.update();
     }
 
     /*
