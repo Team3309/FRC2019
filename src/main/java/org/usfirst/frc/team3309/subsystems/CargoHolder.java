@@ -24,7 +24,7 @@ public class CargoHolder extends Subsystem {
     }
 
     public void outputToDashboard() {
-        SmartDashboard.putBoolean("CH bumper sensor", isBumperPressed());
+        SmartDashboard.putBoolean("CH bumper sensor", hasCargo());
         SmartDashboard.putNumber("CH motor power", motor.getMotorOutputPercent());
         SmartDashboard.putNumber("CH motor voltage", motor.getMotorOutputVoltage());
     }
@@ -33,7 +33,7 @@ public class CargoHolder extends Subsystem {
         motor.set(ControlMode.PercentOutput, power);
     }
 
-    public boolean isBumperPressed() {
+    public boolean hasCargo() {
         return !bumperSensor.get();
     }
 

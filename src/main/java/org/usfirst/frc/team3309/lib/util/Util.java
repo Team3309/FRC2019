@@ -75,22 +75,13 @@ public class Util {
     }
 
     /*
-     * @return positive percent error
-     * @param error, current closed loop error
-     * @param goal, goal in loop
-     * */
-    public static double errorToPercent(double error, double goal) {
-        return error / goal * 100;
-    }
-
-    /*
      * @return boolean of whether percent error is within percent tolerance
-     * @param error, current closed loop error
-     * @param goal, goal in loop
-     * @param tolerance, percent tolerance the percent error must within error
+     * @param value, current value
+     * @param goal, desired value
+     * @param tolerance, percent tolerance
      * */
-    public static boolean withinTolerance(double error, double goal, double tolerance) {
-        return Math.abs(Util.errorToPercent(error, goal)) < Math.abs(tolerance);
+    public static boolean withinTolerance(double value, double goal, double tolerance) {
+        return Math.abs((goal - value) / goal) <= Math.abs(tolerance);
     }
 
     /*
@@ -116,6 +107,10 @@ public class Util {
         } else {
             return 0.0;
         }
+    }
+
+    public static double overlap1D(double min1, double max1, double min2, double max2) {
+        return Math.max(0, Math.min(max1, max2) - Math.max(min1, min2));
     }
 
 }

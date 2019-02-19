@@ -1,9 +1,12 @@
 package org.usfirst.frc.team3309;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
+import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
+import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeManual;
+import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeManual;
+import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team3309.subsystems.*;
 import org.usfirst.frc.team4322.commandv2.Command;
 import org.usfirst.frc.team4322.commandv2.Scheduler;
@@ -41,7 +44,9 @@ public class Robot extends TimedRobot {
         climber = new Climber();
         vision = new Vision();
 
+        // TODO: needs to use limelight stream
         CameraServer.getInstance().startAutomaticCapture(0).setFPS(15);
+
         AutoModeExecutor.displayAutos();
         Scheduler.initialize();
     }
@@ -77,7 +82,6 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousPeriodic() {
         Scheduler.update();
-        drive.outputToDashboard();
     }
 
     /*
@@ -98,7 +102,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        drive.outputToDashboard();
         Scheduler.update();
     }
 
@@ -107,6 +110,9 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void testInit() {
+        new CargoHolderManual().start();
+        new CargoIntakeManual().start();
+        new PanelIntakeManual().start();
     }
 
 
@@ -131,12 +137,11 @@ public class Robot extends TimedRobot {
         climber.outputToDashboard();
     }
 
-    public static boolean hasCargo() {
-        return cargoHolder.isBumperPressed();
-    }
-
-    public static boolean hasPanel() {
-        return panelHolder.isBumperPressed();
+    public static boolean hasCargoInIntakeZone() {
+        return cargoHolder.hasCargo()
+                && Util.within(elevator.getCarriagePercentage(),
+                Constants.CARGO_INTAKE_ZONE_MIN,
+                Constants.CARGO_INTAKE_ZONE_MAX);
     }
 
     /*

@@ -68,6 +68,7 @@ public class Constants {
     /**
      * Elevator Mappings
      */
+    // TODO: rename lift to elevator prefix
     public static final int LIFT_MASTER_TALON_ID = 6;
     public static final int LIFT_SLAVE_VICTOR_ID = 10;
 
@@ -76,7 +77,7 @@ public class Constants {
     public static final double LIFT_D = 0.0;
 
     // max position used for conversions (encoder counts)
-    public static final double LIFT_COUNTS_FOR_LENGTH = 1;
+    public static final double ELEVATOR_ENCODER_COUNTS_FOR_MAX_HEIGHT = 1;
 
     // [0, 1], minimum value where it is safe to rotate arm
     public static final double LIFT_BEGIN_SAFE_ZONE = 0;
@@ -85,7 +86,11 @@ public class Constants {
     public static final double LIFT_END_SAFE_ZONE = 0;
 
     // [0, 1], manual elevator speed
-    public static final double LIFT_NUDGE_SPEED = 0;
+    public static final double LIFT_NUDGE_PCT_PER_SEC = 0;
+
+    // these can NEVER be the same
+    public static final double CARGO_INTAKE_ZONE_MIN = 0.0;
+    public static final double CARGO_INTAKE_ZONE_MAX = 0.1;
 
     public static final int WRIST_TALON_ID = -1;
 

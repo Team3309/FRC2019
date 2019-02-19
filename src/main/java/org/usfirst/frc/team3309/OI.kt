@@ -23,15 +23,14 @@ object OI {
 
 //        rightJoystick.knobCluster.bottom.whenPressed(TogglePipeline())
 //
-//        operatorController.dPad.up.whenPressed(Elevate(Elevate.Level.Low))
+//        operatorController.dPad.down.whenPressed(Elevate(Elevate.Level.Low))
 //        operatorController.dPad.right.whenPressed(Elevate(Elevate.Level.Middle))
-//        operatorController.dPad.down.whenPressed(Elevate(Elevate.Level.High))
-//        operatorController.dPad.left.whenPressed(Elevate(Elevate.Level.CargoOnShip))
+//        operatorController.dPad.up.whenPressed(Elevate(Elevate.Level.High))
+//        operatorController.dPad.left.whenPressed(Elevate(Elevate.Level.CargoShipCargo))
 //
-//        operatorController.b.whenPressed(IntakeCargo())
+//        operatorController.b.whenPressed(IntakeCargoNear())
 //        operatorController.a.whenPressed(IntakePanel())
 //        operatorController.y.whenPressed(Elevate(Elevate.Level.Home))
-//        operatorController.x.whenPressed(Elevate(Elevate.Level.FeederStation))
 //
 //        operatorController.rb.whenPressed(PanelHolderActuate(PanelHolder.PanelHolderPosition.PlacePanel))
 //        operatorController.rb.whenReleased(PanelHolderActuate(PanelHolder.PanelHolderPosition.ReleasePanel))
