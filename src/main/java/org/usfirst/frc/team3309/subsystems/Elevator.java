@@ -29,6 +29,8 @@ public class Elevator extends Subsystem {
                 Constants.LIFT_P,
                 Constants.LIFT_I,
                 Constants.LIFT_D);
+        liftMaster.configNominalOutputForward(0.1);
+        liftMaster.configNominalOutputReverse(0.1);
 //        liftMaster.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
 //        liftMaster.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
         liftSlave = new WPI_VictorSPX(Constants.LIFT_SLAVE_VICTOR_ID);
