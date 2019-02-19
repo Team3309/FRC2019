@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
@@ -46,7 +47,6 @@ public class Robot extends TimedRobot {
 
         // TODO: needs to use limelight stream
         CameraServer.getInstance().startAutomaticCapture(0).setFPS(15);
-
         AutoModeExecutor.displayAutos();
         Scheduler.initialize();
     }
