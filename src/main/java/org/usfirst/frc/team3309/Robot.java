@@ -6,6 +6,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotBase;
 import org.usfirst.frc.team3309.commands.ElevatorManual;
 import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
+import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate;
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeManual;
 import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeManual;
 import org.usfirst.frc.team3309.lib.util.Util;
