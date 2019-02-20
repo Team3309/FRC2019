@@ -16,7 +16,12 @@ public class Util {
     }
 
     public static double clamp(double value, double min, double max) {
-        return limit(value, min, max);
+       if (value < min) {
+           return min;
+       } else if (value > max) {
+           return max;
+       }
+       return value;
     }
 
     /**

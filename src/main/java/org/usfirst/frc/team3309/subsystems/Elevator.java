@@ -25,15 +25,17 @@ public class Elevator extends Subsystem {
 
     public Elevator() {
         liftMaster = createMaster(
-                Constants.LIFT_MASTER_TALON_ID,
-                Constants.LIFT_P,
-                Constants.LIFT_I,
-                Constants.LIFT_D);
-        liftMaster.configNominalOutputForward(0.1);
-        liftMaster.configNominalOutputReverse(0.1);
+                Constants.ELEVATOR_MASTER_TALON_ID,
+                Constants.ELEVATOR_P,
+                Constants.ELEVATOR_I,
+                Constants.ELEVATOR_D);
+        // TODO: uncap when safe
+        liftMaster.configFactoryDefault();
+        liftMaster.configPeakOutputForward(0.9);
+        liftMaster.configPeakOutputReverse(-0.2);
 //        liftMaster.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
 //        liftMaster.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
-        liftSlave = new WPI_VictorSPX(Constants.LIFT_SLAVE_VICTOR_ID);
+        liftSlave = new WPI_VictorSPX(Constants.ELEVATOR_SLAVE_VICTOR_ID);
       /*  wristMaster = createMaster(
                 Constants.WRIST_TALON_ID,
                 Constants.WRIST_P,
@@ -52,6 +54,10 @@ public class Elevator extends Subsystem {
         talon.setNeutralMode(NeutralMode.Brake);
         addChild(talon);
         return talon;
+    }
+
+    public void zeroEncoder() {
+        liftMaster.setSelectedSensorPosition(0);
     }
 
     @Override
@@ -85,14 +91,18 @@ public class Elevator extends Subsystem {
         setPosition(position, wristGoal);
     }
 
+    public void setPosition(double position) {
+        setPosition(position, wristGoal);
+    }
+
     public void setPosition(double carriagePercentage, WristFacing wristFacing) {
         carriageGoal = Util.clamp(carriagePercentage, 0, 1);
         wristGoal = wristFacing;
 
         // TODO: integrate wrist through collision avoidance
-        boolean withinSafeZone = Util.within(getCarriagePercentage(),
-                Constants.LIFT_BEGIN_SAFE_ZONE,
-                Constants.LIFT_END_SAFE_ZONE);
+//        boolean withinSafeZone = Util.within(getCarriagePercentage(),
+//                Constants.LIFT_BEGIN_SAFE_ZONE,
+//                Constants.LIFT_END_SAFE_ZONE);
 
         if (Robot.cargoHolder.hasCargo()
                 && Robot.cargoIntake.getPosition() == CargoIntake.CargoIntakePosition.Stowed
@@ -114,10 +124,6 @@ public class Elevator extends Subsystem {
                 getCarriagePercentage(), carriageGoal) > 0;
     }
 
-    public void setPosition(double position) {
-        setPosition(position, wristGoal);
-    }
-
     public double getCarriagePercentage() {
         return encoderCountsToNormalizedLift(liftMaster.getSelectedSensorPosition());
     }
@@ -132,6 +138,10 @@ public class Elevator extends Subsystem {
 
     private double wristGoalToEncoderCounts(double wristGoal) {
         return wristGoal * Constants.WRIST_COUNTS_FOR_FULL_ROTATION / 180.0;
+    }
+
+    public void setPower(double power) {
+        liftMaster.set(ControlMode.PercentOutput, power);
     }
 
     public void outputToDashboard() {

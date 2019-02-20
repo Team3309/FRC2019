@@ -38,6 +38,13 @@ public class PanelHolder extends Subsystem {
         }
     }
 
+    public void setPosition(JointedPosition jointedPosition, ExtendedPosition extendedPosition) {
+        setExtendingSolenoid(extendedPosition);
+        setJointedSolenoid(jointedPosition);
+    }
+
+
+
     /*
      * @return current PanelHolder configuration
      * */
@@ -84,12 +91,13 @@ public class PanelHolder extends Subsystem {
         SmartDashboard.putBoolean("PH bumper pressed", isBumperPressed());
     }
 
-    private void setJointedSolenoid(JointedPosition position) {
+    // TODO: make private and wrap them through their the main subsystem set function
+    public void setJointedSolenoid(JointedPosition position) {
         jointedSolenoid.set(position.get());
     }
 
-    private void setExtendingSolenoid(ExtendedPosition position) {
-       extendingSolenoid.set(position.get());
+    public void setExtendingSolenoid(ExtendedPosition position) {
+        extendingSolenoid.set(position.get());
     }
 
     public boolean isBumperPressed() {
@@ -116,6 +124,10 @@ public class PanelHolder extends Subsystem {
         public boolean get() {
             return value;
         }
+
+        public static JointedPosition fromBoolean(boolean value) {
+            return value ? PointingOutwards : Vertical;
+        }
     }
 
     public enum ExtendedPosition {
@@ -124,13 +136,17 @@ public class PanelHolder extends Subsystem {
 
         private boolean value;
 
-        ExtendedPosition(boolean value){
+        ExtendedPosition(boolean value) {
             this.value = value;
         }
 
-        public boolean get(){
+        public boolean get() {
             return value;
         }
-    }
 
+        public static ExtendedPosition fromBoolean(boolean value) {
+            return value ? ExtendedOutwards : RetractedInwards;
+        }
+
+    }
 }

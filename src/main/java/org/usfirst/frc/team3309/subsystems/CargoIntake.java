@@ -21,6 +21,7 @@ public class CargoIntake extends Subsystem {
         solenoid = new Solenoid(Constants.CARGO_INTAKE_SOLENOID_ID);
 
         intakeMotor.configFactoryDefault();
+        intakeMotor.setInverted(true);
 
         addChild(intakeMotor);
         addChild(solenoid);
@@ -69,6 +70,9 @@ public class CargoIntake extends Subsystem {
             return value;
         }
 
+        public static CargoIntakePosition fromBoolean(boolean value) {
+            return value ? CargoIntakePosition.Extended : CargoIntakePosition.Stowed;
+        }
     }
 
 }
