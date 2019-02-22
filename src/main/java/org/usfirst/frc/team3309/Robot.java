@@ -3,19 +3,15 @@ package org.usfirst.frc.team3309;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.commands.ElevatorManual;
 import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
-import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate;
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeManual;
 import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeManual;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team3309.subsystems.*;
 import org.usfirst.frc.team4322.commandv2.Command;
+import org.usfirst.frc.team4322.commandv2.CommandV2Robot;
 import org.usfirst.frc.team4322.commandv2.Scheduler;
 import org.usfirst.frc.team4322.logging.RobotLogger;
 
@@ -24,7 +20,7 @@ import org.usfirst.frc.team4322.logging.RobotLogger;
  * It handles the setup for the rest of the robot code.
  */
 
-public class Robot extends TimedRobot {
+public class Robot extends CommandV2Robot {
 
     public static Drive drive;
     public static Elevator elevator;
@@ -55,8 +51,6 @@ public class Robot extends TimedRobot {
         // TODO: needs to use limelight stream
         CameraServer.getInstance().startAutomaticCapture(0).setFPS(15);
         AutoModeExecutor.displayAutos();
-        Scheduler.initialize();
-        RobotLogger.INSTANCE.update();
 
         // TODO: flip every joystick?
         // invert turning joystick's left to right
@@ -98,7 +92,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousPeriodic() {
-        Scheduler.update();
     }
 
     /*
@@ -123,7 +116,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        Scheduler.update();
     }
 
     /*
