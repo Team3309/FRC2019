@@ -1,9 +1,6 @@
 package org.usfirst.frc.team3309.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.DemandType;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
@@ -53,9 +50,14 @@ public class Drive extends Subsystem {
         driveLeftMaster.config_kD(0, Constants.DRIVE_D, 10);
         driveLeftMaster.config_kF(0, Constants.DRIVE_F, 10);
         driveLeftMaster.setNeutralMode(NeutralMode.Brake);
+        driveLeftMaster.setInverted(true);
+        driveLeftMaster.setSensorPhase(true);
 
         driveLeftSlave1.follow(driveLeftMaster);
+        driveLeftSlave1.setInverted(InvertType.FollowMaster);
+        driveRightSlave2.follow(driveLeftMaster, FollowerType.PercentOutput);
         driveLeftSlave2.follow(driveLeftMaster);
+        driveLeftSlave2.setInverted(InvertType.FollowMaster);
 
         //Configure Right Side of Drive
         driveRightMaster.configFactoryDefault();
@@ -65,16 +67,20 @@ public class Drive extends Subsystem {
         driveRightMaster.config_kD(0, Constants.DRIVE_D, 10);
         driveRightMaster.config_kF(0, Constants.DRIVE_F, 10);
         driveRightMaster.setNeutralMode(NeutralMode.Brake);
+        driveRightMaster.setInverted(true);
+        driveRightMaster.setSensorPhase(true);
 
         driveRightSlave1.follow(driveRightMaster);
+        driveRightSlave1.setInverted(InvertType.FollowMaster);
+
         driveRightSlave2.follow(driveRightMaster);
+        driveRightSlave2.setInverted(InvertType.FollowMaster);
 
         addChild(driveLeftMaster);
         addChild(driveRightMaster);
         addChild(shifter);
         addChild(navx);
     }
-
 
     public double encoderCountsToInches(double counts) {
         return counts / Constants.DRIVE_ENCODER_COUNTS_PER_REV * (Math.PI * Constants.WHEEL_DIAMETER_INCHES);
@@ -99,8 +105,8 @@ public class Drive extends Subsystem {
         driveLeftMaster.setSelectedSensorPosition(0, 0, 0);
         driveRightMaster.setSelectedSensorPosition(0, 0, 0);
         zeroNavx();
-        driveRobotStateEstimator.reset(Timer.getFPGATimestamp(), new Pose2d());
-        driveRobotStateEstimator.start();
+//        driveRobotStateEstimator.reset(Timer.getFPGATimestamp(), new Pose2d());
+//        driveRobotStateEstimator.start();
     }
 
     public void zeroNavx() {
@@ -144,11 +150,11 @@ public class Drive extends Subsystem {
     }
 
     public void setHighGear() {
-        shifter.set(false);
+        shifter.set(true);
     }
 
     public void setLowGear() {
-        shifter.set(true);
+        shifter.set(false);
     }
 
     public boolean inHighGear() {

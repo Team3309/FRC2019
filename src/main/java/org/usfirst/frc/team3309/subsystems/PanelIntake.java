@@ -23,6 +23,7 @@ public class PanelIntake extends Subsystem {
         solenoid = new Solenoid(Constants.PANEL_INTAKE_SOLENOID_ID);
 
         intakeMotor.configFactoryDefault();
+        intakeMotor.setInverted(true);
 
         addChild(sharpSensor);
         addChild(intakeMotor);
@@ -71,6 +72,10 @@ public class PanelIntake extends Subsystem {
 
         public boolean get() {
             return value;
+        }
+
+        public static PanelIntakePosition fromBoolean(boolean value) {
+            return value ? Up : Down;
         }
 
     }

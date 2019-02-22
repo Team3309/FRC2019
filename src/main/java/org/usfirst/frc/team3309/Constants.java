@@ -68,24 +68,30 @@ public class Constants {
     /**
      * Elevator Mappings
      */
-    public static final int LIFT_MASTER_TALON_ID = 6;
-    public static final int LIFT_SLAVE_VICTOR_ID = 10;
+    // TODO: rename lift to elevator prefix
+    public static final int ELEVATOR_MASTER_TALON_ID = 6;
+    public static final int ELEVATOR_SLAVE_VICTOR_ID = 10;
 
-    public static final double LIFT_P = 0.0;
-    public static final double LIFT_I = 0.0;
-    public static final double LIFT_D = 0.0;
+    public static final double ELEVATOR_P = 0.0;
+    public static final double ELEVATOR_I = 0.0;
+    public static final double ELEVATOR_D = 0.0;
 
     // max position used for conversions (encoder counts)
-    public static final double LIFT_COUNTS_FOR_LENGTH = 1;
-
-    // [0, 1], minimum value where it is safe to rotate arm
-    public static final double LIFT_BEGIN_SAFE_ZONE = 0;
-
-    // [0, 1], maximum value where it is safe to rotate arm
-    public static final double LIFT_END_SAFE_ZONE = 0;
+    public static final double ELEVATOR_ENCODER_COUNTS_FOR_MAX_HEIGHT = 1;
 
     // [0, 1], manual elevator speed
-    public static final double LIFT_NUDGE_SPEED = 0;
+    public static final double LIFT_NUDGE_PCT_PER_SEC = 0;
+
+    // TODO: to be used with wrist when added
+//    // [0, 1], minimum value where it is safe to rotate arm
+//    public static final double LIFT_BEGIN_SAFE_ZONE = 0;
+//
+//    // [0, 1], maximum value where it is safe to rotate arm
+//    public static final double LIFT_END_SAFE_ZONE = 0;
+
+    // these can NEVER be the same
+    public static final double CARGO_INTAKE_ZONE_MIN = 0.0;
+    public static final double CARGO_INTAKE_ZONE_MAX = 0.1;
 
     public static final int WRIST_TALON_ID = -1;
 
@@ -120,16 +126,16 @@ public class Constants {
      * Cargo launcher mappings
      */
     public static final int CARGO_HOLDER_VICTOR_ID = 4;
-    public static final int CARGO_HOLDER_BUMPER_PORT = 1;
+    public static final int CARGO_HOLDER_BUMPER_PORT = 0;
 
     public static final double CARGO_LAUNCHER_ROLLERS_MIN_POWER = 0.1;
 
     /**
      * Panel placer mappings
      */
-    public static final int PANEL_HOLDER_EXTENDING_SOLENOID_ID = 4;
-    public static final int PANEL_HOLDER_TELESCOPING_SOLENOID_ID = 3;
-    public static final int PANEL_HOLDER_BUMPER_SENSOR_PORT = 2;
+    public static final int PANEL_HOLDER_EXTENDING_SOLENOID_ID = 3;
+    public static final int PANEL_HOLDER_TELESCOPING_SOLENOID_ID = 4;
+    public static final int PANEL_HOLDER_BUMPER_SENSOR_PORT = 1;
 
     /**
      * Climber mappings

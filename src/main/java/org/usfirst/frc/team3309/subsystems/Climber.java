@@ -79,6 +79,10 @@ public class Climber extends Subsystem {
             return value;
         }
 
+        public static ClimberLatchPosition fromBoolean(boolean value) {
+            return value ? Released : Latched;
+        }
+
     }
 
 }

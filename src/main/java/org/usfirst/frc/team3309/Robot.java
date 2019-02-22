@@ -1,12 +1,23 @@
 package org.usfirst.frc.team3309;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team3309.commands.ElevatorManual;
+import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
+import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate;
+import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeManual;
+import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeManual;
+import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team3309.subsystems.*;
 import org.usfirst.frc.team4322.commandv2.Command;
 import org.usfirst.frc.team4322.commandv2.Scheduler;
+import org.usfirst.frc.team4322.logging.RobotLogger;
 
 /*
  * This is the Robot class.
@@ -41,9 +52,19 @@ public class Robot extends TimedRobot {
         climber = new Climber();
         vision = new Vision();
 
+        // TODO: needs to use limelight stream
         CameraServer.getInstance().startAutomaticCapture(0).setFPS(15);
         AutoModeExecutor.displayAutos();
         Scheduler.initialize();
+        RobotLogger.INSTANCE.update();
+
+        // TODO: flip every joystick?
+        // invert turning joystick's left to right
+        OI.INSTANCE.getRightJoystick().getXAxis().setRampFunction((x) -> (-x));
+        OI.INSTANCE.getLeftJoystick().getYAxis().setRampFunction((x) -> (-x));
+
+        // TODO: temporary until limit switch
+        elevator.zeroEncoder();
     }
 
     /*
@@ -64,6 +85,7 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         Scheduler.killAllCommands();
         drive.reset();
+        drive.setHighGear();
         autoCommand = AutoModeExecutor.getAutoSelected();
         if (autoCommand != null) {
             autoCommand.start();
@@ -77,7 +99,6 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousPeriodic() {
         Scheduler.update();
-        drive.outputToDashboard();
     }
 
     /*
@@ -88,9 +109,13 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         if (autoCommand != null)
             autoCommand.cancel();
+        drive.setHighGear();
         drive.reset();
+        // TODO: DELETE LATER
+        new CargoHolderManual().start();
+        new CargoIntakeManual().start();
+        new PanelIntakeManual().start();
     }
-
 
     /*
      * This function is called every 2 milliseconds while the robot is in autonomous.
@@ -98,7 +123,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        drive.outputToDashboard();
         Scheduler.update();
     }
 
@@ -107,6 +131,10 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void testInit() {
+        new CargoHolderManual().start();
+        new CargoIntakeManual().start();
+        new PanelIntakeManual().start();
+        new ElevatorManual().start();
     }
 
 
@@ -115,6 +143,42 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void testPeriodic() {
+        NetworkTable testTable = NetworkTableInstance.getDefault().getTable("test");
+        NetworkTable pneumaticsTable = testTable.getSubTable("pneumatics");
+
+        boolean cargoIntakeExtend = pneumaticsTable.getEntry("CargoIntake extend").getBoolean(false);
+        boolean panelIntakeExtend = pneumaticsTable.getEntry("PanelIntake extend").getBoolean(false);
+        boolean panelHolderJointedExtended = pneumaticsTable
+                .getEntry("PanelHolder jointed extended").getBoolean(false);
+        boolean panelHolderTelescopingExtended = pneumaticsTable
+                .getEntry("PanelHolder telescoping extended").getBoolean(false);
+        boolean climberReleased = pneumaticsTable.getEntry("Climber released").getBoolean(false);
+
+//        cargoIntake.setPosition(CargoIntake.CargoIntakePosition.fromBoolean(cargoIntakeExtend));
+        panelIntake.setPosition(PanelIntake.PanelIntakePosition.fromBoolean(panelIntakeExtend));
+//        panelHolder.setPosition(PanelHolder.JointedPosition.fromBoolean(panelHolderJointedExtended),
+//                PanelHolder.ExtendedPosition.fromBoolean(panelHolderTelescopingExtended));
+        climber.setPosition(Climber.ClimberLatchPosition.fromBoolean(climberReleased ));
+
+        // TODO: remove require(cargoIntake) in actuate
+        if (OI.INSTANCE.getOperatorController().a()) {
+            cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Extended);
+        } else if (OI.INSTANCE.getOperatorController().b()){
+            cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Stowed);
+        }
+
+        if (OI.INSTANCE.getOperatorController().x()) {
+            panelHolder.setJointedSolenoid(PanelHolder.JointedPosition.Vertical);
+        } else if (OI.INSTANCE.getOperatorController().y()) {
+            panelHolder.setJointedSolenoid(PanelHolder.JointedPosition.PointingOutwards);
+        }
+
+        if (OI.INSTANCE.getOperatorController().getDPad().down()) {
+            panelHolder.setExtendingSolenoid(PanelHolder.ExtendedPosition.RetractedInwards);
+        } else if (OI.INSTANCE.getOperatorController().getDPad().up()) {
+            panelHolder.setExtendingSolenoid(PanelHolder.ExtendedPosition.ExtendedOutwards);
+        }
+
     }
 
     /*
@@ -131,12 +195,11 @@ public class Robot extends TimedRobot {
         climber.outputToDashboard();
     }
 
-    public static boolean hasCargo() {
-        return cargoHolder.isBumperPressed();
-    }
-
-    public static boolean hasPanel() {
-        return panelHolder.isBumperPressed();
+    public static boolean hasCargoInIntakeZone() {
+        return cargoHolder.hasCargo()
+                && Util.within(elevator.getCarriagePercentage(),
+                Constants.CARGO_INTAKE_ZONE_MIN,
+                Constants.CARGO_INTAKE_ZONE_MAX);
     }
 
     /*
