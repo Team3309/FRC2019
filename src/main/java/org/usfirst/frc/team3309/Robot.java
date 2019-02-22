@@ -13,7 +13,6 @@ import org.usfirst.frc.team3309.subsystems.*;
 import org.usfirst.frc.team4322.commandv2.Command;
 import org.usfirst.frc.team4322.commandv2.CommandV2Robot;
 import org.usfirst.frc.team4322.commandv2.Scheduler;
-import org.usfirst.frc.team4322.logging.RobotLogger;
 
 /*
  * This is the Robot class.
