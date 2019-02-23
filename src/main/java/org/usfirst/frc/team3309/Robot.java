@@ -6,6 +6,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotBase;
 import org.usfirst.frc.team3309.commands.ElevatorManual;
 import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
+import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate;
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeManual;
 import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeManual;
 import org.usfirst.frc.team3309.lib.util.Util;
@@ -49,6 +50,7 @@ public class Robot extends CommandV2Robot {
 
         // TODO: needs to use limelight stream
         CameraServer.getInstance().startAutomaticCapture(0).setFPS(15);
+
         AutoModeExecutor.displayAutos();
 
         // TODO: flip every joystick?
