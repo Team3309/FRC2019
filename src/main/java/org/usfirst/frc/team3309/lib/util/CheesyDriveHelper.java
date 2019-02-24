@@ -1,5 +1,7 @@
 package org.usfirst.frc.team3309.lib.util;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  * Helper class to implement "Cheesy Drive". "Cheesy Drive" simply means that the "turning" stick controls the curvature
  * of the robot's path rather than its rate of heading change. This helps make the robot more controllable at high
@@ -17,15 +19,15 @@ public class CheesyDriveHelper {
 
     private static final double kHighNegInertiaScalar = 4.0;
 
+    private static final double kHighSensitivity = 1.0;
+    private static final double kLowSensitiity = 1.3;
+
     private static final double kLowNegInertiaThreshold = 0.65;
-    private static final double kLowNegInertiaTurnScalar = 3.5;
+    private static final double kLowNegInertiaTurnScalar = 1.5;
     private static final double kLowNegInertiaCloseScalar = 4.0;
     private static final double kLowNegInertiaFarScalar = 5.0;
 
-    private static final double kHighSensitivity = 5.0;
-    private static final double kLowSensitiity = 0.65;
-
-    private static final double kQuickStopDeadband = 0.5;
+    private static final double kQuickStopDeadband = 0.2;
     private static final double kQuickStopWeight = 0.1;
     private static final double kQuickStopScalar = 5.0;
 

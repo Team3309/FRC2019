@@ -48,7 +48,7 @@ dependencies {
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
     testCompile 'junit:junit:4.12'
-    compile "com.github.Nico1999:4322Utils:2019-3.1"
+    compile "com.github.Nico1999:4322Utils:2019-3.3"
     compile "gov.nist.math:jama:1.0.3"
 }
 

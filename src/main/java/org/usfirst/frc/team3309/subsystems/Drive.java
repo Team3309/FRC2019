@@ -6,12 +6,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.commands.drive.DriveManual;
 import org.usfirst.frc.team3309.commands.drive.RobotStateEstimator;
-import org.usfirst.frc.team3309.lib.geometry.Pose2d;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
 /*
@@ -43,43 +41,43 @@ public class Drive extends Subsystem {
         navx = new AHRS(SPI.Port.kMXP);
 
         //Configure Left Side of Drive
-        driveRightMaster.configFactoryDefault();
-        driveLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-        driveLeftMaster.configClosedloopRamp(Constants.DRIVE_CLOSED_LOOP_RAMP_RATE, 10);
-        driveLeftMaster.config_kP(0, Constants.DRIVE_P, 10);
-        driveLeftMaster.config_kD(0, Constants.DRIVE_D, 10);
-        driveLeftMaster.config_kF(0, Constants.DRIVE_F, 10);
-        driveLeftMaster.setNeutralMode(NeutralMode.Brake);
-        driveLeftMaster.setInverted(true);
-        driveLeftMaster.setSensorPhase(true);
-
-        driveLeftSlave1.follow(driveLeftMaster);
-        driveLeftSlave1.setInverted(InvertType.FollowMaster);
-        driveRightSlave2.follow(driveLeftMaster, FollowerType.PercentOutput);
-        driveLeftSlave2.follow(driveLeftMaster);
-        driveLeftSlave2.setInverted(InvertType.FollowMaster);
+        configMaster(driveLeftMaster);
+        configSlave(driveLeftSlave1, driveLeftMaster);
+        configSlave(driveLeftSlave2, driveLeftMaster);
 
         //Configure Right Side of Drive
-        driveRightMaster.configFactoryDefault();
-        driveRightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-        driveRightMaster.configClosedloopRamp(Constants.DRIVE_CLOSED_LOOP_RAMP_RATE, 10);
-        driveRightMaster.config_kP(0, Constants.DRIVE_P, 10);
-        driveRightMaster.config_kD(0, Constants.DRIVE_D, 10);
-        driveRightMaster.config_kF(0, Constants.DRIVE_F, 10);
-        driveRightMaster.setNeutralMode(NeutralMode.Brake);
-        driveRightMaster.setInverted(true);
-        driveRightMaster.setSensorPhase(true);
+        configMaster(driveRightMaster);
+        configSlave(driveRightSlave1, driveRightMaster);
+        configSlave(driveRightSlave2, driveRightMaster);
 
-        driveRightSlave1.follow(driveRightMaster);
-        driveRightSlave1.setInverted(InvertType.FollowMaster);
-
-        driveRightSlave2.follow(driveRightMaster);
-        driveRightSlave2.setInverted(InvertType.FollowMaster);
-
+        // auto output for NetworkTables
         addChild(driveLeftMaster);
         addChild(driveRightMaster);
         addChild(shifter);
         addChild(navx);
+    }
+
+    private void configMaster(WPI_TalonSRX talon) {
+        talon.configFactoryDefault();
+        talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+        talon.configClosedloopRamp(Constants.DRIVE_CLOSED_LOOP_RAMP_RATE, 10);
+        talon.configOpenloopRamp(Constants.DRIVE_OPEN_LOOP_RAMP_RATE, 10);
+
+        talon.config_kP(0, Constants.DRIVE_P, 10);
+        talon.config_kD(0, Constants.DRIVE_D, 10);
+        talon.config_kF(0, Constants.DRIVE_F, 10);
+
+        talon.setNeutralMode(NeutralMode.Brake);
+        talon.setInverted(true);
+        talon.setSensorPhase(true);
+        addChild(talon);
+    }
+
+    private void configSlave(WPI_VictorSPX slave, WPI_TalonSRX master) {
+        slave.follow(master);
+        slave.setNeutralMode(NeutralMode.Brake);
+        slave.setInverted(InvertType.FollowMaster);
+        addChild(slave);
     }
 
     public double encoderCountsToInches(double counts) {
@@ -194,6 +192,8 @@ public class Drive extends Subsystem {
 
     public void outputToDashboard() {
         driveRobotStateEstimator.outputToSmartDashboard();
+        SmartDashboard.putNumber("Drive left power get", driveLeftMaster.getMotorOutputPercent());
+        SmartDashboard.putNumber("Drive right power get", driveRightMaster.getMotorOutputPercent());
         SmartDashboard.putNumber("Raw angle", getAngularPosition());
         SmartDashboard.putNumber("Encoder left", getLeftEncoderDistance());
         SmartDashboard.putNumber("Encoder right", getRightEncoderDistance());

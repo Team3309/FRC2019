@@ -14,6 +14,7 @@ import org.usfirst.frc.team3309.subsystems.*;
 import org.usfirst.frc.team4322.commandv2.Command;
 import org.usfirst.frc.team4322.commandv2.CommandV2Robot;
 import org.usfirst.frc.team4322.commandv2.Scheduler;
+import org.usfirst.frc.team4322.logging.RobotLogger;
 
 /*
  * This is the Robot class.
@@ -39,6 +40,8 @@ public class Robot extends CommandV2Robot {
      */
     @Override
     public void robotInit() {
+        super.robotInit();
+
         drive = new Drive();
         elevator = new Elevator();
         cargoIntake = new CargoIntake();
@@ -50,8 +53,9 @@ public class Robot extends CommandV2Robot {
 
         // TODO: needs to use limelight stream
         CameraServer.getInstance().startAutomaticCapture(0).setFPS(15);
-
         AutoModeExecutor.displayAutos();
+
+        RobotLogger.INSTANCE.setCurrentLogLevel(RobotLogger.LogLevel.DEBUG);
 
         // TODO: flip every joystick?
         // invert turning joystick's left to right
@@ -60,6 +64,8 @@ public class Robot extends CommandV2Robot {
 
         // TODO: temporary until limit switch
         elevator.zeroEncoder();
+
+        drive.initDefaultCommand();
     }
 
     /*
@@ -68,6 +74,7 @@ public class Robot extends CommandV2Robot {
      */
     @Override
     public void disabledInit() {
+        super.disabledInit();
         Scheduler.killAllCommands();
         drive.reset();
     }
@@ -78,6 +85,7 @@ public class Robot extends CommandV2Robot {
      */
     @Override
     public void autonomousInit() {
+        super.autonomousInit();
         Scheduler.killAllCommands();
         drive.reset();
         drive.setHighGear();
@@ -93,6 +101,7 @@ public class Robot extends CommandV2Robot {
      */
     @Override
     public void autonomousPeriodic() {
+        super.autonomousPeriodic();
     }
 
     /*
@@ -101,6 +110,7 @@ public class Robot extends CommandV2Robot {
      */
     @Override
     public void teleopInit() {
+        super.teleopInit();
         if (autoCommand != null)
             autoCommand.cancel();
         drive.setHighGear();
@@ -117,6 +127,7 @@ public class Robot extends CommandV2Robot {
      */
     @Override
     public void teleopPeriodic() {
+        super.teleopPeriodic();
     }
 
     /*
@@ -136,6 +147,8 @@ public class Robot extends CommandV2Robot {
      */
     @Override
     public void testPeriodic() {
+        super.testPeriodic();
+
         NetworkTable testTable = NetworkTableInstance.getDefault().getTable("test");
         NetworkTable pneumaticsTable = testTable.getSubTable("pneumatics");
 
@@ -179,13 +192,14 @@ public class Robot extends CommandV2Robot {
      */
     @Override
     public void robotPeriodic() {
-        drive.outputToDashboard();
-        elevator.outputToDashboard();
-        panelHolder.outputToDashboard();
-        panelIntake.outputToDashboard();
-        cargoIntake.outputToDashboard();
-        cargoIntake.outputToDashboard();
-        climber.outputToDashboard();
+        super.robotPeriodic();
+//        drive.outputToDashboard();
+//        elevator.outputToDashboard();
+//        panelHolder.outputToDashboard();
+//        panelIntake.outputToDashboard();
+//        cargoIntake.outputToDashboard();
+//        cargoIntake.outputToDashboard();
+//        climber.outputToDashboard();
     }
 
     public static boolean hasCargoInIntakeZone() {
