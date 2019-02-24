@@ -24,7 +24,7 @@ public class Elevator extends Subsystem {
     private boolean stowIntakeAfterMove;
 
     public Elevator() {
-        liftMaster = createMaster(
+        liftMaster = configTalon(
                 Constants.ELEVATOR_MASTER_TALON_ID,
                 Constants.ELEVATOR_P,
                 Constants.ELEVATOR_I,
@@ -36,7 +36,7 @@ public class Elevator extends Subsystem {
         // liftMaster.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
 //        liftMaster.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
         liftSlave = new WPI_VictorSPX(Constants.ELEVATOR_SLAVE_VICTOR_ID);
-      /*  wristMaster = createMaster(
+      /*  wristMaster = configTalon(
                 Constants.WRIST_TALON_ID,
                 Constants.WRIST_P,
                 Constants.WRIST_I,
@@ -44,14 +44,14 @@ public class Elevator extends Subsystem {
         liftSlave.follow(liftMaster);
     }
 
-    private WPI_TalonSRX createMaster(int id, double p, double i, double d) {
+    private WPI_TalonSRX configTalon(int id, double p, double i, double d) {
         WPI_TalonSRX talon = new WPI_TalonSRX(id);
         talon.configFactoryDefault();
         talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         talon.config_kP(0, p);
         talon.config_kI(0, i);
         talon.config_kD(0, d);
-        talon.setNeutralMode(NeutralMode.Brake);
+        talon.setNeutralMode(NeutralMode.Coast);
         addChild(talon);
         return talon;
     }

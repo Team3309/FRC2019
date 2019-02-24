@@ -157,6 +157,7 @@ public class Constants {
     public static final double DRIVE_D = 0.0006;
     public static final double DRIVE_F = 0.002;
     public static final double DRIVE_CLOSED_LOOP_RAMP_RATE = 0.0;
+    public static final double DRIVE_OPEN_LOOP_RAMP_RATE = 0.15; // don't go below 0.15, due to rebound power in cheezy
 
     // Tuned dynamics
     public static final double kRobotMass = 60.0;  // kg
