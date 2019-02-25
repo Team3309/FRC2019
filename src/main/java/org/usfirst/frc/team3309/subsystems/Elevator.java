@@ -6,7 +6,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
-import org.usfirst.frc.team3309.commands.ElevateNudge;
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
@@ -24,36 +23,39 @@ public class Elevator extends Subsystem {
     private boolean stowIntakeAfterMove;
 
     public Elevator() {
-        liftMaster = configTalon(
-                Constants.ELEVATOR_MASTER_TALON_ID,
-                Constants.ELEVATOR_P,
-                Constants.ELEVATOR_I,
-                Constants.ELEVATOR_D);
-        // TODO: uncap when safe
-        liftMaster.configFactoryDefault();
-        liftMaster.configPeakOutputForward(0.9);
-        liftMaster.configPeakOutputReverse(-0.2);//
-        // liftMaster.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
-//        liftMaster.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+        liftMaster = new WPI_TalonSRX(Constants.ELEVATOR_MASTER_TALON_ID);
         liftSlave = new WPI_VictorSPX(Constants.ELEVATOR_SLAVE_VICTOR_ID);
-      /*  wristMaster = configTalon(
-                Constants.WRIST_TALON_ID,
-                Constants.WRIST_P,
-                Constants.WRIST_I,
-                Constants.WRIST_D);*/
+        configTalon(liftMaster);
+
+        liftSlave.configFactoryDefault();
         liftSlave.follow(liftMaster);
+        liftSlave.setNeutralMode(NeutralMode.Brake);
+        liftSlave.setInverted(InvertType.FollowMaster);
+
     }
 
-    private WPI_TalonSRX configTalon(int id, double p, double i, double d) {
-        WPI_TalonSRX talon = new WPI_TalonSRX(id);
+    private void configTalon(WPI_TalonSRX talon) {
         talon.configFactoryDefault();
+
         talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
-        talon.config_kP(0, p);
-        talon.config_kI(0, i);
-        talon.config_kD(0, d);
-        talon.setNeutralMode(NeutralMode.Coast);
+
+        talon.config_kP(0, Constants.ELEVATOR_P);
+        talon.config_kI(0, Constants.ELEVATOR_I);
+        talon.config_kD(0, Constants.ELEVATOR_D);
+
+        talon.configPeakOutputForward(0.7);
+        talon.configPeakOutputReverse(-0.2);
+
+        if (Constants.Robot.PRACTICE == Constants.currentRobot) {
+            talon.setSensorPhase(true);
+        } else {
+            talon.setSensorPhase(false);
+        }
+
+        talon.setNeutralMode(NeutralMode.Brake);
+        // talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+        // talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
         addChild(talon);
-        return talon;
     }
 
     public void zeroEncoder() {
@@ -62,7 +64,7 @@ public class Elevator extends Subsystem {
 
     @Override
     public void initDefaultCommand() {
-        setDefaultCommand(new ElevateNudge());
+//        setDefaultCommand(new ElevateNudge());
     }
 
     @Override

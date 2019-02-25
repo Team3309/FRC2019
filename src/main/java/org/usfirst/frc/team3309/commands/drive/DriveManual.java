@@ -24,18 +24,18 @@ public class DriveManual extends Command {
     @Override
     protected void execute() {
 
-        double throttle = OI.INSTANCE.getOperatorController().getLeftStick().y();
-        double turn = -OI.INSTANCE.getOperatorController().getRightStick().x();
+//        double throttle = OI.INSTANCE.getOperatorController().getLeftStick().y();
+//        double turn = -OI.INSTANCE.getOperatorController().getRightStick().x();
 
-//        double throttle = OI.INSTANCE.getLeftJoystick().getYAxis().get();
-//        double turn = OI.INSTANCE.getRightJoystick().getXAxis().get();
+        double throttle = OI.INSTANCE.getLeftJoystick().getYAxis().get();
+        double turn = OI.INSTANCE.getRightJoystick().getXAxis().get();
 
         SmartDashboard.putNumber("Throttle", throttle);
         SmartDashboard.putNumber("Turn", turn);
 
         boolean isHighGear = Robot.drive.inHighGear();
-//        boolean isQuickTurn = OI.INSTANCE.getRightJoystick().getTrigger().get();
-        boolean isQuickTurn = OI.INSTANCE.getOperatorController().rb();
+        boolean isQuickTurn = OI.INSTANCE.getRightJoystick().getTrigger().get();
+//        boolean isQuickTurn = OI.INSTANCE.getOperatorController().rb();
         boolean isAutoTurn = OI.INSTANCE.getLeftJoystick().getKnobCluster().getBottom().get();
 
         DriveSignal signal = cheesyDrive.update(throttle, turn, isQuickTurn, isHighGear, isAutoTurn);
