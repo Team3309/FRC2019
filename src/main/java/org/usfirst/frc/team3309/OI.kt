@@ -33,8 +33,22 @@ object OI {
 //        operatorController.b.whenPressed(IntakeCargoNear())
 //        operatorController.a.whenPressed(IntakePanel())
 //        operatorController.y.whenPressed(Elevate(Elevate.Level.Home))
-//
-        operatorController.rb.whenPressed(Command.lambda {
+
+        operatorController.b.whenPressed(Command.lambda {
+            Robot.cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Extended)
+        })
+        operatorController.a.whenPressed(Command.lambda {
+            Robot.cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Stowed)
+        })
+
+        operatorController.dPad.down.whenPressed(Elevate(Elevate.Level.Low))
+        operatorController.dPad.right.whenPressed(Elevate(Elevate.Level.Middle))
+        operatorController.dPad.up.whenPressed(Elevate(Elevate.Level.High))
+        operatorController.dPad.left.whenPressed(Elevate(Elevate.Level.Home))
+
+        operatorController.x.whenPressed(IntakeCargoNear())
+
+     /*   operatorController.rb.whenPressed(Command.lambda {
             Robot.panelHolder.setJointedSolenoid(PanelHolder.JointedPosition.PointingOutwards)
         })
         operatorController.rb.whenReleased(Command.lambda {
@@ -46,14 +60,9 @@ object OI {
         })
         operatorController.lb.whenReleased(Command.lambda {
             Robot.panelHolder.setExtendingSolenoid(PanelHolder.ExtendedPosition.RetractedInwards)
-        })
+        })*/
 
-        operatorController.b.whenPressed(Command.lambda {
-            Robot.cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Extended)
-        })
-        operatorController.b.whenReleased(Command.lambda {
-            Robot.cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Stowed)
-        })
+
         //        operatorController.rb.whenPressed(PanelHolderActuate(PanelHolder.PanelHolderPosition.PlacePanel))
 //        operatorController.rb.whenReleased(PanelHolderActuate(PanelHolder.PanelHolderPosition.ReleasePanel))
 ////

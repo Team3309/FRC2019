@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309.commands;
 
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team3309.subsystems.Elevator;
@@ -13,12 +14,15 @@ public class Elevate extends Command {
     private Elevator.CarriagePosition carriageGoalPosition;
     private Elevator.WristFacing wristFacing;
 
+
     public Elevate(Level level) {
+        super(Constants.ELEVATOR_TIMEOUT);
         require(Robot.elevator);
         this.level = level;
     }
 
     public Elevate(Elevator.CarriagePosition carriageGoalPosition, Elevator.WristFacing wristFacing) {
+        super(Constants.ELEVATOR_TIMEOUT);
         require(Robot.elevator);
         this.carriageGoalPosition = carriageGoalPosition;
         this.wristFacing = wristFacing;
@@ -62,6 +66,9 @@ public class Elevate extends Command {
                         carriageGoalPosition = Elevator.CarriagePosition.PanelHigh;
                     }
                     break;
+                case Test:
+                    carriageGoalPosition = Elevator.CarriagePosition.Test;
+                    break;
             }
         }
     }
@@ -69,12 +76,13 @@ public class Elevate extends Command {
     @Override
     protected void execute() {
         Robot.elevator.setPosition(carriageGoalPosition.getCarriagePercentage(), wristFacing);
+        SmartDashboard.putBoolean("Within tolerance", isFinished());
     }
 
     @Override
     protected boolean isFinished() {
         return Util.withinTolerance(Robot.elevator.getCarriagePercentage(),
-                carriageGoalPosition.getCarriagePercentage(), 0.05);
+                carriageGoalPosition.getCarriagePercentage(), 0.06);
     }
 
     public enum Level {
@@ -83,6 +91,7 @@ public class Elevate extends Command {
         High,
         CargoShipCargo,
         Home,
+        Test,
     }
 
 }

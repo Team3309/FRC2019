@@ -9,7 +9,6 @@ public class PanelIntakeActuate extends Command {
     private PanelIntake.PanelIntakePosition position;
 
     public PanelIntakeActuate(PanelIntake.PanelIntakePosition position) {
-        require(Robot.panelIntake);
         this.position = position;
     }
 

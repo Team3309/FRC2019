@@ -9,7 +9,6 @@ public class CargoIntakeActuate extends Command {
     private CargoIntake.CargoIntakePosition position;
 
     public CargoIntakeActuate(CargoIntake.CargoIntakePosition position) {
-        require(Robot.cargoIntake);
         this.position = position;
     }
 

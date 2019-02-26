@@ -19,6 +19,9 @@ public class CargoHolderManual extends Command {
 
         double power = Util.signedMax(powerOut, powerIn, Constants.CARGO_LAUNCHER_ROLLERS_MIN_POWER);
 
+        if (Robot.cargoHolder.hasCargo() && !(power > 0)) {
+                power = -3.0 / 12;
+        }
         Robot.cargoHolder.setPower(power);
     }
 

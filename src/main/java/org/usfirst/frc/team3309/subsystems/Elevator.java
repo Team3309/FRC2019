@@ -6,6 +6,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
+import org.usfirst.frc.team3309.commands.ElevateNudge;
+import org.usfirst.frc.team3309.commands.WaitCommand;
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
@@ -41,17 +43,13 @@ public class Elevator extends Subsystem {
 
         talon.config_kP(0, Constants.ELEVATOR_P);
         talon.config_kI(0, Constants.ELEVATOR_I);
+
         talon.config_kD(0, Constants.ELEVATOR_D);
 
-        talon.configPeakOutputForward(0.7);
-        talon.configPeakOutputReverse(-0.2);
+        talon.configPeakOutputForward(0.86);
+        talon.configPeakOutputReverse(-0.6);
 
-        if (Constants.Robot.PRACTICE == Constants.currentRobot) {
-            talon.setSensorPhase(true);
-        } else {
-            talon.setSensorPhase(false);
-        }
-
+        talon.setSensorPhase(false);
         talon.setNeutralMode(NeutralMode.Brake);
         // talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
         // talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
@@ -148,6 +146,7 @@ public class Elevator extends Subsystem {
 
     public void outputToDashboard() {
         SmartDashboard.putNumber("Carriage position goal", carriageGoal);
+        SmartDashboard.putNumber("Carriage position goal raw", liftGoalToEncoderCounts(carriageGoal));
         SmartDashboard.putNumber("Carriage position actual", getCarriagePercentage());
         SmartDashboard.putNumber("Carriage position raw", liftMaster.getSelectedSensorPosition());
         SmartDashboard.putNumber("Carriage position goal raw", liftGoalToEncoderCounts(carriageGoal));
@@ -160,15 +159,19 @@ public class Elevator extends Subsystem {
     // Goal in percentage [0, 1]
     public enum CarriagePosition {
 
-        PanelLow(0.0),
+        Home(0.01),
+        PanelLow(Home.getCarriagePercentage()),
         PanelMiddle(0.0),
         PanelHigh(0.0),
-        CargoLow(PanelLow.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
-        CargoMiddle(PanelMiddle.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
-        CargoHigh(PanelHigh.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
+        CargoLow(0.26),
+        CargoMiddle(0.64),
+        CargoHigh(0.99),
+//        CargoLow(PanelLow.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
+//        CargoMiddle(PanelMiddle.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
+//        CargoHigh(PanelHigh.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
         CargoShipCargo(0.0),
         PanelClearingPanelIntake(0.0),
-        Home(0.0);
+        Test(0.0);
 
         private double carriagePercentage;
 

@@ -5,6 +5,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team3309.commands.ElevateNudge;
 import org.usfirst.frc.team3309.commands.ElevatorManual;
 import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate;
@@ -67,7 +68,6 @@ public class Robot extends CommandV2Robot {
         elevator.zeroEncoder();
 
         drive.initDefaultCommand();
-        elevator.initDefaultCommand();
 
         SmartDashboard.putBoolean("outputSubsystemsToDashboard", false);
     }
@@ -81,6 +81,7 @@ public class Robot extends CommandV2Robot {
         super.disabledInit();
         Scheduler.killAllCommands();
         drive.reset();
+        drive.setHighGear();
     }
 
     /*
@@ -119,10 +120,9 @@ public class Robot extends CommandV2Robot {
             autoCommand.cancel();
         drive.setHighGear();
         drive.reset();
-        // TODO: DELETE LATER
-        new CargoHolderManual().start();
+        elevator.zeroEncoder();
         new CargoIntakeManual().start();
-        new PanelIntakeManual().start();
+        new CargoHolderManual().start();
         new ElevatorManual().start();
     }
 
@@ -140,10 +140,6 @@ public class Robot extends CommandV2Robot {
      */
     @Override
     public void testInit() {
-        new CargoHolderManual().start();
-        new CargoIntakeManual().start();
-        new PanelIntakeManual().start();
-        new ElevatorManual().start();
     }
 
 
@@ -209,7 +205,7 @@ public class Robot extends CommandV2Robot {
             cargoIntake.outputToDashboard();
             climber.outputToDashboard();
         }
-
+        elevator.outputToDashboard();
     }
 
     public static boolean hasCargoInIntakeZone() {

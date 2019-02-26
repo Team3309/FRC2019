@@ -34,6 +34,7 @@ public class CargoHolder extends Subsystem {
     }
 
     public boolean hasCargo() {
+//        return true;
         return !bumperSensor.get();
     }
 
