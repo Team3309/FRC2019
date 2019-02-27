@@ -67,12 +67,12 @@ public class Elevator extends Subsystem {
 
     @Override
     public void periodic() {
-        if (stowIntakeAfterMove
+        /*if (stowIntakeAfterMove
                 && moveComplete()
                 && !Robot.hasCargoInIntakeZone()) {
             new CargoIntakeActuate(CargoIntake.CargoIntakePosition.Stowed).start();
             stowIntakeAfterMove = false;
-        }
+        }*/
     }
 
     private boolean moveComplete() {
@@ -104,13 +104,15 @@ public class Elevator extends Subsystem {
 //                Constants.LIFT_BEGIN_SAFE_ZONE,
 //                Constants.LIFT_END_SAFE_ZONE);
 
-        if (Robot.cargoHolder.hasCargo()
+        /*if (Robot.cargoHolder.hasCargo()
                 && Robot.cargoIntake.getPosition() == CargoIntake.CargoIntakePosition.Stowed
                 && moveCrossesIntake()) {
             new CargoIntakeActuate(CargoIntake.CargoIntakePosition.Extended).start();
             // TODO: if elevator is faster than intake can extend, put wait here
             stowIntakeAfterMove = true;
-        }
+        }*/
+
+
 
         double rawLiftGoal = liftGoalToEncoderCounts(carriageGoal);
 
@@ -163,15 +165,17 @@ public class Elevator extends Subsystem {
         PanelLow(Home.getCarriagePercentage()),
         PanelMiddle(0.0),
         PanelHigh(0.0),
+        PanelGrab(0.05),
         CargoLow(0.26),
         CargoMiddle(0.64),
         CargoHigh(0.99),
-//        CargoLow(PanelLow.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
+        //        CargoLow(PanelLow.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
 //        CargoMiddle(PanelMiddle.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
 //        CargoHigh(PanelHigh.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
         CargoShipCargo(0.0),
         PanelClearingPanelIntake(0.0),
-        Test(0.0);
+        Test(0.0),
+        DropATad(0.0);
 
         private double carriagePercentage;
 

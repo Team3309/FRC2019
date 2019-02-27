@@ -7,7 +7,7 @@ import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.PIDController;
 import org.usfirst.frc.team3309.lib.util.CheesyDriveHelper;
 import org.usfirst.frc.team3309.lib.util.DriveSignal;
-import org.usfirst.frc.team3309.subsystems.Drive;
+import org.usfirst.frc.team3309.subsystems.Vision;
 import org.usfirst.frc.team4322.commandv2.Command;
 
 public class DriveManual extends Command {
@@ -46,11 +46,33 @@ public class DriveManual extends Command {
         SmartDashboard.putNumber("Drive left power set", leftPower);
         SmartDashboard.putNumber("Drive right power set", rightPower);
 
+        Vision.Limelight limelight = null;
 
         if (isAutoTurn) {
-            double angularPower = turnController.update(Robot.vision.getXError());
-            leftPower += angularPower;
-            rightPower -= angularPower;
+            if (Robot.cargoHolder.hasCargo()) {
+                limelight = Vision.cargoLimelight;
+            } else if (Robot.panelIntake.hasPanel()) {
+                limelight = Vision.panelLimelight;
+            } else {
+                limelight = null;
+            }
+
+            if (limelight != null) {
+                limelight.setLed(Vision.Limelight.LEDMode.On);
+
+                double gyroAngle = Robot.drive.getAngularPosition();
+                double limelightAngle = limelight.getTx();
+                double goalAngle = gyroAngle + limelightAngle;
+
+                double angularPower = turnController.update(gyroAngle, goalAngle);
+
+                leftPower += angularPower;
+                rightPower -= angularPower;
+
+            }
+        } else if (limelight != null) {
+            limelight.setLed(Vision.Limelight.LEDMode.Off);
+            limelight = null;
         }
 
         Robot.drive.setLeftRight(ControlMode.PercentOutput, leftPower, rightPower);

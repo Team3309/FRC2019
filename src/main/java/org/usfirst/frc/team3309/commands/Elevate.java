@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.util.Util;
+import org.usfirst.frc.team3309.subsystems.CargoIntake;
 import org.usfirst.frc.team3309.subsystems.Elevator;
 import org.usfirst.frc.team4322.commandv2.Command;
 
@@ -40,9 +41,19 @@ public class Elevate extends Command {
 
             switch (level) {
                 case Home:
-                    carriageGoalPosition = Elevator.CarriagePosition.Home;
+                    if (Robot.hasCargoInIntakeZone()
+                            && Robot.cargoIntake.getPosition() == CargoIntake.CargoIntakePosition.Stowed) {
+                        carriageGoalPosition = Elevator.CarriagePosition.Home;
+                    } else if (!Robot.hasCargoInIntakeZone()
+                            && Robot.cargoHolder.hasCargo()
+                            && Robot.cargoIntake.getPosition() == CargoIntake.CargoIntakePosition.Stowed) {
+                        carriageGoalPosition = Elevator.CarriagePosition.CargoLow;
+                    } else {
+                        carriageGoalPosition = Elevator.CarriagePosition.Home;
+                    }
                     break;
                 case CargoShipCargo:
+
                     carriageGoalPosition = Elevator.CarriagePosition.CargoShipCargo;
                     break;
                 case Low:
@@ -69,13 +80,22 @@ public class Elevate extends Command {
                 case Test:
                     carriageGoalPosition = Elevator.CarriagePosition.Test;
                     break;
+                case DropATad:
+                    carriageGoalPosition = Elevator.CarriagePosition.DropATad;
+                    break;
             }
         }
     }
 
     @Override
     protected void execute() {
-        Robot.elevator.setPosition(carriageGoalPosition.getCarriagePercentage(), wristFacing);
+        double goalPosition;
+        if (carriageGoalPosition == Elevator.CarriagePosition.DropATad) {
+            goalPosition = Robot.elevator.getCarriagePercentage() - Constants.ELEVATOR_PANEL_DROP_DISTANCE;
+        } else {
+            goalPosition = carriageGoalPosition.getCarriagePercentage();
+        }
+        Robot.elevator.setPosition(goalPosition, wristFacing);
         SmartDashboard.putBoolean("Within tolerance", isFinished());
     }
 
@@ -92,6 +112,7 @@ public class Elevate extends Command {
         CargoShipCargo,
         Home,
         Test,
+        DropATad
     }
 
 }

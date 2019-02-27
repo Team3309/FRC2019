@@ -23,20 +23,10 @@ object OI {
         leftJoystick.trigger.whenPressed(DriveSetLowGear())
         leftJoystick.trigger.whenReleased(DriveSetHighGear())
 
-//        rightJoystick.knobCluster.bottom.whenPressed(TogglePipeline())
-//
-//        operatorController.dPad.down.whenPressed(Elevate(Elevate.Level.Low))
-//        operatorController.dPad.right.whenPressed(Elevate(Elevate.Level.Middle))
-//        operatorController.dPad.up.whenPressed(Elevate(Elevate.Level.High))
-//        operatorController.dPad.left.whenPressed(Elevate(Elevate.Level.CargoShipCargo))
-//
-//        operatorController.b.whenPressed(IntakeCargoNear())
-//        operatorController.a.whenPressed(IntakePanel())
-//        operatorController.y.whenPressed(Elevate(Elevate.Level.Home))
-
         operatorController.b.whenPressed(Command.lambda {
             Robot.cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Extended)
         })
+
         operatorController.a.whenPressed(Command.lambda {
             Robot.cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Stowed)
         })
@@ -47,24 +37,28 @@ object OI {
         operatorController.dPad.left.whenPressed(Elevate(Elevate.Level.Home))
 
         operatorController.x.whenPressed(IntakeCargoNear())
+        operatorController.y.whenPressed(IntakePanelFromStation())
 
-     /*   operatorController.rb.whenPressed(Command.lambda {
-            Robot.panelHolder.setJointedSolenoid(PanelHolder.JointedPosition.PointingOutwards)
-        })
-        operatorController.rb.whenReleased(Command.lambda {
-            Robot.panelHolder.setJointedSolenoid(PanelHolder.JointedPosition.Vertical)
-        })
+        operatorController.rb.whenPressed(PlacePanel())
 
-        operatorController.lb.whenPressed(Command.lambda {
-            Robot.panelHolder.setExtendingSolenoid(PanelHolder.ExtendedPosition.ExtendedOutwards)
-        })
-        operatorController.lb.whenReleased(Command.lambda {
-            Robot.panelHolder.setExtendingSolenoid(PanelHolder.ExtendedPosition.RetractedInwards)
-        })*/
-
-
-        //        operatorController.rb.whenPressed(PanelHolderActuate(PanelHolder.PanelHolderPosition.PlacePanel))
+//        operatorController.rb.whenPressed(PanelHolderActuate(PanelHolder.PanelHolderPosition.PlacePanel))
 //        operatorController.rb.whenReleased(PanelHolderActuate(PanelHolder.PanelHolderPosition.ReleasePanel))
+
+        /*        operatorController.rb.whenPressed(Command.lambda {
+                Robot.panelHolder.setJointedSolenoid(PanelHolder.JointedPosition.PointingOutwards)
+            })
+            operatorController.rb.whenReleased(Command.lambda {
+                Robot.panelHolder.setJointedSolenoid(PanelHolder.JointedPosition.Vertical)
+            })
+
+            operatorController.lb.whenPressed(Command.lambda {
+                Robot.panelHolder.setExtendingSolenoid(PanelHolder.ExtendedPosition.ExtendedOutwards)
+            })
+            operatorController.lb.whenReleased(Command.lambda {
+                Robot.panelHolder.setExtendingSolenoid(PanelHolder.ExtendedPosition.RetractedInwards)
+            })
+    */
+
 ////
 //        operatorController.start.whenPressed(ReleaseLatch(Climber.ClimberLatchPosition.Released))
 //        operatorController.back.whenPressed(WinchClimber(Climber.ClimberAngle.Extended))

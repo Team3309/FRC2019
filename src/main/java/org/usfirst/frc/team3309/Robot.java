@@ -206,6 +206,8 @@ public class Robot extends CommandV2Robot {
             climber.outputToDashboard();
         }
         elevator.outputToDashboard();
+        panelHolder.outputToDashboard();
+
     }
 
     public static boolean hasCargoInIntakeZone() {

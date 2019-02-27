@@ -79,7 +79,12 @@ public class Constants {
     // max position used for conversions (encoder counts)
     public static final double ELEVATOR_ENCODER_COUNTS_FOR_MAX_HEIGHT = 116000;
 
+    // timeout for Elevate to finish
     public static  final double ELEVATOR_TIMEOUT = 1.5;
+
+    // amount elevator drops for placing a panel
+    public static final double ELEVATOR_PANEL_DROP_DISTANCE = 0.01;
+
 
     // [0, 1], manual elevator speed
     public static final double LIFT_NUDGE_PCT_PER_SEC = 0.001;
@@ -92,7 +97,7 @@ public class Constants {
 //    public static final double LIFT_END_SAFE_ZONE = 0;
 
     // these can NEVER be the same
-    public static final double CARGO_INTAKE_ZONE_MIN = 0.0;
+    public static final double CARGO_INTAKE_ZONE_MIN = -0.1;
     public static final double CARGO_INTAKE_ZONE_MAX = 0.24;
 
     public static final int WRIST_TALON_ID = -1;

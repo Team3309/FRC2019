@@ -35,6 +35,14 @@ public class PanelHolder extends Subsystem {
         } else if (position == PanelHolderPosition.GrabPanel) {
             setExtendingSolenoid(ExtendedPosition.RetractedInwards);
             setJointedSolenoid(JointedPosition.Vertical);
+        } else if (position == PanelHolderPosition.FingerVertical) {
+            setJointedSolenoid(JointedPosition.Vertical);
+        } else if (position == PanelHolderPosition.TelescopeBack) {
+            setExtendingSolenoid(ExtendedPosition.RetractedInwards);
+        } else if (position == PanelHolderPosition.FingerPointingOutwards) {
+            setJointedSolenoid(JointedPosition.PointingOutwards);
+        } else if (position == PanelHolderPosition.TelescopeForwards) {
+            setExtendingSolenoid(ExtendedPosition.ExtendedOutwards);
         }
     }
 
@@ -101,14 +109,18 @@ public class PanelHolder extends Subsystem {
     }
 
     public boolean isBumperPressed() {
-        return bumperSensor.get();
+        return !bumperSensor.get();
     }
 
     public enum PanelHolderPosition {
         ReleasePanel,
         PlacePanel,
         GrabPanel,
-        Unknown
+        Unknown,
+        FingerVertical,
+        FingerPointingOutwards,
+        TelescopeBack,
+        TelescopeForwards
     }
 
     public enum JointedPosition {

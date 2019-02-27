@@ -32,12 +32,12 @@ public class CargoIntake extends Subsystem {
     }
 
     public void setPosition(CargoIntakePosition position) {
-        if (position == CargoIntakePosition.Stowed
-            && Robot.hasCargoInIntakeZone()) {
-            DriverStation.reportWarning("Cannot stow CargoIntake with " +
-                    "elevator down and holding cargo", true);
-            return;
-        }
+//        if (position == CargoIntakePosition.Stowed
+//            && Robot.hasCargoInIntakeZone()) {
+//            DriverStation.reportWarning("Cannot stow CargoIntake with " +
+//                    "elevator down and holding cargo", true);
+//            return;
+//        }
        solenoid.set(position.get());
     }
 
