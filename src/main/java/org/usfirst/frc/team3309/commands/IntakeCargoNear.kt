@@ -28,7 +28,7 @@ fun IntakeCargoNear(): Command {
                 // TODO: add or for operator override
                 +WaitUntilCargoIsIn()
                 +Elevate(Elevator.CarriagePosition.CargoLow)
-                +WaitCommand(0.25)
+                +WaitCommand(0.15)
                 +CargoIntakeActuate(CargoIntake.CargoIntakePosition.Stowed)
             }
 

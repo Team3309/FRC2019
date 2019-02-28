@@ -8,7 +8,7 @@ import org.usfirst.frc.team4322.commandv2.group
 fun RetractFingerFromFeederStation(): Command {
     return group {
         sequential {
-            +WaitCommand(0.2)
+            +WaitCommand(0.5)
             +Elevate(Elevator.CarriagePosition.PanelGrab)
             +PanelHolderActuate(PanelHolder.PanelHolderPosition.FingerVertical)
             +WaitCommand(0.2)

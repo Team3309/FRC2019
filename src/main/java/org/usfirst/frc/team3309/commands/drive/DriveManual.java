@@ -13,7 +13,7 @@ import org.usfirst.frc.team4322.commandv2.Command;
 
 public class DriveManual extends Command {
 
-    private PIDController turnController = new PIDController("turn", 0.07, 0.0, 0.0);
+    private PIDController turnController = new PIDController("turn", 0.25, 0.0, 0.0);
 
     private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
 
