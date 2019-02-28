@@ -72,9 +72,9 @@ public class Constants {
     public static final int ELEVATOR_MASTER_TALON_ID = 6;
     public static final int ELEVATOR_SLAVE_VICTOR_ID = 10;
 
-    public static final double ELEVATOR_P = 0.2;
-    public static final double ELEVATOR_I = 0.0;
-    public static final double ELEVATOR_D = 2.0;
+    public static final double ELEVATOR_P = 0.054;
+    public static final double ELEVATOR_I = 5.56e-6;
+    public static final double ELEVATOR_D = 0;
 
     // max position used for conversions (encoder counts)
     public static final double ELEVATOR_ENCODER_COUNTS_FOR_MAX_HEIGHT = 116000;

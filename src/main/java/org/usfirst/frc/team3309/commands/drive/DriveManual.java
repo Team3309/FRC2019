@@ -7,18 +7,24 @@ import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.PIDController;
 import org.usfirst.frc.team3309.lib.util.CheesyDriveHelper;
 import org.usfirst.frc.team3309.lib.util.DriveSignal;
+import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team3309.subsystems.Vision;
 import org.usfirst.frc.team4322.commandv2.Command;
 
 public class DriveManual extends Command {
 
-    private PIDController turnController = new PIDController("turn", 0.0, 0.0, 0.0);
+    private PIDController turnController = new PIDController("turn", 0.07, 0.0, 0.0);
 
     private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
+
+    private double goalAngle;
+    private Vision.Limelight limelight = Vision.panelLimelight;
+
 
     public DriveManual() {
         require(Robot.drive);
         setInterruptBehavior(InterruptBehavior.Suspend);
+        turnController.outputToDashboard();
     }
 
     @Override
@@ -30,8 +36,8 @@ public class DriveManual extends Command {
         double throttle = OI.INSTANCE.getLeftJoystick().getYAxis().get();
         double turn = OI.INSTANCE.getRightJoystick().getXAxis().get();
 
-        SmartDashboard.putNumber("Throttle", throttle);
-        SmartDashboard.putNumber("Turn", turn);
+//           SmartDashboard.putNumber("Throttle", throttle);
+//        SmartDashboard.putNumber("Turn", turn);
 
         boolean isHighGear = Robot.drive.inHighGear();
         boolean isQuickTurn = OI.INSTANCE.getRightJoystick().getTrigger().get();
@@ -43,36 +49,43 @@ public class DriveManual extends Command {
         double leftPower = signal.getLeft();
         double rightPower = signal.getRight();
 
-        SmartDashboard.putNumber("Drive left power set", leftPower);
-        SmartDashboard.putNumber("Drive right power set", rightPower);
+//        SmartDashboard.putNumber("Drive left power set", leftPower);
+//        SmartDashboard.putNumber("Drive right power set", rightPower);
 
-        Vision.Limelight limelight = null;
 
         if (isAutoTurn) {
+            turnController.readDashboard();
+
             if (Robot.cargoHolder.hasCargo()) {
                 limelight = Vision.cargoLimelight;
-            } else if (Robot.panelIntake.hasPanel()) {
+            } else if (Robot.panelHolder.hasPanel()) {
                 limelight = Vision.panelLimelight;
-            } else {
-                limelight = null;
             }
 
-            if (limelight != null) {
-                limelight.setLed(Vision.Limelight.LEDMode.On);
+            limelight.setCamMode(Vision.Limelight.CamMode.VisionProcessor);
+            limelight.setLed(Vision.Limelight.LEDMode.On);
 
-                double gyroAngle = Robot.drive.getAngularPosition();
-                double limelightAngle = limelight.getTx();
-                double goalAngle = gyroAngle + limelightAngle;
+            if (Util.within(limelight.getArea(), 3.1, 12)) {
 
-                double angularPower = turnController.update(gyroAngle, goalAngle);
+                double skew = limelight.getSkew();
+                if (skew == 0 || skew <= -89.0) {
+                    double gyroAngle = Robot.drive.getAngularPosition();
+                    double limelightAngle = limelight.getTx();
+                    goalAngle = gyroAngle + limelightAngle;
 
-                leftPower += angularPower;
-                rightPower -= angularPower;
+                    double angularPower = -turnController.update(gyroAngle, goalAngle);
 
+//                    SmartDashboard.putNumber("Limelight angle", limelightAngle);
+//                    SmartDashboard.putNumber("Turn angular power", angularPower);
+
+                    leftPower += angularPower;
+                    rightPower -= angularPower;
+                }
             }
-        } else if (limelight != null) {
+        } else {
+            limelight.setCamMode(Vision.Limelight.CamMode.DriverCamera);
             limelight.setLed(Vision.Limelight.LEDMode.Off);
-            limelight = null;
+            limelight = Vision.panelLimelight;
         }
 
         Robot.drive.setLeftRight(ControlMode.PercentOutput, leftPower, rightPower);

@@ -11,10 +11,12 @@ public class Vision extends Subsystem {
     public static Limelight panelLimelight;
 
     public Vision() {
-        cargoLimelight = new Limelight("cargoLimelight");
-        panelLimelight = new Limelight("panelLimelight");
+        cargoLimelight = new Limelight("limelight-cargo");
+        panelLimelight = new Limelight("limelight-panel");
         cargoLimelight.setLed(Limelight.LEDMode.Off);
         panelLimelight.setLed(Limelight.LEDMode.Off);
+        cargoLimelight.setCamMode(Limelight.CamMode.DriverCamera);
+        panelLimelight.setCamMode(Limelight.CamMode.DriverCamera);
     }
 
     public double getAngle(Limelight limelight) {
@@ -37,6 +39,14 @@ public class Vision extends Subsystem {
             return get("tx");
         }
 
+        public double getSkew() {
+            return get("ts");
+        }
+
+        public double getArea() {
+            return get("ta");
+        }
+
         public double get(String entryName) {
             return table.getEntry(entryName).getDouble(0.0);
         }
@@ -53,8 +63,16 @@ public class Vision extends Subsystem {
             table.getEntry("ledMode").setDouble(mode.value);
         }
 
+        public void setCamMode(CamMode camMode) {
+            if (camMode == CamMode.VisionProcessor) {
+                table.getEntry("camMode").setDouble(0.0);
+            } else if (camMode == CamMode.DriverCamera) {
+                table.getEntry("camMode").setDouble(1.0);
+            }
+        }
+
         public enum LEDMode {
-            Off(2),
+            Off(1),
             On(3);
 
             private int value;
@@ -67,6 +85,11 @@ public class Vision extends Subsystem {
                 return value;
             }
 
+        }
+
+        public enum CamMode {
+            VisionProcessor,
+            DriverCamera
         }
 
     }

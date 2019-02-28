@@ -43,11 +43,13 @@ public class Elevator extends Subsystem {
 
         talon.config_kP(0, Constants.ELEVATOR_P);
         talon.config_kI(0, Constants.ELEVATOR_I);
-
         talon.config_kD(0, Constants.ELEVATOR_D);
 
-        talon.configPeakOutputForward(0.86);
-        talon.configPeakOutputReverse(-0.6);
+        talon.configMotionCruiseVelocity(300000);
+        talon.configMotionAcceleration(180000);
+
+        talon.configPeakOutputForward(1.0);
+        talon.configPeakOutputReverse(-0.7);
 
         talon.setSensorPhase(false);
         talon.setNeutralMode(NeutralMode.Brake);
@@ -113,10 +115,9 @@ public class Elevator extends Subsystem {
         }*/
 
 
-
         double rawLiftGoal = liftGoalToEncoderCounts(carriageGoal);
 
-        liftMaster.set(ControlMode.Position, rawLiftGoal);
+        liftMaster.set(ControlMode.MotionMagic, rawLiftGoal);
     }
 
     // if intake zone is 0 in length, this can return false when it crosses
@@ -128,6 +129,10 @@ public class Elevator extends Subsystem {
 
     public double getCarriagePercentage() {
         return encoderCountsToNormalizedLift(liftMaster.getSelectedSensorPosition());
+    }
+
+    public double getEncoderVelocity() {
+        return liftMaster.getSelectedSensorVelocity();
     }
 
     private double encoderCountsToNormalizedLift(double encoderCounts) {
@@ -149,6 +154,7 @@ public class Elevator extends Subsystem {
     public void outputToDashboard() {
         SmartDashboard.putNumber("Carriage position goal", carriageGoal);
         SmartDashboard.putNumber("Carriage position goal raw", liftGoalToEncoderCounts(carriageGoal));
+        SmartDashboard.putNumber("Carriage velocity raw", getEncoderVelocity());
         SmartDashboard.putNumber("Carriage position actual", getCarriagePercentage());
         SmartDashboard.putNumber("Carriage position raw", liftMaster.getSelectedSensorPosition());
         SmartDashboard.putNumber("Carriage position goal raw", liftGoalToEncoderCounts(carriageGoal));
@@ -161,20 +167,20 @@ public class Elevator extends Subsystem {
     // Goal in percentage [0, 1]
     public enum CarriagePosition {
 
-        Home(0.01),
+        Home(0.0),
         PanelLow(Home.getCarriagePercentage()),
-        PanelMiddle(0.0),
-        PanelHigh(0.0),
+        PanelMiddle(0.40),
+        PanelHigh(0.76),
         PanelGrab(0.05),
         CargoLow(0.26),
         CargoMiddle(0.64),
-        CargoHigh(0.99),
+        CargoHigh(0.95),
         //        CargoLow(PanelLow.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
 //        CargoMiddle(PanelMiddle.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
 //        CargoHigh(PanelHigh.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
-        CargoShipCargo(0.0),
+        CargoShipCargo(0.5),
         PanelClearingPanelIntake(0.0),
-        Test(0.0),
+        Test(0.92),
         DropATad(0.0);
 
         private double carriagePercentage;

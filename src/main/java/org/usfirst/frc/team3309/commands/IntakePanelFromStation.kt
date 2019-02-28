@@ -12,13 +12,7 @@ fun IntakePanelFromStation(): Command {
             +PanelHolderActuate(PanelHolder.PanelHolderPosition.PlacePanel)
             sequential {
                 +WaitUntilPanelIsInPanelHolder()
-                +WaitCommand(0.2)
-                +Elevate(Elevator.CarriagePosition.PanelGrab)
-                +PanelHolderActuate(PanelHolder.PanelHolderPosition.FingerVertical)
-                +WaitCommand(0.2)
-                +PanelHolderActuate(PanelHolder.PanelHolderPosition.TelescopeBack)
-                +WaitCommand(1.0)
-                +Elevate(Elevate.Level.Home)
+                +RetractFingerFromFeederStation()
             }
         }
     }

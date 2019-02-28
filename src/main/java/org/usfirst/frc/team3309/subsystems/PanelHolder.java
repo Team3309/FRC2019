@@ -51,28 +51,6 @@ public class PanelHolder extends Subsystem {
         setJointedSolenoid(jointedPosition);
     }
 
-
-
-    /*
-     * @return current PanelHolder configuration
-     * */
-    public PanelHolderPosition getPosition() {
-        JointedPosition jointedPosition = getJointedPosition();
-        ExtendedPosition extendedPosition = getExtendedPosition();
-
-        if (extendedPosition == ExtendedPosition.RetractedInwards
-                && jointedPosition == JointedPosition.PointingOutwards) {
-            return PanelHolderPosition.ReleasePanel;
-        } else if (extendedPosition == ExtendedPosition.ExtendedOutwards
-                && jointedPosition == JointedPosition.PointingOutwards) {
-            return PanelHolderPosition.PlacePanel;
-        } else if (extendedPosition == ExtendedPosition.RetractedInwards
-                && jointedPosition == JointedPosition.Vertical) {
-            return PanelHolderPosition.GrabPanel;
-        }
-        return PanelHolderPosition.Unknown;
-    }
-
     public JointedPosition getJointedPosition() {
         boolean isPointing = jointedSolenoid.get();
         if (isPointing == JointedPosition.PointingOutwards.get()) {
@@ -96,7 +74,7 @@ public class PanelHolder extends Subsystem {
         SmartDashboard.putBoolean("PH Jointed raw", getJointedPosition().value);
         SmartDashboard.putString("PH ExtendedPosition", getExtendedPosition().toString());
         SmartDashboard.putBoolean("PH Extended raw", getExtendedPosition().value);
-        SmartDashboard.putBoolean("PH bumper pressed", isBumperPressed());
+        SmartDashboard.putBoolean("PH bumper pressed", hasPanel());
     }
 
     // TODO: make private and wrap them through their the main subsystem set function
@@ -108,7 +86,7 @@ public class PanelHolder extends Subsystem {
         extendingSolenoid.set(position.get());
     }
 
-    public boolean isBumperPressed() {
+    public boolean hasPanel() {
         return !bumperSensor.get();
     }
 
@@ -116,7 +94,6 @@ public class PanelHolder extends Subsystem {
         ReleasePanel,
         PlacePanel,
         GrabPanel,
-        Unknown,
         FingerVertical,
         FingerPointingOutwards,
         TelescopeBack,

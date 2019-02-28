@@ -57,7 +57,7 @@ public class Robot extends CommandV2Robot {
 //        CameraServer.getInstance().startAutomaticCapture(0).setFPS(15);
         AutoModeExecutor.displayAutos();
 
-        RobotLogger.INSTANCE.setCurrentLogLevel(RobotLogger.LogLevel.DEBUG);
+        RobotLogger.INSTANCE.setCurrentLogLevel(RobotLogger.LogLevel.ERR);
 
         // TODO: flip every joystick?
         // invert turning joystick's left to right
@@ -123,7 +123,7 @@ public class Robot extends CommandV2Robot {
         elevator.zeroEncoder();
         new CargoIntakeManual().start();
         new CargoHolderManual().start();
-        new ElevatorManual().start();
+//        new ElevatorManual().start();
     }
 
     /*
@@ -205,9 +205,10 @@ public class Robot extends CommandV2Robot {
             cargoIntake.outputToDashboard();
             climber.outputToDashboard();
         }
-        elevator.outputToDashboard();
-        panelHolder.outputToDashboard();
-
+//        elevator.outputToDashboard();
+//        panelHolder.outputToDashboard();
+//        cargoHolder.outputToDashboard();
+//        drive.outputToDashboard();
     }
 
     public static boolean hasCargoInIntakeZone() {
