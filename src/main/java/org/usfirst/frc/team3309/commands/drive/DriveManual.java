@@ -18,6 +18,9 @@ public class DriveManual extends Command {
     private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
 
     private double goalAngle;
+    private double limelightAngle;
+    private boolean lock;
+
     private Vision.Limelight limelight = Vision.panelLimelight;
 
 
@@ -62,15 +65,24 @@ public class DriveManual extends Command {
                 limelight = Vision.panelLimelight;
             }
 
-            limelight.setCamMode(Vision.Limelight.CamMode.VisionProcessor);
-            limelight.setLed(Vision.Limelight.LEDMode.On);
+            if (!lock) {
+                limelight.setCamMode(Vision.Limelight.CamMode.VisionProcessor);
+                limelight.setLed(Vision.Limelight.LEDMode.On);
+            } else {
+                limelight.setLed(Vision.Limelight.LEDMode.Off);
+            }
 
             if (Util.within(limelight.getArea(), 3.1, 12)) {
 
                 double skew = limelight.getSkew();
                 if (skew == 0 || skew <= -89.0) {
+                    if (!lock) {
+                        limelightAngle = limelight.getTx();
+                        lock = true;
+                    }
+
                     double gyroAngle = Robot.drive.getAngularPosition();
-                    double limelightAngle = limelight.getTx();
+
                     goalAngle = gyroAngle + limelightAngle;
 
                     double angularPower = -turnController.update(gyroAngle, goalAngle);
@@ -86,6 +98,7 @@ public class DriveManual extends Command {
             limelight.setCamMode(Vision.Limelight.CamMode.DriverCamera);
             limelight.setLed(Vision.Limelight.LEDMode.Off);
             limelight = Vision.panelLimelight;
+            lock = false;
         }
 
         Robot.drive.setLeftRight(ControlMode.PercentOutput, leftPower, rightPower);
