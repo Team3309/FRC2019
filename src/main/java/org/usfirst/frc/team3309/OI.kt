@@ -6,6 +6,7 @@ import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate
 import org.usfirst.frc.team3309.commands.drive.DriveSetHighGear
 import org.usfirst.frc.team3309.commands.drive.DriveSetLowGear
 import org.usfirst.frc.team3309.subsystems.CargoIntake
+import org.usfirst.frc.team3309.subsystems.Climber
 import org.usfirst.frc.team3309.subsystems.PanelHolder
 import org.usfirst.frc.team4322.commandv2.Command
 import org.usfirst.frc.team4322.input.InputThrustmaster
@@ -49,7 +50,7 @@ object OI {
         operatorController.dPad.up.whenPressed(Elevate(Elevate.Level.High))
         operatorController.dPad.left.whenPressed(Elevate(Elevate.Level.CargoShipCargo))
 
-        operatorController.x.whenPressed(Elevate(Elevate.Level.Test))
+        operatorController.start.whenPressed(ReleaseLatch(Climber.ClimberLatchPosition.Released))
 
         operatorController.lb.whileHeld(IntakePanelFromStation())
         operatorController.lb.whenReleased(RetractFingerFromFeederStation())

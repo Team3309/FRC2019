@@ -5,6 +5,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team3309.commands.ClimberManual;
 import org.usfirst.frc.team3309.commands.ElevateNudge;
 import org.usfirst.frc.team3309.commands.ElevatorManual;
 import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
@@ -125,6 +126,7 @@ public class Robot extends CommandV2Robot {
         new CargoIntakeManual().start();
         new CargoHolderManual().start();
         new ElevatorManual().start();
+        new ClimberManual().start();
     }
 
     /*
