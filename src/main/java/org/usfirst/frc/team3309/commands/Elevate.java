@@ -15,6 +15,7 @@ public class Elevate extends Command {
     private Elevator.CarriagePosition carriageGoalPosition;
     private Elevator.WristFacing wristFacing;
 
+
     public Elevate(Level level) {
         super(Constants.ELEVATOR_TIMEOUT);
         require(Robot.elevator);

@@ -51,6 +51,7 @@ public class Elevator extends Subsystem {
         talon.configPeakOutputForward(1.0);
         talon.configPeakOutputReverse(-0.7);
 
+
         talon.setSensorPhase(false);
         talon.setNeutralMode(NeutralMode.Brake);
         // talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
@@ -79,6 +80,23 @@ public class Elevator extends Subsystem {
 
     private boolean moveComplete() {
         return Util.withinTolerance(getCarriagePercentage(), carriageGoal, 0.05);
+    }
+
+    public void changeSlot(Slot slot) {
+        if (slot == Slot.Tad) {
+            liftMaster.config_kP(0, Constants.ELEVATOR_P);
+            liftMaster.config_kI(0, Constants.ELEVATOR_I);
+            liftMaster.config_kD(0, Constants.ELEVATOR_D);
+        } else if (slot == Slot.BigMovement) {
+            liftMaster.config_kF(1, 0.1);
+            liftMaster.config_kI(1, 5.96e-6);
+            liftMaster.config_kP(1, 0.45);
+        }
+    }
+
+    public enum Slot {
+        Tad,
+        BigMovement
     }
 
     public void setPosition(CarriagePosition position, WristFacing wristFacing) {
@@ -167,20 +185,20 @@ public class Elevator extends Subsystem {
     // Goal in percentage [0, 1]
     public enum CarriagePosition {
 
-        Home(0.0),
+        Home(0.001),
         PanelLow(Home.getCarriagePercentage()),
         PanelMiddle(0.40),
         PanelHigh(0.76),
-        PanelGrab(0.05),
+        PanelGrab(0.09),
         CargoLow(0.26),
         CargoMiddle(0.64),
         CargoHigh(0.95),
         //        CargoLow(PanelLow.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
 //        CargoMiddle(PanelMiddle.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
 //        CargoHigh(PanelHigh.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
-        CargoShipCargo(0.5),
+        CargoShipCargo(0.45),
         PanelClearingPanelIntake(0.0),
-        Test(0.92),
+        Test(0.05),
         DropATad(0.0);
 
         private double carriagePercentage;

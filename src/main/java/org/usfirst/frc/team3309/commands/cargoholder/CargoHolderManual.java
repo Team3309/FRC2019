@@ -8,6 +8,9 @@ import org.usfirst.frc.team4322.commandv2.Command;
 
 public class CargoHolderManual extends Command {
 
+    private double power;
+    private boolean hasCargo;
+
     public CargoHolderManual() {
         require(Robot.cargoHolder);
     }
@@ -22,6 +25,7 @@ public class CargoHolderManual extends Command {
         if (Robot.cargoHolder.hasCargo() && !(power > 0)) {
                 power = -3.0 / 12;
         }
+
         Robot.cargoHolder.setPower(power);
     }
 

@@ -14,7 +14,7 @@ public class PanelHolder extends Subsystem {
     private DigitalInput bumperSensor;
 
     public PanelHolder() {
-        jointedSolenoid = new Solenoid(Constants.PANEL_HOLDER_EXTENDING_SOLENOID_ID);
+        jointedSolenoid = new Solenoid(Constants.PANEL_HOLDER_JOINTED_SOLENOID_ID);
         extendingSolenoid = new Solenoid(Constants.PANEL_HOLDER_TELESCOPING_SOLENOID_ID);
         bumperSensor = new DigitalInput(Constants.PANEL_HOLDER_BUMPER_SENSOR_PORT);
         addChild(jointedSolenoid);

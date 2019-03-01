@@ -72,9 +72,10 @@ public class Constants {
     public static final int ELEVATOR_MASTER_TALON_ID = 6;
     public static final int ELEVATOR_SLAVE_VICTOR_ID = 10;
 
-    public static final double ELEVATOR_P = 0.054;
+    public static final double ELEVATOR_P = 0.05;
     public static final double ELEVATOR_I = 5.56e-6;
     public static final double ELEVATOR_D = 0;
+    public static final double ELEVATOR_F = 0.45;
 
     // max position used for conversions (encoder counts)
     public static final double ELEVATOR_ENCODER_COUNTS_FOR_MAX_HEIGHT = 116000;
@@ -83,7 +84,7 @@ public class Constants {
     public static  final double ELEVATOR_TIMEOUT = 0.8;
 
     // amount elevator drops for placing a panel
-    public static final double ELEVATOR_PANEL_DROP_DISTANCE = 0.01;
+    public static final double ELEVATOR_PANEL_DROP_DISTANCE = 0.03;
 
 
     // [0, 1], manual elevator speed
@@ -140,7 +141,7 @@ public class Constants {
     /**
      * Panel placer mappings
      */
-    public static final int PANEL_HOLDER_EXTENDING_SOLENOID_ID = 3;
+    public static final int PANEL_HOLDER_JOINTED_SOLENOID_ID = 3;
     public static final int PANEL_HOLDER_TELESCOPING_SOLENOID_ID = 4;
     public static final int PANEL_HOLDER_BUMPER_SENSOR_PORT = 0;
 

@@ -52,6 +52,7 @@ public class Robot extends CommandV2Robot {
         panelHolder = new PanelHolder();
         climber = new Climber();
         vision = new Vision();
+//        LightComm lightComm = new LightComm();
 
         // TODO: needs to use limelight stream
 //        CameraServer.getInstance().startAutomaticCapture(0).setFPS(15);
@@ -74,7 +75,7 @@ public class Robot extends CommandV2Robot {
 
     /*
      * This function is called when the Robot enters disabled.
-     * It should be used to shut down processes that should only run when the bot is enabled.
+     * It should be used to shut down processes that should only run when the bot is sendIsEnabled.
      */
     @Override
     public void disabledInit() {
@@ -123,7 +124,7 @@ public class Robot extends CommandV2Robot {
         elevator.zeroEncoder();
         new CargoIntakeManual().start();
         new CargoHolderManual().start();
-//        new ElevatorManual().start();
+        new ElevatorManual().start();
     }
 
     /*
@@ -202,10 +203,10 @@ public class Robot extends CommandV2Robot {
             panelHolder.outputToDashboard();
             panelIntake.outputToDashboard();
             cargoIntake.outputToDashboard();
-            cargoIntake.outputToDashboard();
+            cargoHolder.outputToDashboard();
             climber.outputToDashboard();
         }
-        elevator.outputToDashboard();
+//        elevator.outputToDashboard();
 //        panelHolder.outputToDashboard();
 //        cargoHolder.outputToDashboard();
 //        drive.outputToDashboard();

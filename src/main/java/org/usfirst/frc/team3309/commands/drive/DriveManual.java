@@ -27,7 +27,7 @@ public class DriveManual extends Command {
     public DriveManual() {
         require(Robot.drive);
         setInterruptBehavior(InterruptBehavior.Suspend);
-        turnController.outputToDashboard();
+//        turnController.outputToDashboard();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class DriveManual extends Command {
 
 
         if (isAutoTurn) {
-            turnController.readDashboard();
+//            turnController.readDashboard();
 
             if (Robot.cargoHolder.hasCargo()) {
                 limelight = Vision.cargoLimelight;
@@ -65,21 +65,21 @@ public class DriveManual extends Command {
                 limelight = Vision.panelLimelight;
             }
 
-            if (!lock) {
+//            if (!lock) {
                 limelight.setCamMode(Vision.Limelight.CamMode.VisionProcessor);
                 limelight.setLed(Vision.Limelight.LEDMode.On);
-            } else {
+       /*     } else {
                 limelight.setLed(Vision.Limelight.LEDMode.Off);
-            }
+            }*/
 
             if (Util.within(limelight.getArea(), 3.1, 12)) {
 
                 double skew = limelight.getSkew();
                 if (skew == 0 || skew <= -89.0) {
-                    if (!lock) {
+//                    if (!lock) {
                         limelightAngle = limelight.getTx();
-                        lock = true;
-                    }
+//                        lock = true;
+//                    }
 
                     double gyroAngle = Robot.drive.getAngularPosition();
 
@@ -98,7 +98,7 @@ public class DriveManual extends Command {
             limelight.setCamMode(Vision.Limelight.CamMode.DriverCamera);
             limelight.setLed(Vision.Limelight.LEDMode.Off);
             limelight = Vision.panelLimelight;
-            lock = false;
+//            lock = false;
         }
 
         Robot.drive.setLeftRight(ControlMode.PercentOutput, leftPower, rightPower);
