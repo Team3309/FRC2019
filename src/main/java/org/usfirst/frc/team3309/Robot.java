@@ -3,9 +3,11 @@ package org.usfirst.frc.team3309;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.commands.ClimberManual;
+import org.usfirst.frc.team3309.commands.Elevate;
 import org.usfirst.frc.team3309.commands.ElevateNudge;
 import org.usfirst.frc.team3309.commands.ElevatorManual;
 import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
@@ -96,10 +98,16 @@ public class Robot extends CommandV2Robot {
         Scheduler.killAllCommands();
         drive.reset();
         drive.setHighGear();
+        elevator.zeroEncoder();
         autoCommand = AutoModeExecutor.getAutoSelected();
         if (autoCommand != null) {
             autoCommand.start();
         }
+        new CargoIntakeManual().start();
+        new CargoHolderManual().start();
+//        new ClimberManual().start();
+        //        new ElevatorManual().start();
+        new Elevate(Elevate.Level.Home).start();
     }
 
     /*
@@ -122,11 +130,12 @@ public class Robot extends CommandV2Robot {
             autoCommand.cancel();
         drive.setHighGear();
         drive.reset();
-        elevator.zeroEncoder();
         new CargoIntakeManual().start();
         new CargoHolderManual().start();
-        new ElevatorManual().start();
-        new ClimberManual().start();
+        if (!DriverStation.getInstance().isFMSAttached()) {
+            elevator.zeroEncoder();
+//            new ClimberManual().start();
+        }
     }
 
     /*

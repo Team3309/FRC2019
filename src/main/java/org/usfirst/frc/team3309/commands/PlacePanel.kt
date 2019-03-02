@@ -8,7 +8,7 @@ fun PlacePanel(): Command {
     return group {
         sequential {
             +PanelHolderActuate(PanelHolder.PanelHolderPosition.TelescopeForwards)
-            +WaitCommand(0.55)
+            +WaitCommand(0.65)
             +PanelHolderActuate(PanelHolder.PanelHolderPosition.FingerPointingOutwards)
         }
     }

@@ -3,12 +3,10 @@ package org.usfirst.frc.team3309.subsystems;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
-import org.usfirst.frc.team3309.Robot;
-import org.usfirst.frc.team3309.commands.ElevateNudge;
-import org.usfirst.frc.team3309.commands.WaitCommand;
-import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
@@ -16,6 +14,8 @@ public class Elevator extends Subsystem {
 
     private WPI_TalonSRX liftMaster;
     private WPI_VictorSPX liftSlave;
+
+    private DigitalInput limitSwitch;
 
     // private WPI_TalonSRX wristMaster;
 
@@ -34,6 +34,8 @@ public class Elevator extends Subsystem {
         liftSlave.setNeutralMode(NeutralMode.Brake);
         liftSlave.setInverted(InvertType.FollowMaster);
 
+        limitSwitch = new DigitalInput(2);
+        addChild(limitSwitch);
     }
 
     private void configTalon(WPI_TalonSRX talon) {
@@ -70,6 +72,11 @@ public class Elevator extends Subsystem {
 
     @Override
     public void periodic() {
+
+        if (getLimitSwitchPressed()) {
+            zeroEncoder();
+        }
+
         /*if (stowIntakeAfterMove
                 && moveComplete()
                 && !Robot.hasCargoInIntakeZone()) {
@@ -135,7 +142,11 @@ public class Elevator extends Subsystem {
 
         double rawLiftGoal = liftGoalToEncoderCounts(carriageGoal);
 
-        liftMaster.set(ControlMode.MotionMagic, rawLiftGoal);
+        if (!DriverStation.getInstance().isDisabled()) {
+            liftMaster.set(ControlMode.MotionMagic, rawLiftGoal);
+        } else {
+            DriverStation.reportWarning("ELEVATOR: Tried to set value while disabled", false);
+        }
     }
 
     // if intake zone is 0 in length, this can return false when it crosses
@@ -143,6 +154,10 @@ public class Elevator extends Subsystem {
         assert Constants.CARGO_INTAKE_ZONE_MAX > Constants.CARGO_INTAKE_ZONE_MIN;
         return Util.overlap1D(Constants.CARGO_INTAKE_ZONE_MIN, Constants.CARGO_INTAKE_ZONE_MAX,
                 getCarriagePercentage(), carriageGoal) > 0;
+    }
+
+    public boolean getLimitSwitchPressed() {
+        return !limitSwitch.get();
     }
 
     public double getCarriagePercentage() {
@@ -170,6 +185,7 @@ public class Elevator extends Subsystem {
     }
 
     public void outputToDashboard() {
+        SmartDashboard.putBoolean("Carriage limit switch", getLimitSwitchPressed());
         SmartDashboard.putNumber("Carriage position goal", carriageGoal);
         SmartDashboard.putNumber("Carriage position goal raw", liftGoalToEncoderCounts(carriageGoal));
         SmartDashboard.putNumber("Carriage velocity raw", getEncoderVelocity());
@@ -185,11 +201,11 @@ public class Elevator extends Subsystem {
     // Goal in percentage [0, 1]
     public enum CarriagePosition {
 
-        Home(0.001),
-        PanelLow(Home.getCarriagePercentage()),
+        Home(0.0),
+        PanelFeederStation(0.0),
+        PanelLow(0.05),
         PanelMiddle(0.40),
         PanelHigh(0.76),
-        PanelGrab(0.09),
         CargoLow(0.26),
         CargoMiddle(0.64),
         CargoHigh(0.95),
@@ -198,7 +214,7 @@ public class Elevator extends Subsystem {
 //        CargoHigh(PanelHigh.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
         CargoShipCargo(0.45),
         PanelClearingPanelIntake(0.0),
-        Test(0.05),
+        Test(0.0),
         DropATad(0.0);
 
         private double carriagePercentage;

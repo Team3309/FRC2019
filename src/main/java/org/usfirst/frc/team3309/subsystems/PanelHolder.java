@@ -29,7 +29,7 @@ public class PanelHolder extends Subsystem {
         if (position == PanelHolderPosition.ReleasePanel) {
             setExtendingSolenoid(ExtendedPosition.RetractedInwards);
             setJointedSolenoid(JointedPosition.PointingOutwards);
-        } else if (position == PanelHolderPosition.PlacePanel) {
+        } else if (position == PanelHolderPosition.Extended) {
             setExtendingSolenoid(ExtendedPosition.ExtendedOutwards);
             setJointedSolenoid(JointedPosition.PointingOutwards);
         } else if (position == PanelHolderPosition.GrabPanel) {
@@ -90,9 +90,10 @@ public class PanelHolder extends Subsystem {
         return !bumperSensor.get();
     }
 
+    // TODO: revisit and clean up
     public enum PanelHolderPosition {
         ReleasePanel,
-        PlacePanel,
+        Extended,
         GrabPanel,
         FingerVertical,
         FingerPointingOutwards,

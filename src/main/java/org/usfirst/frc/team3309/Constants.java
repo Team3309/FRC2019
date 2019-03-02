@@ -81,10 +81,10 @@ public class Constants {
     public static final double ELEVATOR_ENCODER_COUNTS_FOR_MAX_HEIGHT = 116000;
 
     // timeout for Elevate to finish
-    public static  final double ELEVATOR_TIMEOUT = 0.8;
+    public static  final double ELEVATOR_TIMEOUT = 0.6;
 
     // amount elevator drops for placing a panel
-    public static final double ELEVATOR_PANEL_DROP_DISTANCE = 0.03;
+    public static final double ELEVATOR_PANEL_DROP_DISTANCE = 0.05;
 
 
     // [0, 1], manual elevator speed

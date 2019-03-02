@@ -17,13 +17,22 @@ public class CargoHolderManual extends Command {
 
     @Override
     protected void execute() {
-        double powerOut = OI.INSTANCE.getOperatorController().lt();
+//        double powerOut = OI.INSTANCE.getOperatorController().lt();
         double powerIn = OI.INSTANCE.getOperatorController().rt();
 
-        double power = Util.signedMax(powerOut, powerIn, Constants.CARGO_LAUNCHER_ROLLERS_MIN_POWER);
+        double power = Util.signedMax(0.0, powerIn, Constants.CARGO_LAUNCHER_ROLLERS_MIN_POWER);
 
-        if (Robot.cargoHolder.hasCargo() && !(power > 0)) {
-                power = -3.0 / 12;
+        boolean rightClusterPressed = OI.INSTANCE.getRightJoystick().getLeftCluster().getBottomRight().get()
+                || OI.INSTANCE.getRightJoystick().getLeftCluster().getBottomLeft().get()
+                || OI.INSTANCE.getRightJoystick().getLeftCluster().getBottomCenter().get()
+                || OI.INSTANCE.getRightJoystick().getLeftCluster().getTopRight().get()
+                || OI.INSTANCE.getRightJoystick().getLeftCluster().getTopLeft().get()
+                || OI.INSTANCE.getRightJoystick().getLeftCluster().getTopCenter().get();
+
+        if (rightClusterPressed) {
+            power = 1.0;
+        } else if (Robot.cargoHolder.hasCargo() && !(power > 0)) {
+            power = -3.0 / 12;
         }
 
         Robot.cargoHolder.setPower(power);

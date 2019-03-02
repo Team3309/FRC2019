@@ -9,13 +9,13 @@ fun RetractFingerFromFeederStation(): Command {
     return group {
         sequential {
             +WaitCommand(0.2)
-            +Elevate(Elevator.CarriagePosition.PanelGrab)
+            +Elevate(Elevator.CarriagePosition.PanelLow)
             +WaitCommand(.25)
             +PanelHolderActuate(PanelHolder.PanelHolderPosition.FingerVertical)
             +WaitCommand(0.4)
             +PanelHolderActuate(PanelHolder.PanelHolderPosition.TelescopeBack)
-            +WaitCommand(.55)
-            +Elevate(Elevate.Level.Home)
+//            +WaitCommand(.55)
+//            +Elevate(Elevate.Level.Home)
         }
     }
 }

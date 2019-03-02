@@ -33,7 +33,7 @@ object OI {
                 CargoHolderSetRollers(1.0)
                 hadCargo = true
             } else {
-                PlacePanel()
+                Extended()
             }
 
         })
@@ -50,7 +50,7 @@ object OI {
         operatorController.dPad.up.whenPressed(Elevate(Elevate.Level.High))
         operatorController.dPad.left.whenPressed(Elevate(Elevate.Level.CargoShipCargo))
 
-        operatorController.start.whenPressed(ReleaseLatch(Climber.ClimberLatchPosition.Released))
+//        operatorController.start.whenPressed(ReleaseLatch(Climber.ClimberLatchPosition.Released))
 
         operatorController.lb.whileHeld(IntakePanelFromStation())
         operatorController.lb.whenReleased(RetractFingerFromFeederStation())
@@ -99,7 +99,7 @@ object OI {
             if (!Robot.panelHolder.hasPanel())
                 PanelHolderGoHome().start()
         })
-        operatorController.rb.whenPressed(PlacePanel())
+        operatorController.rb.whenPressed(Extended())
 
         operatorController.lb.whenPressed(Elevate(Elevate.Level.Test))*/
     }

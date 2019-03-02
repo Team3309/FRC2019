@@ -10,9 +10,12 @@ import org.usfirst.frc.team4322.commandv2.group
 fun IntakePanelFromStation(): Command {
     return group {
         parallel {
+            +PanelHolderActuate(PanelHolder.PanelHolderPosition.Extended)
             +CargoIntakeActuate(CargoIntake.CargoIntakePosition.Stowed)
-            +Elevate(Elevate.Level.Home)
-            +PanelHolderActuate(PanelHolder.PanelHolderPosition.PlacePanel)
+            sequential {
+                +Elevate(Elevator.CarriagePosition.PanelFeederStation)
+                +LowerElevatorToLimitSwitch()
+            }
             sequential {
                 +WaitUntilPanelIsInPanelHolder()
                 +RetractFingerFromFeederStation()

@@ -53,7 +53,6 @@ public class Elevate extends Command {
                     }
                     break;
                 case CargoShipCargo:
-
                     carriageGoalPosition = Elevator.CarriagePosition.CargoShipCargo;
                     break;
                 case Low:
@@ -61,6 +60,8 @@ public class Elevate extends Command {
                         carriageGoalPosition = Elevator.CarriagePosition.CargoLow;
                     } else if (hasPanel) {
                         carriageGoalPosition = Elevator.CarriagePosition.PanelLow;
+                    } else {
+                        carriageGoalPosition = Elevator.CarriagePosition.Home;
                     }
                     break;
                 case Middle:
