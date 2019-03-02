@@ -100,7 +100,7 @@ object OI {
 
 //        operatorController.start.whenPressed(ReleaseLatch(Climber.ClimberLatchPosition.Released))
 
-        operatorController.lb.whileHeld(IntakePanelFromStation())
+        operatorController.lb.whenPressed(IntakePanelFromStation())
         operatorController.lb.whenReleased(RetractFingerFromFeederStation())
 
         operatorController.rb.whileHeld(IntakeCargoNear())
