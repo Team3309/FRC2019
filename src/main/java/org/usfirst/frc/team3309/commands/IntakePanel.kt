@@ -14,24 +14,31 @@ fun IntakePanel(): Command {
     return group {
         parallel {
             +PanelIntakeActuate(PanelIntake.PanelIntakePosition.Down)
-            +PanelIntakeManual()
-            +Elevate(Elevate.Level.Home)
+//            +PanelIntakeManual()
+            +Elevate(Elevator.CarriagePosition.PanelLow)
+            +PanelHolderActuate(PanelHolder.PanelHolderPosition.Extended)
+            +PanelIntakeSetRollers(0.3)
+
             sequential {
                 // TODO: add or for operator override
                 +WaitUntilPanelIsInIntake()
-                +PanelIntakeSetRollers(0.3)
-                +PanelIntakeActuate(PanelIntake.PanelIntakePosition.Up)
 
-                +WaitUntilPanelIsInPanelHolder()
-                +PanelHolderActuate(PanelHolder.PanelHolderPosition.GrabPanel)
-
-                +PanelIntakeSetRollers(-0.2)
-                +Elevate(Elevator.CarriagePosition.PanelClearingPanelIntake)
-                +PanelIntakeStopRollers()
-
-                // hopefully the PanelIntake is now behind the panel
                 +WaitCommand(0.25)
-                +Elevate(Elevator.CarriagePosition.PanelLow)
+                +PanelIntakeActuate(PanelIntake.PanelIntakePosition.Up)
+                +WaitCommand(1.5)
+                +PanelHolderActuate(PanelHolder.PanelHolderPosition.FingerVertical)
+                +WaitCommand(0.25)
+
+//                +WaitUntilPanelIsInPanelHolder()
+//                +PanelHolderActuate(PanelHolder.PanelHolderPosition.GrabPanel)
+//
+//                +PanelIntakeSetRollers(-0.2)
+//                +Elevate(Elevator.CarriagePosition.PanelClearingPanelIntake)
+//                +PanelIntakeStopRollers()
+//
+//                // hopefully the PanelIntake is now behind the panel
+//                +WaitCommand(0.25)
+//                +Elevate(Elevator.CarriagePosition.PanelLow)
             }
         }
     }
