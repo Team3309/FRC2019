@@ -61,7 +61,7 @@ public class Robot extends CommandV2Robot {
 //        CameraServer.getInstance().startAutomaticCapture(0).setFPS(15);
         AutoModeExecutor.displayAutos();
 
-        RobotLogger.INSTANCE.setCurrentLogLevel(RobotLogger.LogLevel.ERR);
+        RobotLogger.INSTANCE.setCurrentLogLevel(RobotLogger.LogLevel.INFO);
 
         // TODO: flip every joystick?
         // invert turning joystick's left to right

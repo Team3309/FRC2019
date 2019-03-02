@@ -13,7 +13,7 @@ import org.usfirst.frc.team4322.commandv2.Command;
 
 public class DriveManual extends Command {
 
-    private PIDController turnController = new PIDController("turn", 0.25, 0.0, 0.0);
+    private PIDController turnController = new PIDController("turn", 0.07, 0.00001, 0.0);
 
     private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
 
@@ -27,7 +27,7 @@ public class DriveManual extends Command {
     public DriveManual() {
         require(Robot.drive);
         setInterruptBehavior(InterruptBehavior.Suspend);
-//        turnController.outputToDashboard();
+        // turnController.outputToDashboard();
     }
 
     @Override
@@ -57,7 +57,9 @@ public class DriveManual extends Command {
 
 
         if (isAutoTurn) {
-//            turnController.readDashboard();
+            // turnController.readDashboard();
+
+
 
             if (Robot.cargoHolder.hasCargo()) {
                 limelight = Vision.cargoLimelight;
@@ -66,34 +68,34 @@ public class DriveManual extends Command {
             }
 
 //            if (!lock) {
-                limelight.setCamMode(Vision.Limelight.CamMode.VisionProcessor);
-                limelight.setLed(Vision.Limelight.LEDMode.On);
+            limelight.setCamMode(Vision.Limelight.CamMode.VisionProcessor);
+            limelight.setLed(Vision.Limelight.LEDMode.On);
        /*     } else {
                 limelight.setLed(Vision.Limelight.LEDMode.Off);
             }*/
 
-            if (Util.within(limelight.getArea(), 3.1, 12)) {
+            if (limelight.getArea() < 14) {
 
-                double skew = limelight.getSkew();
-                if (skew == 0 || skew <= -89.0) {
+//                double skew = limelight.getSkew();
+//                if (skew == 0 || skew <= -89.0) {
 //                    if (!lock) {
-                        limelightAngle = limelight.getTx();
+                limelightAngle = limelight.getTx();
 //                        lock = true;
 //                    }
 
-                    double gyroAngle = Robot.drive.getAngularPosition();
+                double gyroAngle = Robot.drive.getAngularPosition();
 
-                    goalAngle = gyroAngle + limelightAngle;
+                goalAngle = gyroAngle + limelightAngle;
 
-                    double angularPower = -turnController.update(gyroAngle, goalAngle);
+                double angularPower = -turnController.update(gyroAngle, goalAngle);
 
-//                    SmartDashboard.putNumber("Limelight angle", limelightAngle);
-//                    SmartDashboard.putNumber("Turn angular power", angularPower);
+                SmartDashboard.putNumber("Limelight angle", limelightAngle);
+                SmartDashboard.putNumber("Turn angular power", angularPower);
 
-                    leftPower += angularPower;
-                    rightPower -= angularPower;
-                }
+                leftPower += angularPower;
+                rightPower -= angularPower;
             }
+//            }
         } else {
             limelight.setCamMode(Vision.Limelight.CamMode.DriverCamera);
             limelight.setLed(Vision.Limelight.LEDMode.Off);

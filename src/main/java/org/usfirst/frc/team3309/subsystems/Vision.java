@@ -35,6 +35,10 @@ public class Vision extends Subsystem {
             table = NetworkTableInstance.getDefault().getTable(tablename);
         }
 
+        public boolean hasTarget() {
+            return get("tv") == 1.0;
+        }
+
         public double getTx() {
             return get("tx");
         }
