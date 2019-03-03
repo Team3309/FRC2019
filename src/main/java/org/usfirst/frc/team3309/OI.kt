@@ -76,23 +76,6 @@ object OI {
             }
         })
 
-    /*    rightJoystick.leftCluster.topRight.whenPressed(Command.lambda {
-            if (Robot.cargoHolder.hasCargo()) {
-                CargoHolderSetRollers(1.0)
-                hadCargo = true
-            } else {
-                Extended()
-            }
-
-        })
-        rightJoystick.leftCluster.topRight.whenPressed(Command.lambda {
-            if (hadCargo) {
-                hadCargo = false
-            } else {
-                RemoveFinger()
-            }
-        })*/
-
         operatorController.dPad.down.whenPressed(Elevate(Elevate.Level.Low))
         operatorController.dPad.right.whenPressed(Elevate(Elevate.Level.Middle))
         operatorController.dPad.up.whenPressed(Elevate(Elevate.Level.High))

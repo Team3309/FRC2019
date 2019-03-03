@@ -123,6 +123,7 @@ public class Elevator extends Subsystem {
     }
 
     public void setPosition(double carriagePercentage, WristFacing wristFacing) {
+        double prevCarriageGoal = carriageGoal;
         carriageGoal = Util.clamp(carriagePercentage, 0, 1);
         wristGoal = wristFacing;
 
@@ -143,6 +144,12 @@ public class Elevator extends Subsystem {
         double rawLiftGoal = liftGoalToEncoderCounts(carriageGoal);
 
         if (!DriverStation.getInstance().isDisabled()) {
+//            double kF = 0.0;
+//            if (Util.within(carriageGoal - prevCarriageGoal, 0.0 ,0.1)) {
+//                kF = 0.28;
+//            }
+//            System.out.println("Kf" + kF);
+//            liftMaster.config_kF(0, kF);
             liftMaster.set(ControlMode.MotionMagic, rawLiftGoal);
         } else {
             DriverStation.reportWarning("ELEVATOR: Tried to set value while disabled", false);

@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3309;
 
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -58,7 +59,10 @@ public class Robot extends CommandV2Robot {
 //        LightComm lightComm = new LightComm();
 
         // TODO: needs to use limelight stream
-//        CameraServer.getInstance().startAutomaticCapture(0).setFPS(15);
+//        UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
+//        camera.setFPS(15);
+//        camera.setResolution(320, 240);
+
         AutoModeExecutor.displayAutos();
 
         RobotLogger.INSTANCE.setCurrentLogLevel(RobotLogger.LogLevel.INFO);

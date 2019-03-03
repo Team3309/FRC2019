@@ -84,7 +84,7 @@ public class Constants {
     public static  final double ELEVATOR_TIMEOUT = 0.6;
 
     // amount elevator drops for placing a panel
-    public static final double ELEVATOR_PANEL_DROP_DISTANCE = 0.05;
+    public static final double ELEVATOR_PANEL_DROP_DISTANCE = 0.02;
 
 
     // [0, 1], manual elevator speed
