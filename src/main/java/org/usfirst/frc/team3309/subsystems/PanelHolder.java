@@ -14,7 +14,7 @@ public class PanelHolder extends Subsystem {
     private DigitalInput bumperSensor;
 
     public PanelHolder() {
-        jointedSolenoid = new Solenoid(Constants.PANEL_HOLDER_EXTENDING_SOLENOID_ID);
+        jointedSolenoid = new Solenoid(Constants.PANEL_HOLDER_JOINTED_SOLENOID_ID);
         extendingSolenoid = new Solenoid(Constants.PANEL_HOLDER_TELESCOPING_SOLENOID_ID);
         bumperSensor = new DigitalInput(Constants.PANEL_HOLDER_BUMPER_SENSOR_PORT);
         addChild(jointedSolenoid);
@@ -29,40 +29,26 @@ public class PanelHolder extends Subsystem {
         if (position == PanelHolderPosition.ReleasePanel) {
             setExtendingSolenoid(ExtendedPosition.RetractedInwards);
             setJointedSolenoid(JointedPosition.PointingOutwards);
-        } else if (position == PanelHolderPosition.PlacePanel) {
+        } else if (position == PanelHolderPosition.Extended) {
             setExtendingSolenoid(ExtendedPosition.ExtendedOutwards);
             setJointedSolenoid(JointedPosition.PointingOutwards);
         } else if (position == PanelHolderPosition.GrabPanel) {
             setExtendingSolenoid(ExtendedPosition.RetractedInwards);
             setJointedSolenoid(JointedPosition.Vertical);
+        } else if (position == PanelHolderPosition.FingerVertical) {
+            setJointedSolenoid(JointedPosition.Vertical);
+        } else if (position == PanelHolderPosition.TelescopeBack) {
+            setExtendingSolenoid(ExtendedPosition.RetractedInwards);
+        } else if (position == PanelHolderPosition.FingerPointingOutwards) {
+            setJointedSolenoid(JointedPosition.PointingOutwards);
+        } else if (position == PanelHolderPosition.TelescopeForwards) {
+            setExtendingSolenoid(ExtendedPosition.ExtendedOutwards);
         }
     }
 
     public void setPosition(JointedPosition jointedPosition, ExtendedPosition extendedPosition) {
         setExtendingSolenoid(extendedPosition);
         setJointedSolenoid(jointedPosition);
-    }
-
-
-
-    /*
-     * @return current PanelHolder configuration
-     * */
-    public PanelHolderPosition getPosition() {
-        JointedPosition jointedPosition = getJointedPosition();
-        ExtendedPosition extendedPosition = getExtendedPosition();
-
-        if (extendedPosition == ExtendedPosition.RetractedInwards
-                && jointedPosition == JointedPosition.PointingOutwards) {
-            return PanelHolderPosition.ReleasePanel;
-        } else if (extendedPosition == ExtendedPosition.ExtendedOutwards
-                && jointedPosition == JointedPosition.PointingOutwards) {
-            return PanelHolderPosition.PlacePanel;
-        } else if (extendedPosition == ExtendedPosition.RetractedInwards
-                && jointedPosition == JointedPosition.Vertical) {
-            return PanelHolderPosition.GrabPanel;
-        }
-        return PanelHolderPosition.Unknown;
     }
 
     public JointedPosition getJointedPosition() {
@@ -88,7 +74,7 @@ public class PanelHolder extends Subsystem {
         SmartDashboard.putBoolean("PH Jointed raw", getJointedPosition().value);
         SmartDashboard.putString("PH ExtendedPosition", getExtendedPosition().toString());
         SmartDashboard.putBoolean("PH Extended raw", getExtendedPosition().value);
-        SmartDashboard.putBoolean("PH bumper pressed", isBumperPressed());
+        SmartDashboard.putBoolean("PH bumper pressed", hasPanel());
     }
 
     // TODO: make private and wrap them through their the main subsystem set function
@@ -100,15 +86,19 @@ public class PanelHolder extends Subsystem {
         extendingSolenoid.set(position.get());
     }
 
-    public boolean isBumperPressed() {
-        return bumperSensor.get();
+    public boolean hasPanel() {
+        return !bumperSensor.get();
     }
 
+    // TODO: revisit and clean up
     public enum PanelHolderPosition {
         ReleasePanel,
-        PlacePanel,
+        Extended,
         GrabPanel,
-        Unknown
+        FingerVertical,
+        FingerPointingOutwards,
+        TelescopeBack,
+        TelescopeForwards
     }
 
     public enum JointedPosition {

@@ -72,15 +72,23 @@ public class Constants {
     public static final int ELEVATOR_MASTER_TALON_ID = 6;
     public static final int ELEVATOR_SLAVE_VICTOR_ID = 10;
 
-    public static final double ELEVATOR_P = 0.0;
-    public static final double ELEVATOR_I = 0.0;
-    public static final double ELEVATOR_D = 0.0;
+    public static final double ELEVATOR_P = 0.05;
+    public static final double ELEVATOR_I = 5.56e-6;
+    public static final double ELEVATOR_D = 0;
+    public static final double ELEVATOR_F = 0.45;
 
     // max position used for conversions (encoder counts)
-    public static final double ELEVATOR_ENCODER_COUNTS_FOR_MAX_HEIGHT = 1;
+    public static final double ELEVATOR_ENCODER_COUNTS_FOR_MAX_HEIGHT = 116000;
+
+    // timeout for Elevate to finish
+    public static  final double ELEVATOR_TIMEOUT = 0.6;
+
+    // amount elevator drops for placing a panel
+    public static final double ELEVATOR_PANEL_DROP_DISTANCE = 0.02;
+
 
     // [0, 1], manual elevator speed
-    public static final double LIFT_NUDGE_PCT_PER_SEC = 0;
+    public static final double LIFT_NUDGE_PCT_PER_SEC = 0.001;
 
     // TODO: to be used with wrist when added
 //    // [0, 1], minimum value where it is safe to rotate arm
@@ -90,8 +98,8 @@ public class Constants {
 //    public static final double LIFT_END_SAFE_ZONE = 0;
 
     // these can NEVER be the same
-    public static final double CARGO_INTAKE_ZONE_MIN = 0.0;
-    public static final double CARGO_INTAKE_ZONE_MAX = 0.1;
+    public static final double CARGO_INTAKE_ZONE_MIN = -0.1;
+    public static final double CARGO_INTAKE_ZONE_MAX = 0.24;
 
     public static final int WRIST_TALON_ID = -1;
 
@@ -118,7 +126,7 @@ public class Constants {
      */
     public static final int PANEL_INTAKE_VICTOR_ID = 11;
     public static final int PANEL_INTAKE_SOLENOID_ID = 5;
-    public static final int PANEL_INTAKE_SENSOR_PORT = 0;
+    public static final int PANEL_INTAKE_SENSOR_PORT = 3;
 
     public static final double PANEL_INTAKE_MIN_POWER = 0.1;
 
@@ -126,16 +134,16 @@ public class Constants {
      * Cargo launcher mappings
      */
     public static final int CARGO_HOLDER_VICTOR_ID = 4;
-    public static final int CARGO_HOLDER_BUMPER_PORT = 0;
+    public static final int CARGO_HOLDER_BUMPER_PORT = 1;
 
     public static final double CARGO_LAUNCHER_ROLLERS_MIN_POWER = 0.1;
 
     /**
      * Panel placer mappings
      */
-    public static final int PANEL_HOLDER_EXTENDING_SOLENOID_ID = 3;
+    public static final int PANEL_HOLDER_JOINTED_SOLENOID_ID = 3;
     public static final int PANEL_HOLDER_TELESCOPING_SOLENOID_ID = 4;
-    public static final int PANEL_HOLDER_BUMPER_SENSOR_PORT = 1;
+    public static final int PANEL_HOLDER_BUMPER_SENSOR_PORT = 0;
 
     /**
      * Climber mappings

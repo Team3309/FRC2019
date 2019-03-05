@@ -13,6 +13,7 @@ public class ElevateNudge extends Command {
 
     public ElevateNudge() {
         require(Robot.elevator);
+        setInterruptBehavior(InterruptBehavior.Suspend);
     }
 
     @Override
@@ -25,7 +26,7 @@ public class ElevateNudge extends Command {
         double curTime = Timer.getFPGATimestamp();
         double deltaTime = curTime - prevTime;
 
-        double offset = Constants.LIFT_NUDGE_PCT_PER_SEC * deltaTime *
+        double offset = -Constants.LIFT_NUDGE_PCT_PER_SEC * deltaTime *
                 OI.INSTANCE.getOperatorController().getLeftStick().y();
         double goalPercentage = Util.clamp(Robot.elevator.getCarriagePercentage() + offset,
                 0.0, 0.8);

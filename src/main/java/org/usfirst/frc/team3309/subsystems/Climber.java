@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
+import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
 public class Climber extends Subsystem {
@@ -38,6 +39,10 @@ public class Climber extends Subsystem {
 
     public void setPosition(ClimberLatchPosition position) {
         latchingSolenoid.set(position.get());
+    }
+
+    public void setPower(double power) {
+        Robot.climber.setPower(power);
     }
 
     public ClimberLatchPosition getLatchPosition() {

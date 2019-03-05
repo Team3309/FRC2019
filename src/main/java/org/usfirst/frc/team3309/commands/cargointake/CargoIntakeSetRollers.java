@@ -19,7 +19,7 @@ public class CargoIntakeSetRollers extends Command {
 
     @Override
     protected boolean isFinished() {
-        return false;
+        return true;
     }
 
 }

@@ -1,9 +1,15 @@
 package org.usfirst.frc.team3309;
 
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team3309.commands.ClimberManual;
+import org.usfirst.frc.team3309.commands.Elevate;
+import org.usfirst.frc.team3309.commands.ElevateNudge;
 import org.usfirst.frc.team3309.commands.ElevatorManual;
 import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate;
@@ -50,12 +56,16 @@ public class Robot extends CommandV2Robot {
         panelHolder = new PanelHolder();
         climber = new Climber();
         vision = new Vision();
+//        LightComm lightComm = new LightComm();
 
         // TODO: needs to use limelight stream
-        CameraServer.getInstance().startAutomaticCapture(0).setFPS(15);
+//        UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
+//        camera.setFPS(15);
+//        camera.setResolution(320, 240);
+
         AutoModeExecutor.displayAutos();
 
-        RobotLogger.INSTANCE.setCurrentLogLevel(RobotLogger.LogLevel.DEBUG);
+        RobotLogger.INSTANCE.setCurrentLogLevel(RobotLogger.LogLevel.INFO);
 
         // TODO: flip every joystick?
         // invert turning joystick's left to right
@@ -66,17 +76,20 @@ public class Robot extends CommandV2Robot {
         elevator.zeroEncoder();
 
         drive.initDefaultCommand();
+
+        SmartDashboard.putBoolean("outputSubsystemsToDashboard", false);
     }
 
     /*
      * This function is called when the Robot enters disabled.
-     * It should be used to shut down processes that should only run when the bot is enabled.
+     * It should be used to shut down processes that should only run when the bot is sendIsEnabled.
      */
     @Override
     public void disabledInit() {
         super.disabledInit();
         Scheduler.killAllCommands();
         drive.reset();
+        drive.setHighGear();
     }
 
     /*
@@ -89,10 +102,16 @@ public class Robot extends CommandV2Robot {
         Scheduler.killAllCommands();
         drive.reset();
         drive.setHighGear();
+        elevator.zeroEncoder();
         autoCommand = AutoModeExecutor.getAutoSelected();
         if (autoCommand != null) {
             autoCommand.start();
         }
+        new CargoIntakeManual().start();
+        new CargoHolderManual().start();
+//        new ClimberManual().start();
+        //        new ElevatorManual().start();
+        new Elevate(Elevate.Level.Home).start();
     }
 
     /*
@@ -115,10 +134,12 @@ public class Robot extends CommandV2Robot {
             autoCommand.cancel();
         drive.setHighGear();
         drive.reset();
-        // TODO: DELETE LATER
-        new CargoHolderManual().start();
         new CargoIntakeManual().start();
-        new PanelIntakeManual().start();
+        new CargoHolderManual().start();
+        if (!DriverStation.getInstance().isFMSAttached()) {
+            elevator.zeroEncoder();
+//            new ClimberManual().start();
+        }
     }
 
     /*
@@ -135,10 +156,6 @@ public class Robot extends CommandV2Robot {
      */
     @Override
     public void testInit() {
-        new CargoHolderManual().start();
-        new CargoIntakeManual().start();
-        new PanelIntakeManual().start();
-        new ElevatorManual().start();
     }
 
 
@@ -164,12 +181,12 @@ public class Robot extends CommandV2Robot {
         panelIntake.setPosition(PanelIntake.PanelIntakePosition.fromBoolean(panelIntakeExtend));
 //        panelHolder.setPosition(PanelHolder.JointedPosition.fromBoolean(panelHolderJointedExtended),
 //                PanelHolder.ExtendedPosition.fromBoolean(panelHolderTelescopingExtended));
-        climber.setPosition(Climber.ClimberLatchPosition.fromBoolean(climberReleased ));
+        climber.setPosition(Climber.ClimberLatchPosition.fromBoolean(climberReleased));
 
         // TODO: remove require(cargoIntake) in actuate
         if (OI.INSTANCE.getOperatorController().a()) {
             cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Extended);
-        } else if (OI.INSTANCE.getOperatorController().b()){
+        } else if (OI.INSTANCE.getOperatorController().b()) {
             cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Stowed);
         }
 
@@ -193,13 +210,21 @@ public class Robot extends CommandV2Robot {
     @Override
     public void robotPeriodic() {
         super.robotPeriodic();
-//        drive.outputToDashboard();
+        boolean outputSubsystemsToDashboard = SmartDashboard.getBoolean("outputSubsystemsToDashboard",
+                false);
+        if (outputSubsystemsToDashboard) {
+            drive.outputToDashboard();
+            elevator.outputToDashboard();
+            panelHolder.outputToDashboard();
+            panelIntake.outputToDashboard();
+            cargoIntake.outputToDashboard();
+            cargoHolder.outputToDashboard();
+            climber.outputToDashboard();
+        }
 //        elevator.outputToDashboard();
 //        panelHolder.outputToDashboard();
-//        panelIntake.outputToDashboard();
-//        cargoIntake.outputToDashboard();
-//        cargoIntake.outputToDashboard();
-//        climber.outputToDashboard();
+//        cargoHolder.outputToDashboard();
+//        drive.outputToDashboard();
     }
 
     public static boolean hasCargoInIntakeZone() {

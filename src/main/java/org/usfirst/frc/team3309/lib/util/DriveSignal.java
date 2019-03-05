@@ -1,7 +1,7 @@
 package org.usfirst.frc.team3309.lib.util;
 
 /**
- * A drivetrain command consisting of the left, right motor settings and whether the brake mode is enabled.
+ * A drivetrain command consisting of the left, right motor settings and whether the brake mode is sendIsEnabled.
  */
 public class DriveSignal {
     protected double mLeftMotor;

@@ -7,6 +7,6 @@ public class WaitUntilPanelIsInPanelHolder extends Command {
 
     @Override
     protected boolean isFinished() {
-        return Robot.panelHolder.isBumperPressed();
+        return Robot.panelHolder.hasPanel();
     }
 }
