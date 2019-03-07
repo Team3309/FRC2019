@@ -209,7 +209,7 @@ public class Elevator extends Subsystem {
     public enum CarriagePosition {
 
         Home(0.0),
-        PanelFeederStation(0.0),
+        PanelFeederStation(0.04),
         PanelFeederStationLift(0.05),
         PanelLow(0.01),
         PanelMiddle(0.40),
