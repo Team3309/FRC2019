@@ -221,7 +221,7 @@ public class Robot extends CommandV2Robot {
             cargoHolder.outputToDashboard();
             climber.outputToDashboard();
         }
-//        elevator.outputToDashboard();
+        elevator.outputToDashboard();
 //        panelHolder.outputToDashboard();
 //        cargoHolder.outputToDashboard();
 //        drive.outputToDashboard();

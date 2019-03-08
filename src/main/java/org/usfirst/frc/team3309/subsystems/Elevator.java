@@ -164,7 +164,10 @@ public class Elevator extends Subsystem {
     }
 
     public boolean getLimitSwitchPressed() {
-        return !limitSwitch.get();
+        if (Constants.currentRobot == Constants.Robot.COMPETITION) {
+            return !limitSwitch.get();
+        }
+        return limitSwitch.get();
     }
 
     public double getCarriagePercentage() {
