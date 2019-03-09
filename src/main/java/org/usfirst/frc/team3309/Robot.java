@@ -57,7 +57,7 @@ public class Robot extends CommandV2Robot {
        UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
        camera.setFPS(15);
        camera.setResolution(320, 240);
-
+      
         AutoModeExecutor.displayAutos();
 
         RobotLogger.INSTANCE.setCurrentLogLevel(RobotLogger.LogLevel.INFO);

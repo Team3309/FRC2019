@@ -16,9 +16,17 @@ public class DriveManual extends Command {
 
     private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
 
+    private double goalAngle;
+    private double limelightAngle;
+    private boolean lock;
+
+    private Vision.Limelight limelight = Vision.panelLimelight;
+
+
     public DriveManual() {
         require(Robot.drive);
         setInterruptBehavior(InterruptBehavior.Suspend);
+        // turnController.outputToDashboard();
     }
 
     @Override

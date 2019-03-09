@@ -33,8 +33,9 @@ object OI {
             || rightJoystick.rightCluster.topRight()
     }
 
-    @JvmStatic
     var operatorController: InputXbox = InputXbox(2)
+
+    private var hadCargo: Boolean = false
 
     init {
         leftJoystick.trigger.whenPressed(DriveSetLowGear())
@@ -59,6 +60,7 @@ object OI {
                 RemoveFinger()
             } else {
                 CargoHolderSetRollers(0.0)
+
             }
         })
 

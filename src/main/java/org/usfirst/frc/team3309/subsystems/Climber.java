@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
+import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 import org.usfirst.frc.team3309.commands.ClimberManual;
 

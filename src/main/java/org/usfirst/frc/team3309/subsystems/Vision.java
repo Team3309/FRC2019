@@ -21,5 +21,4 @@ public class Vision extends Subsystem {
         limelight.setLed(mode);
     }
 
-
 }
