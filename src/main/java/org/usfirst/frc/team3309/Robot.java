@@ -58,10 +58,9 @@ public class Robot extends CommandV2Robot {
         vision = new Vision();
 //        LightComm lightComm = new LightComm();
 
-        // TODO: needs to use limelight stream
-//        UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
-//        camera.setFPS(15);
-//        camera.setResolution(320, 240);
+       UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
+       camera.setFPS(15);
+       camera.setResolution(320, 240);
 
         AutoModeExecutor.displayAutos();
 
