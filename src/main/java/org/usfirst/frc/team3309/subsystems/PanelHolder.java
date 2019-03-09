@@ -26,23 +26,31 @@ public class PanelHolder extends Subsystem {
      * @param position, the desired configuration
      * */
     public void setPosition(PanelHolderPosition position) {
-        if (position == PanelHolderPosition.ReleasePanel) {
-            setExtendingSolenoid(ExtendedPosition.RetractedInwards);
-            setJointedSolenoid(JointedPosition.PointingOutwards);
-        } else if (position == PanelHolderPosition.Extended) {
-            setExtendingSolenoid(ExtendedPosition.ExtendedOutwards);
-            setJointedSolenoid(JointedPosition.PointingOutwards);
-        } else if (position == PanelHolderPosition.GrabPanel) {
-            setExtendingSolenoid(ExtendedPosition.RetractedInwards);
-            setJointedSolenoid(JointedPosition.Vertical);
-        } else if (position == PanelHolderPosition.FingerVertical) {
-            setJointedSolenoid(JointedPosition.Vertical);
-        } else if (position == PanelHolderPosition.TelescopeBack) {
-            setExtendingSolenoid(ExtendedPosition.RetractedInwards);
-        } else if (position == PanelHolderPosition.FingerPointingOutwards) {
-            setJointedSolenoid(JointedPosition.PointingOutwards);
-        } else if (position == PanelHolderPosition.TelescopeForwards) {
-            setExtendingSolenoid(ExtendedPosition.ExtendedOutwards);
+        switch (position) {
+            case ReleasePanel:
+                setExtendingSolenoid(ExtendedPosition.RetractedInwards);
+                setJointedSolenoid(JointedPosition.PointingOutwards);
+                break;
+            case Extended:
+                setExtendingSolenoid(ExtendedPosition.ExtendedOutwards);
+                setJointedSolenoid(JointedPosition.PointingOutwards);
+                break;
+            case GrabPanel:
+                setExtendingSolenoid(ExtendedPosition.RetractedInwards);
+                setJointedSolenoid(JointedPosition.Vertical);
+                break;
+            case FingerVertical:
+                setJointedSolenoid(JointedPosition.Vertical);
+                break;
+            case TelescopeBack:
+                setExtendingSolenoid(ExtendedPosition.RetractedInwards);
+                break;
+            case FingerPointingOutwards:
+                setJointedSolenoid(JointedPosition.PointingOutwards);
+                break;
+            case TelescopeForwards:
+                setExtendingSolenoid(ExtendedPosition.ExtendedOutwards);
+                break;
         }
     }
 

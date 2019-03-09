@@ -22,7 +22,6 @@ fun IntakePanel(): Command {
             sequential {
                 // TODO: add or for operator override
                 +WaitUntilPanelIsInIntake()
-
                 +WaitCommand(0.25)
                 +PanelIntakeActuate(PanelIntake.PanelIntakePosition.Up)
                 +WaitCommand(1.5)

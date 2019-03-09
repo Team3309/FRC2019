@@ -13,7 +13,7 @@ public class ClimberManual extends Command {
 
     @Override
     protected void execute() {
-        Robot.climber.setPower(OI.INSTANCE.getOperatorController().getY(GenericHID.Hand.kLeft));
+        Robot.climber.setPower(OI.getOperatorController().getY(GenericHID.Hand.kLeft));
     }
 
     @Override

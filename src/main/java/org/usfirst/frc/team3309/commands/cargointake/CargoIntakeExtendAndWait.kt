@@ -6,7 +6,6 @@ import org.usfirst.frc.team4322.commandv2.Command
 import org.usfirst.frc.team4322.commandv2.group
 
 object CargoIntakeExtendAndWait {
-
     @JvmStatic
     fun to(): Command {
         return group {
