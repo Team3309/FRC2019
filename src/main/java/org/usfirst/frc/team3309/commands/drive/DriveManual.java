@@ -40,11 +40,14 @@ public class DriveManual extends Command {
         double rightPower = signal.getRight();
 
         VisionHelper.outputToDashboard();
+
         if (isAutoTurn) {
             VisionHelper.turnOn();
-            double angularPower = -VisionHelper.getTurnCorrection();
-            leftPower = throttle + angularPower;
-            rightPower = throttle - angularPower;
+            if (VisionHelper.hasTargets()) {
+                double angularPower = -VisionHelper.getTurnCorrection();
+                leftPower = throttle + angularPower;
+                rightPower = throttle - angularPower;
+            }
         } else {
             VisionHelper.turnOff();
         }

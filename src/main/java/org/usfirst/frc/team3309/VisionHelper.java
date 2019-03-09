@@ -10,7 +10,7 @@ public class VisionHelper {
 
     private static Limelight limelight = Vision.panelLimelight;
 
-    private static PIDController turnController = new PIDController("turn", 0.07, 0.00001, 0.0);
+    private static PIDController turnController = new PIDController("turn", 0.02509,0.0, 0.0);
     private static PIDController throttleController = new PIDController("throttle", 0.0, 0.0, 0.0);
 
     private static final boolean isDashboard = true;
@@ -20,6 +20,11 @@ public class VisionHelper {
 
     private static final double PANEL_HEIGHT = 28.875;
     private static final double CAMERA_HEIGHT = 33.25;
+    private static final double CAMERA_MOUNTING_ANGLE = -7.1;
+
+    static {
+        turnController.outputToDashboard();
+    }
 
     public static DriveSignal getDriveSignal() {
         init();
@@ -32,11 +37,11 @@ public class VisionHelper {
     private static void init() {
         if (isDashboard) {
             turnController.readDashboard();
-            turnController.outputToDashboard();
         }
     }
 
     public static void turnOn() {
+        turnController.reset();
         init();
         setCamMode(Limelight.CamMode.VisionProcessor);
         setPipeline(0);
@@ -60,7 +65,7 @@ public class VisionHelper {
         }
 
         double angularPower = 0.0;
-        
+
         if (limelight.getArea() < 15.0) {
             double limelightAngle = limelight.getTx();
             angularPower = turnController.update(limelightAngle);
@@ -70,7 +75,8 @@ public class VisionHelper {
     }
 
     public static double getDist() {
-        return Math.abs(PANEL_HEIGHT - CAMERA_HEIGHT) / Math.tan(limelight.getTy());
+        return Math.abs(PANEL_HEIGHT - CAMERA_HEIGHT) /
+                Math.tan(Math.toRadians(limelight.getTy() + CAMERA_MOUNTING_ANGLE));
     }
 
     private static void setCamMode(Limelight.CamMode camMode) {
@@ -92,6 +98,10 @@ public class VisionHelper {
             limelight.setLed(led);
             curLed = led;
         }
+    }
+
+    public static boolean hasTargets() {
+        return limelight.hasTarget();
     }
 
     public static void outputToDashboard() {
