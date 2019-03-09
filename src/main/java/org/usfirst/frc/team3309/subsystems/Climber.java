@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
+import org.usfirst.frc.team3309.commands.ClimberManual;
 
 public class Climber extends Subsystem {
 
@@ -23,6 +24,11 @@ public class Climber extends Subsystem {
         winchMotor.config_kI(0, 0.0);
         winchMotor.config_kD(0, 0.0);
         winchMotor.setNeutralMode(NeutralMode.Brake);
+    }
+
+    @Override
+    public void initDefaultCommand() {
+        setDefaultCommand(new ClimberManual());
     }
 
     public void outputToDashboard() {
@@ -42,7 +48,7 @@ public class Climber extends Subsystem {
     }
 
     public void setPower(double power) {
-        Robot.climber.setPower(power);
+        winchMotor.set(ControlMode.PercentOutput, power, 0);
     }
 
     public ClimberLatchPosition getLatchPosition() {

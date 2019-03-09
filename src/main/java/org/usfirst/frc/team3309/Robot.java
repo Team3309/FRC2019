@@ -135,6 +135,7 @@ public class Robot extends CommandV2Robot {
         drive.reset();
         new CargoIntakeManual().start();
         new CargoHolderManual().start();
+        new ClimberManual().start();
         if (!DriverStation.getInstance().isFMSAttached()) {
             elevator.zeroEncoder();
 //            new ClimberManual().start();
