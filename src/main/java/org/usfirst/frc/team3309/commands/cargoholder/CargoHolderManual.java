@@ -18,28 +18,10 @@ public class CargoHolderManual extends Command {
 
     @Override
     protected void execute() {
-        double powerOut = OI.INSTANCE.getOperatorController().lt();
-        double powerIn = OI.INSTANCE.getOperatorController().rt();
+        double powerOut = OI.getOperatorController().getLt().axis();
+        double powerIn = OI.getOperatorController().getRt().axis();
 
         double power = Util.signedMax(powerOut, powerIn, Constants.CARGO_LAUNCHER_ROLLERS_MIN_POWER);
-
-        boolean rightClusterPressed = OI.INSTANCE.getRightJoystickRightClusterGroup().get();
-
-        // backup if command router doesn't work for smart outtake
-//        if (Robot.cargoHolder.hasCargo()) {
-//            if (rightClusterPressed) {
-//                power = 1.0;
-//            } else if (power <= 0) {
-//                power = -3.0 / 12;
-//            }
-//        }
-
-        // old way of doing this before smart outtake
-//        if (rightClusterPressed) {
-//            power = 1.0;
-//        } else if (Robot.cargoHolder.hasCargo() && !(power > 0)) {
-//             power = -3.0 / 12;
-//        }
 
         // Hold onto cargo while in holder
         // TODO: make this latching, or debounce the switch

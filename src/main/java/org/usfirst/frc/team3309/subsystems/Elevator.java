@@ -213,7 +213,6 @@ public class Elevator extends Subsystem {
 
         Home(0.0),
         PanelFeederStation(0.04),
-        PanelFeederStationLift(0.05),
         PanelLow(0.01),
         PanelMiddle(0.40),
         PanelHigh(0.76),

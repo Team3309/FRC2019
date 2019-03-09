@@ -16,7 +16,7 @@ public class ElevatorManual extends Command {
 
     @Override
     protected void execute() {
-        double elevatorPower = Util.clamp(OI.INSTANCE.getOperatorController().getY(GenericHID.Hand.kLeft),
+        double elevatorPower = Util.clamp(OI.getOperatorController().getY(GenericHID.Hand.kLeft),
                 -0.2, 1.0);
         Robot.elevator.setPower(elevatorPower);
 //        SmartDashboard.putNumber("Left operator joystick power", elevatorPower);
