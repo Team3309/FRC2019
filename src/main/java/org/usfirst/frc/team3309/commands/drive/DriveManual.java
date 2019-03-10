@@ -16,31 +16,23 @@ public class DriveManual extends Command {
 
     private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
 
-    private double goalAngle;
-    private double limelightAngle;
-    private boolean lock;
-
-    private Vision.Limelight limelight = Vision.panelLimelight;
-
-
     public DriveManual() {
         require(Robot.drive);
         setInterruptBehavior(InterruptBehavior.Suspend);
-        // turnController.outputToDashboard();
     }
 
     @Override
     protected void execute() {
 
-        double throttle = OI.INSTANCE.getLeftJoystick().getYAxis().get();
-        double turn = OI.INSTANCE.getRightJoystick().getXAxis().get();
+        double throttle = OI.getOperatorController().getLeftStick().getY().get();
+        double turn = OI.getOperatorController().getRightStick().getX().get();
 
 //           SmartDashboard.putNumber("Throttle", throttle);
 //        SmartDashboard.putNumber("Turn", turn);
 
         boolean isHighGear = Robot.drive.inHighGear();
-        boolean isQuickTurn = OI.INSTANCE.getRightJoystick().getTrigger().get();
-        boolean isAutoTurn = OI.INSTANCE.getLeftJoystick().getKnobCluster().getBottom().get();
+        boolean isQuickTurn = OI.getRightJoystick().getTrigger().get();
+        boolean isAutoTurn = OI.getLeftJoystick().getKnobCluster().getBottom().get();
 
         DriveSignal signal = cheesyDrive.update(throttle, turn, isQuickTurn, isHighGear);
 

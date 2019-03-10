@@ -48,7 +48,7 @@ public class Climber extends Subsystem {
     }
 
     public void setPower(double power) {
-        winchMotor.set(ControlMode.PercentOutput, power/2.0, 0);
+        winchMotor.set(ControlMode.PercentOutput, power/2.0);
     }
 
     public ClimberLatchPosition getLatchPosition() {
