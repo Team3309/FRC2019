@@ -10,7 +10,7 @@ public class VisionHelper {
 
     private static Limelight limelight = Vision.panelLimelight;
 
-    private static PIDController turnController = new PIDController("turn", 0.02509,0.0, 0.0);
+    private static PIDController turnController = new PIDController("turn", 0.02023,0.0001, 0.00002);
     private static PIDController throttleController = new PIDController("throttle", 0.0, 0.0, 0.0);
 
     private static final boolean isDashboard = true;
@@ -35,13 +35,13 @@ public class VisionHelper {
     }
 
     private static void init() {
+        turnController.reset();
         if (isDashboard) {
             turnController.readDashboard();
         }
     }
 
     public static void turnOn() {
-        turnController.reset();
         init();
         setCamMode(Limelight.CamMode.VisionProcessor);
         setPipeline(0);
@@ -75,8 +75,8 @@ public class VisionHelper {
     }
 
     public static double getDist() {
-        return Math.abs(PANEL_HEIGHT - CAMERA_HEIGHT) /
-                Math.tan(Math.toRadians(limelight.getTy() + CAMERA_MOUNTING_ANGLE));
+        return (PANEL_HEIGHT - CAMERA_HEIGHT) /
+                Math.tan(Math.toRadians(-limelight.getTy() + CAMERA_MOUNTING_ANGLE));
     }
 
     private static void setCamMode(Limelight.CamMode camMode) {

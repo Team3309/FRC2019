@@ -11,6 +11,7 @@ import org.usfirst.frc.team3309.commands.ClimberManual;
 import org.usfirst.frc.team3309.commands.Elevate;
 import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeManual;
+import org.usfirst.frc.team3309.commands.drive.DriveManual;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team3309.subsystems.*;
 import org.usfirst.frc.team4322.commandv2.Command;
@@ -33,6 +34,7 @@ public class Robot extends CommandV2Robot {
     public static PanelHolder panelHolder;
     public static Climber climber;
     public static Vision vision;
+    private static LightComm lightComm;
 
     private Command autoCommand;
 
@@ -52,12 +54,12 @@ public class Robot extends CommandV2Robot {
         panelHolder = new PanelHolder();
         climber = new Climber();
         vision = new Vision();
-//        LightComm lightComm = new LightComm();
+        lightComm = new LightComm();
 
-       UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
-       camera.setFPS(15);
-       camera.setResolution(320, 240);
-      
+        UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
+        camera.setFPS(15);
+        camera.setResolution(320, 240);
+
         AutoModeExecutor.displayAutos();
 
         RobotLogger.INSTANCE.setCurrentLogLevel(RobotLogger.LogLevel.INFO);

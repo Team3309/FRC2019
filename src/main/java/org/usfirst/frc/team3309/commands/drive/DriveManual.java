@@ -24,8 +24,8 @@ public class DriveManual extends Command {
     @Override
     protected void execute() {
 
-        double throttle = OI.getOperatorController().getLeftStick().getY().get();
-        double turn = OI.getOperatorController().getRightStick().getX().get();
+        double throttle = OI.getLeftJoystick().getYAxis().get();
+        double turn = OI.getRightJoystick().getXAxis().get();
 
 //           SmartDashboard.putNumber("Throttle", throttle);
 //        SmartDashboard.putNumber("Turn", turn);

@@ -49,7 +49,7 @@ dependencies {
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
     testCompile 'junit:junit:4.12'
-    compile "com.github.Nico1999:4322Utils:2019-4.2"
+    compile "com.github.Nico1999:4322Utils:2019-4.2.2"
     compile "gov.nist.math:jama:1.0.3"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
