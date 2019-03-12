@@ -11,16 +11,16 @@ public class VisionHelper {
 
     private static Limelight limelight = Vision.panelLimelight;
 
-    private static PIDController turnController = new PIDController("turn", 0.019, 0.0001, 0.00002);
-    private static PIDController throttleController = new PIDController("throttle", 0.0066, 0.0000, 0.0);
-    private static PIDController skewController = new PIDController("skew", 0.0, 0.0, 0.0);
+    private static PIDController turnController = new PIDController("turn", 0.018, 0.0001, 0.00002);
+    private static PIDController throttleController = new PIDController("throttle", 0.0069, 0.0000, 0.0);
+    private static PIDController skewController = new PIDController("skew", 0.1, 0.0, 0.0);
 
     private static final boolean isDashboard = true;
     private static Limelight.CamMode curCamMode = Limelight.CamMode.DriverCamera;
     private static int curPipeline = 0;
     private static Limelight.LEDMode curLed;
 
-    private static final double skewGain = 1.0;
+    private static final double skewGain = 0.5;
     private static final double PANEL_HEIGHT = 28.875;
     private static final double CAMERA_HEIGHT = 33.1875;
     private static final double CAMERA_MOUNTING_ANGLE = -10.236;
@@ -34,9 +34,9 @@ public class VisionHelper {
         if (limelight.getArea() < 15.0) {
             double linearPower = getThrottleCorrection();
             double angularPower = getTurnCorrection();
-            // TODO: add skew implementation to compensate for steeper angles
-            return new DriveSignal(linearPower + angularPower,
-                    linearPower - angularPower);
+            double skewPower = getSkewCorrection();
+            return new DriveSignal(linearPower + angularPower - skewPower,
+                    linearPower - angularPower + skewPower);
         }
         return DriveSignal.NEUTRAL;
     }
@@ -70,23 +70,23 @@ public class VisionHelper {
         return -turnController.update(limelight.getTx());
     }
 
-  /*  public static double getSkewCorrection() {
+    public static double getSkewCorrection() {
         double skew;
         if (limelight.getSkew() < -45) {
             skew = limelight.getSkew() + 90;
         } else {
             skew = limelight.getSkew();
         }
-        double skewPower = skewGain * skewController.update(skew);
-
+        return skewGain * skewController.update(skew) * getSkewScale(getDist(),
+                50, 90);
     }
 
     private static double getSkewScale(double dist, double min, double max) {
         if (!Util.within(dist, min, max)) {
             return 0.0;
         }
-
-    } */
+        return (dist - min) / (max - min);
+    }
 
     public static double getDist() {
         return (PANEL_HEIGHT - CAMERA_HEIGHT) /
