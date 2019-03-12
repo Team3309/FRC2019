@@ -27,7 +27,7 @@ public class ElevateNudge extends Command {
         double deltaTime = curTime - prevTime;
 
         double offset = -Constants.LIFT_NUDGE_PCT_PER_SEC * deltaTime *
-                OI.INSTANCE.getOperatorController().getLeftStick().y();
+                OI.getOperatorController().getLeftStick().getY().get();
         double goalPercentage = Util.clamp(Robot.elevator.getCarriagePercentage() + offset,
                 0.0, 0.8);
         Robot.elevator.setPosition(goalPercentage, null);

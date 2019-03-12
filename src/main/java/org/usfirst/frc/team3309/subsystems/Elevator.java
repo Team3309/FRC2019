@@ -164,7 +164,10 @@ public class Elevator extends Subsystem {
     }
 
     public boolean getLimitSwitchPressed() {
-        return !limitSwitch.get();
+        if (Constants.currentRobot == Constants.Robot.COMPETITION) {
+            return !limitSwitch.get();
+        }
+        return limitSwitch.get();
     }
 
     public double getCarriagePercentage() {
@@ -209,8 +212,7 @@ public class Elevator extends Subsystem {
     public enum CarriagePosition {
 
         Home(0.0),
-        PanelFeederStation(0.0),
-        PanelFeederStationLift(0.05),
+        PanelFeederStation(0.04),
         PanelLow(0.01),
         PanelMiddle(0.40),
         PanelHigh(0.76),

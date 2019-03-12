@@ -14,8 +14,8 @@ public class CargoIntakeManual extends Command {
 
     @Override
     protected void execute() {
-        double powerOut = OI.INSTANCE.getOperatorController().lt();
-        double powerIn = OI.INSTANCE.getOperatorController().rt();
+        double powerOut = OI.getOperatorController().getLt().axis();
+        double powerIn = OI.getOperatorController().getRt().axis();
 
         double power = Util.signedMax(powerOut, powerIn, Constants.CARGO_INTAKE_ROLLERS_MIN_POWER);
 

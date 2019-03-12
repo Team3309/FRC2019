@@ -15,6 +15,7 @@ public class CargoIntake extends Subsystem {
 
     private WPI_VictorSPX intakeMotor;
     private Solenoid solenoid;
+    private boolean solenoidValue;
 
     public CargoIntake() {
         intakeMotor = new WPI_VictorSPX(Constants.CARGO_INTAKE_VICTOR_ID);
@@ -25,6 +26,7 @@ public class CargoIntake extends Subsystem {
 
         addChild(intakeMotor);
         addChild(solenoid);
+        solenoidValue = solenoid.get();
     }
 
     public void setPower(double power) {
@@ -38,11 +40,12 @@ public class CargoIntake extends Subsystem {
 //                    "elevator down and holding cargo", true);
 //            return;
 //        }
-       solenoid.set(position.get());
+        if(solenoidValue != position.get())
+            solenoid.set(solenoidValue = position.get());
     }
 
     public CargoIntakePosition getPosition() {
-       if (solenoid.get() == CargoIntakePosition.Stowed.get()) {
+       if (solenoidValue == CargoIntakePosition.Stowed.get()) {
            return CargoIntakePosition.Stowed;
        } else {
            return CargoIntakePosition.Extended;

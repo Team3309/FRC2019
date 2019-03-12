@@ -51,6 +51,10 @@ public class PIDController {
         integralCeiling = ceiling;
     }
 
+    public void reset() {
+        totalError = 0.0;
+    }
+
     public void outputToDashboard() {
         SmartDashboard.putNumber(name + " kP", kP);
         SmartDashboard.putNumber(name + " kI", kI);

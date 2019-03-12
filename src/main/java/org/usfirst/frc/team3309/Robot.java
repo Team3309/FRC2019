@@ -9,12 +9,9 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.commands.ClimberManual;
 import org.usfirst.frc.team3309.commands.Elevate;
-import org.usfirst.frc.team3309.commands.ElevateNudge;
-import org.usfirst.frc.team3309.commands.ElevatorManual;
 import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
-import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate;
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeManual;
-import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeManual;
+import org.usfirst.frc.team3309.commands.drive.DriveManual;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team3309.subsystems.*;
 import org.usfirst.frc.team4322.commandv2.Command;
@@ -37,6 +34,7 @@ public class Robot extends CommandV2Robot {
     public static PanelHolder panelHolder;
     public static Climber climber;
     public static Vision vision;
+    private static LightComm lightComm;
 
     private Command autoCommand;
 
@@ -56,12 +54,11 @@ public class Robot extends CommandV2Robot {
         panelHolder = new PanelHolder();
         climber = new Climber();
         vision = new Vision();
-//        LightComm lightComm = new LightComm();
+        lightComm = new LightComm();
 
-        // TODO: needs to use limelight stream
-//        UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
-//        camera.setFPS(15);
-//        camera.setResolution(320, 240);
+        UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
+        camera.setFPS(15);
+        camera.setResolution(320, 240);
 
         AutoModeExecutor.displayAutos();
 
@@ -69,8 +66,8 @@ public class Robot extends CommandV2Robot {
 
         // TODO: flip every joystick?
         // invert turning joystick's left to right
-        OI.INSTANCE.getRightJoystick().getXAxis().setRampFunction((x) -> (-x));
-        OI.INSTANCE.getLeftJoystick().getYAxis().setRampFunction((x) -> (-x));
+        OI.getRightJoystick().getXAxis().setRampFunction((x) -> (-x));
+        OI.getLeftJoystick().getYAxis().setRampFunction((x) -> (-x));
 
         // TODO: temporary until limit switch
         elevator.zeroEncoder();
@@ -107,6 +104,7 @@ public class Robot extends CommandV2Robot {
         if (autoCommand != null) {
             autoCommand.start();
         }
+        // TODO: switch to default commands
         new CargoIntakeManual().start();
         new CargoHolderManual().start();
 //        new ClimberManual().start();
@@ -115,7 +113,7 @@ public class Robot extends CommandV2Robot {
     }
 
     /*
-     * This function is called every 2 milliseconds while the robot is in autonomous.
+     * This function is called every 20 milliseconds while the robot is in autonomous.
      * It should be used to perform periodic tasks that need to be done while the robot is in autonomous.
      */
     @Override
@@ -136,6 +134,7 @@ public class Robot extends CommandV2Robot {
         drive.reset();
         new CargoIntakeManual().start();
         new CargoHolderManual().start();
+        new ClimberManual().start();
         if (!DriverStation.getInstance().isFMSAttached()) {
             elevator.zeroEncoder();
 //            new ClimberManual().start();
@@ -184,21 +183,21 @@ public class Robot extends CommandV2Robot {
         climber.setPosition(Climber.ClimberLatchPosition.fromBoolean(climberReleased));
 
         // TODO: remove require(cargoIntake) in actuate
-        if (OI.INSTANCE.getOperatorController().a()) {
+        if (OI.getOperatorController().getA().get()) {
             cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Extended);
-        } else if (OI.INSTANCE.getOperatorController().b()) {
+        } else if (OI.getOperatorController().getB().get()) {
             cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Stowed);
         }
 
-        if (OI.INSTANCE.getOperatorController().x()) {
+        if (OI.getOperatorController().getX().get()) {
             panelHolder.setJointedSolenoid(PanelHolder.JointedPosition.Vertical);
-        } else if (OI.INSTANCE.getOperatorController().y()) {
+        } else if (OI.getOperatorController().getY().get()) {
             panelHolder.setJointedSolenoid(PanelHolder.JointedPosition.PointingOutwards);
         }
 
-        if (OI.INSTANCE.getOperatorController().getDPad().down()) {
+        if (OI.getOperatorController().getDPad().getDown().get()) {
             panelHolder.setExtendingSolenoid(PanelHolder.ExtendedPosition.RetractedInwards);
-        } else if (OI.INSTANCE.getOperatorController().getDPad().up()) {
+        } else if (OI.getOperatorController().getDPad().getUp().get()) {
             panelHolder.setExtendingSolenoid(PanelHolder.ExtendedPosition.ExtendedOutwards);
         }
 
@@ -221,7 +220,7 @@ public class Robot extends CommandV2Robot {
             cargoHolder.outputToDashboard();
             climber.outputToDashboard();
         }
-//        elevator.outputToDashboard();
+        elevator.outputToDashboard();
 //        panelHolder.outputToDashboard();
 //        cargoHolder.outputToDashboard();
 //        drive.outputToDashboard();

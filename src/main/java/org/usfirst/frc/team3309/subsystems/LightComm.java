@@ -3,8 +3,8 @@ package org.usfirst.frc.team3309.subsystems;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team3309.Robot;
+import org.usfirst.frc.team4322.commandv2.Subsystem;
 
 public class LightComm extends Subsystem {
 
@@ -15,6 +15,7 @@ public class LightComm extends Subsystem {
     private boolean wasConnectedToFMS;
     private boolean wasExtended;
     private boolean sentTime;
+    private double lastHeartbeatTime;
 
     public LightComm() {
         port = new SerialPort(115200, SerialPort.Port.kMXP);
@@ -22,6 +23,7 @@ public class LightComm extends Subsystem {
 
     @Override
     public void periodic() {
+
         boolean hasGamepiece = Robot.cargoHolder.hasCargo() || Robot.panelHolder.hasPanel();
         boolean isEnabled = DriverStation.getInstance().isEnabled();
         boolean connectedToFMS = DriverStation.getInstance().isFMSAttached();
@@ -31,6 +33,7 @@ public class LightComm extends Subsystem {
             wasHoldingGamePiece = !wasHoldingGamePiece;
             sendHoldingGamePiece(hasGamepiece);
         } else if (isEnabled != wasEnabled) {
+            System.out.println("Enabled: " + isEnabled);
             wasEnabled = !wasEnabled;
             sendIsEnabled(isEnabled);
         } else if (connectedToFMS != wasConnectedToFMS) {
@@ -51,7 +54,11 @@ public class LightComm extends Subsystem {
     }
 
     public void sendHeartbeat() {
-        port.writeString("h");
+        double now = Timer.getFPGATimestamp();
+        if (now - lastHeartbeatTime > 0.5) {
+            port.writeString("h");
+            lastHeartbeatTime = now;
+        }
     }
 
     public void sendIsEnabled(boolean isEnabled) {
@@ -78,7 +85,4 @@ public class LightComm extends Subsystem {
         port.write(time, time.length);
     }
 
-    @Override
-    protected void initDefaultCommand() {
-    }
 }
