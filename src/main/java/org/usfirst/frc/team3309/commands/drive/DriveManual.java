@@ -36,21 +36,21 @@ public class DriveManual extends Command {
 
         DriveSignal signal = cheesyDrive.update(throttle, turn, isQuickTurn, isHighGear);
 
-        double leftPower = signal.getLeft();
-        double rightPower = signal.getRight();
-
         VisionHelper.outputToDashboard();
 
         if (isAutoTurn) {
             VisionHelper.turnOn();
             if (VisionHelper.hasTargets()) {
-                double angularPower = -VisionHelper.getTurnCorrection();
-                leftPower = throttle + angularPower;
-                rightPower = throttle - angularPower;
+                signal = VisionHelper.getDriveSignal();
             }
+        } else if (OI.getOperatorController().getRightStick().get()){
+            VisionHelper.turnOn();
         } else {
             VisionHelper.turnOff();
         }
+
+        double leftPower = signal.getLeft();
+        double rightPower = signal.getRight();
 
         Robot.drive.setLeftRight(ControlMode.PercentOutput, leftPower, rightPower);
     }

@@ -25,25 +25,20 @@ object OI {
 
     @JvmStatic
     var rightJoystickRightClusterGroup = Trigger.on {
-            rightJoystick.rightCluster.bottomCenter()
-            || rightJoystick.rightCluster.bottomLeft()
-            || rightJoystick.rightCluster.bottomRight()
-            || rightJoystick.rightCluster.topCenter()
-            || rightJoystick.rightCluster.topLeft()
-            || rightJoystick.rightCluster.topRight()
+        rightJoystick.rightCluster.bottomCenter()
+                || rightJoystick.rightCluster.bottomLeft()
+                || rightJoystick.rightCluster.bottomRight()
+                || rightJoystick.rightCluster.topCenter()
+                || rightJoystick.rightCluster.topLeft()
+                || rightJoystick.rightCluster.topRight()
     }
 
     @JvmStatic
     var operatorController: InputXbox = InputXbox(2)
 
-    private var hadCargo: Boolean = false
-
     init {
         leftJoystick.trigger.whenPressed(DriveSetLowGear())
         leftJoystick.trigger.whenReleased(DriveSetHighGear())
-
-//        rightJoystick.knobCluster.bottom.whileHeld(PlacePanel())
-//        rightJoystick.knobCluster.bottom.whenReleased(RemoveFinger())
 
         rightJoystickRightClusterGroup.whileHeld(router {
             if (DriverStation.getInstance().isDisabled) {
@@ -61,7 +56,6 @@ object OI {
                 RemoveFinger()
             } else {
                 CargoHolderSetRollers(0.0)
-
             }
         })
 
@@ -69,8 +63,6 @@ object OI {
         operatorController.dPad.right.whenPressed(Elevate(Elevate.Level.Middle))
         operatorController.dPad.up.whenPressed(Elevate(Elevate.Level.High))
         operatorController.dPad.left.whenPressed(Elevate(Elevate.Level.CargoShipCargo))
-
-//        operatorController.start.whenPressed(ReleaseLatch(Climber.ClimberLatchPosition.Released))
 
         operatorController.lb.whenPressed(IntakePanelFromStation())
         operatorController.lb.whenReleased(RetractFingerFromFeederStation())
@@ -90,38 +82,6 @@ object OI {
             Robot.cargoIntake.position = CargoIntake.CargoIntakePosition.Stowed
         })
 
-        //        operatorController.start.whenPressed(ReleaseLatch(Climber.ClimberLatchPosition.Released))
-//        operatorController.back.whenPressed(WinchClimber(Climber.ClimberAngle.Extended))
-
-/*            operatorController.rb.whenPressed(Command.lambda {
-                Robot.panelHolder.setJointedSolenoid(PanelHolder.JointedPosition.PointingOutwards)
-            })
-            operatorController.rb.whenReleased(Command.lambda {
-                Robot.panelHolder.setJointedSolenoid(PanelHolder.JointedPosition.Vertical)
-            })*/
-/*
-            operatorController.lb.whenPressed(Command.lambda {
-                Robot.panelHolder.setExtendingSolenoid(PanelHolder.ExtendedPosition.ExtendedOutwards)
-            })
-            operatorController.lb.whenReleased(Command.lambda {
-                Robot.panelHolder.setExtendingSolenoid(PanelHolder.ExtendedPosition.RetractedInwards)
-            })
-*/
-        /*        operatorController.dPad.down.whenPressed(Elevate(Elevate.Level.Low))
-        operatorController.dPad.right.whenPressed(Elevate(Elevate.Level.Middle))
-        operatorController.dPad.up.whenPressed(Elevate(Elevate.Level.High))
-        operatorController.dPad.left.whenPressed(Elevate(Elevate.Level.Home))
-
-        operatorController.x.whenPressed(IntakeCargoNear())
-
-        operatorController.y.whileHeld(IntakePanelFromStation())
-        operatorController.y.whenReleased(Command.lambda {
-            if (!Robot.panelHolder.hasPanel())
-                PanelHolderGoHome().start()
-        })
-        operatorController.rb.whenPressed(Extended())
-
-        operatorController.lb.whenPressed(Elevate(Elevate.Level.Test))*/
     }
 
 }

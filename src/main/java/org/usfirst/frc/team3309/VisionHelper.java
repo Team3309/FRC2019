@@ -4,23 +4,26 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.lib.Limelight;
 import org.usfirst.frc.team3309.lib.PIDController;
 import org.usfirst.frc.team3309.lib.util.DriveSignal;
+import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team3309.subsystems.Vision;
 
 public class VisionHelper {
 
     private static Limelight limelight = Vision.panelLimelight;
 
-    private static PIDController turnController = new PIDController("turn", 0.02023,0.0001, 0.00002);
-    private static PIDController throttleController = new PIDController("throttle", 0.0, 0.0, 0.0);
+    private static PIDController turnController = new PIDController("turn", 0.019, 0.0001, 0.00002);
+    private static PIDController throttleController = new PIDController("throttle", 0.0066, 0.0000, 0.0);
+    private static PIDController skewController = new PIDController("skew", 0.0, 0.0, 0.0);
 
     private static final boolean isDashboard = true;
     private static Limelight.CamMode curCamMode = Limelight.CamMode.DriverCamera;
     private static int curPipeline = 0;
     private static Limelight.LEDMode curLed;
 
+    private static final double skewGain = 1.0;
     private static final double PANEL_HEIGHT = 28.875;
-    private static final double CAMERA_HEIGHT = 33.25;
-    private static final double CAMERA_MOUNTING_ANGLE = -7.1;
+    private static final double CAMERA_HEIGHT = 33.1875;
+    private static final double CAMERA_MOUNTING_ANGLE = -10.236;
 
     static {
         turnController.outputToDashboard();
@@ -28,14 +31,20 @@ public class VisionHelper {
 
     public static DriveSignal getDriveSignal() {
         init();
-        double linearPower = getThrottleCorrection();
-        double angularPower = getTurnCorrection();
-        return new DriveSignal(linearPower + angularPower,
-                linearPower - angularPower);
+        if (limelight.getArea() < 15.0) {
+            double linearPower = getThrottleCorrection();
+            double angularPower = getTurnCorrection();
+            // TODO: add skew implementation to compensate for steeper angles
+            return new DriveSignal(linearPower + angularPower,
+                    linearPower - angularPower);
+        }
+        return DriveSignal.NEUTRAL;
     }
 
     private static void init() {
         turnController.reset();
+        throttleController.reset();
+        skewController.reset();
         if (isDashboard) {
             turnController.readDashboard();
         }
@@ -58,25 +67,30 @@ public class VisionHelper {
     }
 
     public static double getTurnCorrection() {
-        init();
+        return -turnController.update(limelight.getTx());
+    }
 
-        if (!limelight.hasTarget()) {
+  /*  public static double getSkewCorrection() {
+        double skew;
+        if (limelight.getSkew() < -45) {
+            skew = limelight.getSkew() + 90;
+        } else {
+            skew = limelight.getSkew();
+        }
+        double skewPower = skewGain * skewController.update(skew);
+
+    }
+
+    private static double getSkewScale(double dist, double min, double max) {
+        if (!Util.within(dist, min, max)) {
             return 0.0;
         }
 
-        double angularPower = 0.0;
-
-        if (limelight.getArea() < 15.0) {
-            double limelightAngle = limelight.getTx();
-            angularPower = turnController.update(limelightAngle);
-        }
-
-        return angularPower;
-    }
+    } */
 
     public static double getDist() {
         return (PANEL_HEIGHT - CAMERA_HEIGHT) /
-                Math.tan(Math.toRadians(-limelight.getTy() + CAMERA_MOUNTING_ANGLE));
+                Math.tan(Math.toRadians(limelight.getTy() + CAMERA_MOUNTING_ANGLE)) - 23;
     }
 
     private static void setCamMode(Limelight.CamMode camMode) {
