@@ -12,15 +12,15 @@ public class VisionHelper {
     private static Limelight limelight = Vision.panelLimelight;
 
     private static PIDController turnController = new PIDController("turn", 0.018, 0.0001, 0.00002);
-    private static PIDController throttleController = new PIDController("throttle", 0.0069, 0.0000, 0.0);
-    private static PIDController skewController = new PIDController("skew", 0.1, 0.0, 0.0);
+    private static PIDController throttleController = new PIDController("throttle", 0.00683, 0.0000, 0.0);
+    private static PIDController skewController = new PIDController("skew", 0.01, 0.0, 0.0);
 
     private static final boolean isDashboard = true;
     private static Limelight.CamMode curCamMode = Limelight.CamMode.DriverCamera;
     private static int curPipeline = 0;
     private static Limelight.LEDMode curLed;
 
-    private static final double skewGain = 0.5;
+    private static final double skewGain = 0.002;
     private static final double PANEL_HEIGHT = 28.875;
     private static final double CAMERA_HEIGHT = 33.1875;
     private static final double CAMERA_MOUNTING_ANGLE = -10.236;
@@ -35,6 +35,7 @@ public class VisionHelper {
             double linearPower = getThrottleCorrection();
             double angularPower = getTurnCorrection();
             double skewPower = getSkewCorrection();
+            SmartDashboard.putNumber("Skew power", skewPower);
             return new DriveSignal(linearPower + angularPower - skewPower,
                     linearPower - angularPower + skewPower);
         }
@@ -78,7 +79,7 @@ public class VisionHelper {
             skew = limelight.getSkew();
         }
         return skewGain * skewController.update(skew) * getSkewScale(getDist(),
-                50, 90);
+                10, 90);
     }
 
     private static double getSkewScale(double dist, double min, double max) {
