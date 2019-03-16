@@ -11,8 +11,8 @@ public class VisionHelper {
 
     private static Limelight limelight = Vision.panelLimelight;
 
-    private static PIDController turnController = new PIDController("turn", 0.018, 0.0001, 0.00002);
-    private static PIDController throttleController = new PIDController("throttle", 0.00683, 0.0000, 0.0);
+    private static PIDController turnController = new PIDController("turn", 0.0178, 0.0001, 0.000021);
+    private static PIDController throttleController = new PIDController("throttle", 0.00682, 0.0000, 0.0);
     private static PIDController skewController = new PIDController("skew", 0.01, 0.0, 0.0);
 
     private static final boolean isDashboard = true;

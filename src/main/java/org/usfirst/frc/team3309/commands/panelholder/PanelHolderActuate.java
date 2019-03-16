@@ -1,4 +1,4 @@
-package org.usfirst.frc.team3309.commands;
+package org.usfirst.frc.team3309.commands.panelholder;
 
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.subsystems.PanelHolder;
@@ -9,7 +9,6 @@ public class PanelHolderActuate extends Command {
     private PanelHolder.PanelHolderPosition position;
 
     public PanelHolderActuate(PanelHolder.PanelHolderPosition position) {
-        require(Robot.panelHolder);
         this.position = position;
     }
 

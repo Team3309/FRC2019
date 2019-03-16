@@ -12,6 +12,7 @@ import org.usfirst.frc.team3309.commands.Elevate;
 import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeManual;
 import org.usfirst.frc.team3309.commands.drive.DriveManual;
+import org.usfirst.frc.team3309.commands.panelholder.PanelHolderManual;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team3309.subsystems.*;
 import org.usfirst.frc.team4322.commandv2.Command;
@@ -107,6 +108,7 @@ public class Robot extends CommandV2Robot {
         // TODO: switch to default commands
         new CargoIntakeManual().start();
         new CargoHolderManual().start();
+        new PanelHolderManual().start();
 //        new ClimberManual().start();
         //        new ElevatorManual().start();
         new Elevate(Elevate.Level.Home).start();
@@ -135,6 +137,7 @@ public class Robot extends CommandV2Robot {
         new CargoIntakeManual().start();
         new CargoHolderManual().start();
         new ClimberManual().start();
+        new PanelHolderManual().start();
         if (!DriverStation.getInstance().isFMSAttached()) {
             elevator.zeroEncoder();
 //            new ClimberManual().start();
@@ -168,18 +171,10 @@ public class Robot extends CommandV2Robot {
         NetworkTable testTable = NetworkTableInstance.getDefault().getTable("test");
         NetworkTable pneumaticsTable = testTable.getSubTable("pneumatics");
 
-        boolean cargoIntakeExtend = pneumaticsTable.getEntry("CargoIntake extend").getBoolean(false);
         boolean panelIntakeExtend = pneumaticsTable.getEntry("PanelIntake extend").getBoolean(false);
-        boolean panelHolderJointedExtended = pneumaticsTable
-                .getEntry("PanelHolder jointed extended").getBoolean(false);
-        boolean panelHolderTelescopingExtended = pneumaticsTable
-                .getEntry("PanelHolder telescoping extended").getBoolean(false);
         boolean climberReleased = pneumaticsTable.getEntry("Climber released").getBoolean(false);
 
-//        cargoIntake.setPosition(CargoIntake.CargoIntakePosition.fromBoolean(cargoIntakeExtend));
         panelIntake.setPosition(PanelIntake.PanelIntakePosition.fromBoolean(panelIntakeExtend));
-//        panelHolder.setPosition(PanelHolder.JointedPosition.fromBoolean(panelHolderJointedExtended),
-//                PanelHolder.ExtendedPosition.fromBoolean(panelHolderTelescopingExtended));
         climber.setPosition(Climber.ClimberLatchPosition.fromBoolean(climberReleased));
 
         // TODO: remove require(cargoIntake) in actuate
@@ -187,12 +182,6 @@ public class Robot extends CommandV2Robot {
             cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Extended);
         } else if (OI.getOperatorController().getB().get()) {
             cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Stowed);
-        }
-
-        if (OI.getOperatorController().getX().get()) {
-            panelHolder.setJointedSolenoid(PanelHolder.JointedPosition.Vertical);
-        } else if (OI.getOperatorController().getY().get()) {
-            panelHolder.setJointedSolenoid(PanelHolder.JointedPosition.PointingOutwards);
         }
 
         if (OI.getOperatorController().getDPad().getDown().get()) {

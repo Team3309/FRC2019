@@ -17,12 +17,7 @@ public class Elevator extends Subsystem {
 
     private DigitalInput limitSwitch;
 
-    // private WPI_TalonSRX wristMaster;
-
     private double carriageGoal;
-    private WristFacing wristGoal;
-
-    private boolean stowIntakeAfterMove;
 
     public Elevator() {
         liftMaster = new WPI_TalonSRX(Constants.ELEVATOR_MASTER_TALON_ID);
@@ -66,23 +61,11 @@ public class Elevator extends Subsystem {
     }
 
     @Override
-    public void initDefaultCommand() {
-//        setDefaultCommand(new ElevateNudge());
-    }
-
-    @Override
     public void periodic() {
 
         if (getLimitSwitchPressed()) {
             zeroEncoder();
         }
-
-        /*if (stowIntakeAfterMove
-                && moveComplete()
-                && !Robot.hasCargoInIntakeZone()) {
-            new CargoIntakeActuate(CargoIntake.CargoIntakePosition.Stowed).start();
-            stowIntakeAfterMove = false;
-        }*/
     }
 
     private boolean moveComplete() {
@@ -106,40 +89,13 @@ public class Elevator extends Subsystem {
         BigMovement
     }
 
-    public void setPosition(CarriagePosition position, WristFacing wristFacing) {
-        setPosition(position.getCarriagePercentage(), wristFacing);
-    }
-
-    public void setPosition(WristFacing wristFacing) {
-        setPosition(carriageGoal, wristFacing);
-    }
-
     public void setPosition(CarriagePosition position) {
-        setPosition(position, wristGoal);
+        setPosition(position);
     }
 
-    public void setPosition(double position) {
-        setPosition(position, wristGoal);
-    }
-
-    public void setPosition(double carriagePercentage, WristFacing wristFacing) {
+    public void setPosition(double carriagePercentage) {
         double prevCarriageGoal = carriageGoal;
         carriageGoal = Util.clamp(carriagePercentage, 0, 1);
-        wristGoal = wristFacing;
-
-        // TODO: integrate wrist through collision avoidance
-//        boolean withinSafeZone = Util.within(getCarriagePercentage(),
-//                Constants.LIFT_BEGIN_SAFE_ZONE,
-//                Constants.LIFT_END_SAFE_ZONE);
-
-        /*if (Robot.cargoHolder.hasCargo()
-                && Robot.cargoIntake.getPosition() == CargoIntake.CargoIntakePosition.Stowed
-                && moveCrossesIntake()) {
-            new CargoIntakeActuate(CargoIntake.CargoIntakePosition.Extended).start();
-            // TODO: if elevator is faster than intake can extend, put wait here
-            stowIntakeAfterMove = true;
-        }*/
-
 
         double rawLiftGoal = liftGoalToEncoderCounts(carriageGoal);
 
@@ -154,13 +110,6 @@ public class Elevator extends Subsystem {
         } else {
             DriverStation.reportWarning("ELEVATOR: Tried to set value while disabled", false);
         }
-    }
-
-    // if intake zone is 0 in length, this can return false when it crosses
-    private boolean moveCrossesIntake() {
-        assert Constants.CARGO_INTAKE_ZONE_MAX > Constants.CARGO_INTAKE_ZONE_MIN;
-        return Util.overlap1D(Constants.CARGO_INTAKE_ZONE_MIN, Constants.CARGO_INTAKE_ZONE_MAX,
-                getCarriagePercentage(), carriageGoal) > 0;
     }
 
     public boolean getLimitSwitchPressed() {
@@ -186,10 +135,6 @@ public class Elevator extends Subsystem {
         return liftGoal * Constants.ELEVATOR_ENCODER_COUNTS_FOR_MAX_HEIGHT;
     }
 
-    private double wristGoalToEncoderCounts(double wristGoal) {
-        return wristGoal * Constants.WRIST_COUNTS_FOR_FULL_ROTATION / 180.0;
-    }
-
     public void setPower(double power) {
         liftMaster.set(ControlMode.PercentOutput, power);
     }
@@ -212,8 +157,8 @@ public class Elevator extends Subsystem {
     public enum CarriagePosition {
 
         Home(0.0),
-        PanelFeederStation(0.04),
-        PanelLow(0.01),
+        PanelFeederStation(0.0),
+        PanelLow(0.0),
         PanelMiddle(0.40),
         PanelHigh(0.76),
         CargoLow(0.26),
@@ -223,7 +168,6 @@ public class Elevator extends Subsystem {
 //        CargoMiddle(PanelMiddle.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
 //        CargoHigh(PanelHigh.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
         CargoShipCargo(0.45),
-        PanelClearingPanelIntake(0.0),
         Test(0.0),
         DropATad(0.0);
 
@@ -237,22 +181,6 @@ public class Elevator extends Subsystem {
             return carriagePercentage;
         }
 
-    }
-
-    public enum WristFacing {
-
-        Front(0.0),
-        Back(0.0);
-
-        private double wristPosition;
-
-        WristFacing(double wristPosition) {
-            this.wristPosition = wristPosition;
-        }
-
-        public double getWristPosition() {
-            return wristPosition;
-        }
     }
 
 }

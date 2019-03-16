@@ -43,7 +43,7 @@ object OI {
         rightJoystickRightClusterGroup.whileHeld(router {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
-            } else if (Robot.panelHolder.hasPanel() || Robot.panelHolder.extendedPosition == PanelHolder.ExtendedPosition.ExtendedOutwards) {
+            } else if (Robot.panelHolder.extendedPosition == PanelHolder.ExtendedPosition.ExtendedOutwards) {
                 PlacePanel()
             } else {
                 CargoHolderSetRollers(1.0)

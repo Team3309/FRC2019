@@ -75,7 +75,7 @@ public class Constants {
     public static final double ELEVATOR_P = 0.05;
     public static final double ELEVATOR_I = 5.56e-6;
     public static final double ELEVATOR_D = 0;
-    public static final double ELEVATOR_F = 0.45;
+    public static final double ELEVATOR_F = 0;
 
     // max position used for conversions (encoder counts)
     public static final double ELEVATOR_ENCODER_COUNTS_FOR_MAX_HEIGHT = 116000;
@@ -100,15 +100,6 @@ public class Constants {
     // these can NEVER be the same
     public static final double CARGO_INTAKE_ZONE_MIN = -0.1;
     public static final double CARGO_INTAKE_ZONE_MAX = 0.24;
-
-    public static final int WRIST_TALON_ID = -1;
-
-    public static final double WRIST_P = 0.0;
-    public static final double WRIST_I = 0.0;
-    public static final double WRIST_D = 0.0;
-
-    // max wrist position used for conversions (encoder counts)
-    public static final double WRIST_COUNTS_FOR_FULL_ROTATION = 0.0;
 
     // difference between cargo and panel in rocket [0, 1]
     public static final double PANEL_CARGO_OFFSET = 0.0;
@@ -141,7 +132,7 @@ public class Constants {
     /**
      * Panel placer mappings
      */
-    public static final int PANEL_HOLDER_JOINTED_SOLENOID_ID = 3;
+    public static final int PANEL_HOLDER_TALON_ID = 13;
     public static final int PANEL_HOLDER_TELESCOPING_SOLENOID_ID = 4;
     public static final int PANEL_HOLDER_BUMPER_SENSOR_PORT = 0;
 
