@@ -9,6 +9,7 @@ public class PanelHolderManual extends Command {
 
     public PanelHolderManual() {
         require(Robot.panelHolder);
+        setInterruptBehavior(InterruptBehavior.Suspend);
     }
 
     @Override
@@ -17,6 +18,10 @@ public class PanelHolderManual extends Command {
         double powerIn = OI.getOperatorController().getRt().axis();
 
         double power = Util.signedMax(powerOut, powerIn, 0.1);
+
+        if (Robot.panelHolder.hasPanel() && !(power > 0)) {
+            power = -0.15;
+        }
 
         Robot.panelHolder.setPower(power);
     }

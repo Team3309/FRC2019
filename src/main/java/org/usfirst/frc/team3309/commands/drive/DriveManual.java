@@ -5,12 +5,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.OI;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.VisionHelper;
+import org.usfirst.frc.team3309.commands.IntakePanelFromStationKt;
+import org.usfirst.frc.team3309.commands.PlacePanelKt;
+import org.usfirst.frc.team3309.commands.RemoveFingerKt;
+import org.usfirst.frc.team3309.commands.RetractFingerFromFeederStationKt;
+import org.usfirst.frc.team3309.commands.panelholder.PanelHolderSetRollers;
 import org.usfirst.frc.team3309.lib.PIDController;
 import org.usfirst.frc.team3309.lib.util.CheesyDriveHelper;
 import org.usfirst.frc.team3309.lib.util.DriveSignal;
 import org.usfirst.frc.team3309.lib.util.Util;
+import org.usfirst.frc.team3309.subsystems.PanelHolder;
 import org.usfirst.frc.team3309.subsystems.Vision;
 import org.usfirst.frc.team4322.commandv2.Command;
+
+import java.awt.*;
 
 public class DriveManual extends Command {
 
@@ -42,8 +50,21 @@ public class DriveManual extends Command {
             VisionHelper.turnOn();
             if (VisionHelper.hasTargets()) {
                 signal = VisionHelper.getDriveSignal();
+                double dist = VisionHelper.getDist();
+                if (Robot.panelHolder.hasPanel()) {
+                    if (Math.abs(dist) < 1.5) {
+                        RemoveFingerKt.RemoveFinger().start();
+                    } else if (Util.within(dist, 3.0, 10.0)) {
+                        PlacePanelKt.PlacePanel().start();
+                    }
+                } else {
+//                    if (Math.abs(dist) < 6.0) {
+////                        new PanelHolderSetRollers(1.0).start();
+////                        IntakePanelFromStationKt.IntakePanelFromStation().start();
+////                    }
+                }
             }
-        } else if (OI.getOperatorController().getRightStick().get()){
+        } else if (OI.getOperatorController().getRightStick().get()) {
             VisionHelper.turnOn();
         } else {
             VisionHelper.turnOff();

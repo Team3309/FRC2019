@@ -11,8 +11,8 @@ public class VisionHelper {
 
     private static Limelight limelight = Vision.panelLimelight;
 
-    private static PIDController turnController = new PIDController("turn", 0.0178, 0.0001, 0.000021);
-    private static PIDController throttleController = new PIDController("throttle", 0.00682, 0.0000, 0.0);
+    private static PIDController turnController = new PIDController("turn", 0.012, 0.000, 0.00);
+    private static PIDController throttleController = new PIDController("throttle", 0.015, 0.0005, 0.0);
     private static PIDController skewController = new PIDController("skew", 0.01, 0.0, 0.0);
 
     private static final boolean isDashboard = true;
@@ -20,13 +20,14 @@ public class VisionHelper {
     private static int curPipeline = 0;
     private static Limelight.LEDMode curLed;
 
-    private static final double skewGain = 0.002;
+    private static final double skewGain = 1.0;
     private static final double PANEL_HEIGHT = 28.875;
     private static final double CAMERA_HEIGHT = 33.1875;
     private static final double CAMERA_MOUNTING_ANGLE = -10.236;
 
     static {
         turnController.outputToDashboard();
+        VisionHelper.turnOff();
     }
 
     public static DriveSignal getDriveSignal() {
@@ -36,8 +37,8 @@ public class VisionHelper {
             double angularPower = getTurnCorrection();
             double skewPower = getSkewCorrection();
             SmartDashboard.putNumber("Skew power", skewPower);
-            return new DriveSignal(linearPower + angularPower - skewPower,
-                    linearPower - angularPower + skewPower);
+            return new DriveSignal(linearPower + angularPower + skewPower,
+                    linearPower - angularPower - skewPower);
         }
         return DriveSignal.NEUTRAL;
     }
@@ -64,7 +65,7 @@ public class VisionHelper {
     }
 
     public static double getThrottleCorrection() {
-        return throttleController.update(getDist());
+        return -throttleController.update(getDist(), 3);
     }
 
     public static double getTurnCorrection() {
@@ -72,15 +73,20 @@ public class VisionHelper {
     }
 
     public static double getSkewCorrection() {
+        return skewGain * skewController.update(getSkew()) * getSkewScale(getDist(),
+                10, 24);
+    }
+
+    public static double getSkew() {
         double skew;
         if (limelight.getSkew() < -45) {
             skew = limelight.getSkew() + 90;
         } else {
             skew = limelight.getSkew();
         }
-        return skewGain * skewController.update(skew) * getSkewScale(getDist(),
-                10, 90);
+        return skew;
     }
+
 
     private static double getSkewScale(double dist, double min, double max) {
         if (!Util.within(dist, min, max)) {
@@ -90,8 +96,8 @@ public class VisionHelper {
     }
 
     public static double getDist() {
-        return (PANEL_HEIGHT - CAMERA_HEIGHT) /
-                Math.tan(Math.toRadians(limelight.getTy() + CAMERA_MOUNTING_ANGLE)) - 23;
+        return ((PANEL_HEIGHT - CAMERA_HEIGHT) /
+                Math.tan(Math.toRadians(limelight.getTy() + CAMERA_MOUNTING_ANGLE))) - 24.0;
     }
 
     private static void setCamMode(Limelight.CamMode camMode) {
@@ -116,7 +122,7 @@ public class VisionHelper {
     }
 
     public static boolean hasTargets() {
-        return limelight.hasTarget();
+        return limelight.hasTarget() && Util.within(getSkew(), -5.0, 5.0);
     }
 
     public static void outputToDashboard() {

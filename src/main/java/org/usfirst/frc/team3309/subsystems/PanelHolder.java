@@ -69,7 +69,7 @@ public class PanelHolder extends Subsystem {
     }
 
     public boolean hasPanel() {
-        return false;
+        return !bumperSensor.get();
     }
 
     public enum PanelHolderPosition {
