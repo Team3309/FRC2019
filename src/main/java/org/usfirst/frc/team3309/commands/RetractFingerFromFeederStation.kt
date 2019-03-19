@@ -8,8 +8,8 @@ import org.usfirst.frc.team4322.commandv2.group
 
 fun RetractFingerFromFeederStation(): Command {
     return group {
-        sequential {
-            +PanelHolderSetRollers(-1.0, 0.4)
+        parallel {
+            +PanelHolderSetRollers(-1.0, 0.5)
             +PanelHolderActuate(PanelHolder.PanelHolderPosition.TelescopeBack)
         }
     }

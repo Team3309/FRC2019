@@ -40,7 +40,7 @@ public class DriveManual extends Command {
 
         boolean isHighGear = Robot.drive.inHighGear();
         boolean isQuickTurn = OI.getRightJoystick().getTrigger().get();
-        boolean isAutoTurn = OI.getLeftJoystick().getKnobCluster().getBottom().get();
+        boolean isAutoTurn = OI.getLeftJoystickLeftClusterGroup().get();
 
         DriveSignal signal = cheesyDrive.update(throttle, turn, isQuickTurn, isHighGear);
 
@@ -52,9 +52,9 @@ public class DriveManual extends Command {
                 signal = VisionHelper.getDriveSignal();
                 double dist = VisionHelper.getDist();
                 if (Robot.panelHolder.hasPanel()) {
-                    if (Math.abs(dist) < 1.5) {
+                    if (Math.abs(dist) < 2.0) {
                         RemoveFingerKt.RemoveFinger().start();
-                    } else if (Util.within(dist, 3.0, 10.0)) {
+                    } else if (Util.within(dist, 3.0, 15.0)) {
                         PlacePanelKt.PlacePanel().start();
                     }
                 } else {

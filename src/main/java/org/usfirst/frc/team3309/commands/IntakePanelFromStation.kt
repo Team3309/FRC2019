@@ -3,6 +3,7 @@ package org.usfirst.frc.team3309.commands
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderActuate
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderManual
+import org.usfirst.frc.team3309.commands.panelholder.PanelHolderSetRollers
 import org.usfirst.frc.team3309.subsystems.CargoIntake
 import org.usfirst.frc.team3309.subsystems.Elevator
 import org.usfirst.frc.team3309.subsystems.PanelHolder

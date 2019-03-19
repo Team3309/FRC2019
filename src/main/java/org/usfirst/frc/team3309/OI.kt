@@ -34,6 +34,16 @@ object OI {
     }
 
     @JvmStatic
+    var leftJoystickLeftClusterGroup = Trigger.on {
+        leftJoystick.leftCluster.bottomCenter()
+                || leftJoystick.leftCluster.bottomLeft()
+                || leftJoystick.leftCluster.bottomRight()
+                || leftJoystick.leftCluster.topCenter()
+                || leftJoystick.leftCluster.topLeft()
+                || leftJoystick.leftCluster.topRight()
+    }
+
+    @JvmStatic
     var operatorController: InputXbox = InputXbox(2)
 
     init {

@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309;
 
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -60,6 +61,7 @@ public class Robot extends CommandV2Robot {
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
         camera.setFPS(15);
         camera.setResolution(320, 240);
+        camera.setPixelFormat(VideoMode.PixelFormat.kYUYV);
 
         AutoModeExecutor.displayAutos();
 

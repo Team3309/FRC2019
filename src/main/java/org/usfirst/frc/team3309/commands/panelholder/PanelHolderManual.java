@@ -20,7 +20,7 @@ public class PanelHolderManual extends Command {
         double power = Util.signedMax(powerOut, powerIn, 0.1);
 
         if (Robot.panelHolder.hasPanel() && !(power > 0)) {
-            power = -0.15;
+            power = -0.23;
         }
 
         Robot.panelHolder.setPower(power);
