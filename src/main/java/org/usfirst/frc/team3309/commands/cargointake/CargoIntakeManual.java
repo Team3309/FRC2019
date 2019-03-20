@@ -19,6 +19,10 @@ public class CargoIntakeManual extends Command {
 
         double power = Util.signedMax(powerOut, powerIn, Constants.CARGO_INTAKE_ROLLERS_MIN_POWER);
 
+        if (!OI.getOperatorCargoIntakeButton().get()) {
+            power = 0.0;
+        }
+
         Robot.cargoIntake.setPower(power);
     }
 

@@ -46,7 +46,7 @@ public class Elevator extends Subsystem {
         talon.configMotionAcceleration(180000);
 
         talon.configPeakOutputForward(1.0);
-        talon.configPeakOutputReverse(-0.7);
+        talon.configPeakOutputReverse(-0.42);
 
 
         talon.setSensorPhase(false);

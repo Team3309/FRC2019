@@ -46,6 +46,16 @@ object OI {
     @JvmStatic
     var operatorController: InputXbox = InputXbox(2)
 
+    @JvmStatic
+    var operatorCargoIntakeButton = Trigger.on {
+        operatorController.rb.get()
+    }
+
+    @JvmStatic
+    var operatorPanelIntakeButton = Trigger.on {
+        operatorController.lb.get()
+    }
+
     init {
         leftJoystick.trigger.whenPressed(DriveSetLowGear())
         leftJoystick.trigger.whenReleased(DriveSetHighGear())
@@ -74,11 +84,11 @@ object OI {
         operatorController.dPad.up.whenPressed(Elevate(Elevate.Level.High))
         operatorController.dPad.left.whenPressed(Elevate(Elevate.Level.CargoShipCargo))
 
-        operatorController.lb.whenPressed(IntakePanelFromStation())
-        operatorController.lb.whenReleased(RetractFingerFromFeederStation())
+        operatorPanelIntakeButton.whenPressed(IntakePanelFromStation())
+        operatorPanelIntakeButton.whenReleased(RetractFingerFromFeederStation())
 
-        operatorController.rb.whileHeld(IntakeCargoNear())
-        operatorController.rb.whenReleased(Command.lambda {
+        operatorCargoIntakeButton.whenPressed(IntakeCargoNear())
+        operatorCargoIntakeButton.whenReleased(Command.lambda {
             if (!Robot.cargoHolder.hasCargo()) {
                 CargoIntakeActuate(CargoIntake.CargoIntakePosition.Stowed)
             }

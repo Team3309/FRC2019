@@ -20,7 +20,9 @@ public class PanelHolderManual extends Command {
         double power = Util.signedMax(powerOut, powerIn, 0.1);
 
         if (Robot.panelHolder.hasPanel() && !(power > 0)) {
-            power = -0.23;
+            power = -0.28;
+        } else if (OI.getOperatorCargoIntakeButton().get()) {
+            power = 0.0;
         }
 
         Robot.panelHolder.setPower(power);

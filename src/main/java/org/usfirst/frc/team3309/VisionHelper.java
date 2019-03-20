@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3309;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.lib.Limelight;
 import org.usfirst.frc.team3309.lib.PIDController;
@@ -15,10 +16,13 @@ public class VisionHelper {
     private static PIDController throttleController = new PIDController("throttle", 0.013, 0.0011, 0.0);
     private static PIDController skewController = new PIDController("skew", 0.0, 0.0, 0.0);
 
+    private static Timer timer = new Timer();
+
     private static final boolean isDashboard = true;
     private static Limelight.CamMode curCamMode = Limelight.CamMode.DriverCamera;
     private static int curPipeline = 0;
     private static Limelight.LEDMode curLed;
+    private static boolean timerStarted;
 
     private static final double skewGain = 1.0;
     private static final double PANEL_HEIGHT = 28.875;
@@ -64,19 +68,27 @@ public class VisionHelper {
         setCamMode(Limelight.CamMode.VisionProcessor);
         setPipeline(0);
         setLed(Limelight.LEDMode.On);
+        if (!timerStarted) {
+            timer.start();
+            timerStarted = true;
+        }
     }
 
     public static void turnOff() {
         setCamMode(Limelight.CamMode.DriverCamera);
         setLed(Limelight.LEDMode.Off);
+        if (timerStarted) {
+            timer.stop();
+            timerStarted = false;
+        }
     }
 
     public static double getThrottleCorrection() {
-        return -throttleController.update(getDist(), 3);
+        return -throttleController.update(getDist(), 0.0);
     }
 
     public static double getTurnCorrection() {
-        return -turnController.update(limelight.getTx());
+        return turnController.update(limelight.getTx(), 0.0);
     }
 
     public static double getSkewCorrection() {
@@ -86,6 +98,7 @@ public class VisionHelper {
 
     public static double getSkew() {
         double skew;
+
         if (limelight.getSkew() < -45) {
             skew = limelight.getSkew() + 90;
         } else {
@@ -127,6 +140,10 @@ public class VisionHelper {
             limelight.setLed(led);
             curLed = led;
         }
+    }
+
+    public static double getTimeElasped() {
+        return timer.get();
     }
 
     public static boolean hasTargets() {
