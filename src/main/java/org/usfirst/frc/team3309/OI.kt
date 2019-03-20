@@ -102,6 +102,10 @@ object OI {
             Robot.cargoIntake.position = CargoIntake.CargoIntakePosition.Stowed
         })
 
+        operatorController.leftStick.whenPressed(
+                ReleaseLatch(Climber.ClimberLatchPosition.Released)
+        )
+
     }
 
 }

@@ -32,11 +32,11 @@ public class Climber extends Subsystem {
     }
 
     public void outputToDashboard() {
+        SmartDashboard.putNumber("Climber current", winchMotor.getOutputCurrent());
         SmartDashboard.putNumber("Climber position", winchMotor.getSelectedSensorPosition());
         SmartDashboard.putNumber("Climber goal", winchMotor.getClosedLoopTarget());
         SmartDashboard.putNumber("Climber closed loop error", winchMotor.getClosedLoopError());
-        SmartDashboard.putString("Climber latch position", getLatchPosition().toString());
-        SmartDashboard.putBoolean("Climber raw latch postion", getLatchPosition().value);
+        SmartDashboard.putBoolean("Climber raw latch postion", latchingSolenoid.get());
     }
 
     public void setAngle(ClimberAngle angle) {
@@ -48,18 +48,11 @@ public class Climber extends Subsystem {
     }
 
     public void setPower(double power) {
-        winchMotor.set(ControlMode.PercentOutput, power/2.0);
-    }
-
-    public ClimberLatchPosition getLatchPosition() {
-        if (latchingSolenoid.get() == ClimberLatchPosition.Latched.value) {
-            return ClimberLatchPosition.Latched;
-        } else {
-            return ClimberLatchPosition.Released;
-        }
+        winchMotor.set(ControlMode.PercentOutput, power);
     }
 
     public enum ClimberAngle {
+
 
         Extended(0.0);
 

@@ -111,8 +111,7 @@ public class Robot extends CommandV2Robot {
         new CargoIntakeManual().start();
         new CargoHolderManual().start();
         new PanelHolderManual().start();
-//        new ClimberManual().start();
-        //        new ElevatorManual().start();
+        new ClimberManual().start();
         new Elevate(Elevate.Level.Home).start();
     }
 
@@ -140,10 +139,6 @@ public class Robot extends CommandV2Robot {
         new CargoHolderManual().start();
         new ClimberManual().start();
         new PanelHolderManual().start();
-        if (!DriverStation.getInstance().isFMSAttached()) {
-            elevator.zeroEncoder();
-//            new ClimberManual().start();
-        }
     }
 
     /*
@@ -160,38 +155,6 @@ public class Robot extends CommandV2Robot {
      */
     @Override
     public void testInit() {
-    }
-
-
-    /*
-     * This function is called every 2 milliseconds while the Robot is in test mode.
-     */
-    @Override
-    public void testPeriodic() {
-        super.testPeriodic();
-
-        NetworkTable testTable = NetworkTableInstance.getDefault().getTable("test");
-        NetworkTable pneumaticsTable = testTable.getSubTable("pneumatics");
-
-        boolean panelIntakeExtend = pneumaticsTable.getEntry("PanelIntake extend").getBoolean(false);
-        boolean climberReleased = pneumaticsTable.getEntry("Climber released").getBoolean(false);
-
-        panelIntake.setPosition(PanelIntake.PanelIntakePosition.fromBoolean(panelIntakeExtend));
-        climber.setPosition(Climber.ClimberLatchPosition.fromBoolean(climberReleased));
-
-        // TODO: remove require(cargoIntake) in actuate
-        if (OI.getOperatorController().getA().get()) {
-            cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Extended);
-        } else if (OI.getOperatorController().getB().get()) {
-            cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Stowed);
-        }
-
-        if (OI.getOperatorController().getDPad().getDown().get()) {
-            panelHolder.setExtendingSolenoid(PanelHolder.ExtendedPosition.RetractedInwards);
-        } else if (OI.getOperatorController().getDPad().getUp().get()) {
-            panelHolder.setExtendingSolenoid(PanelHolder.ExtendedPosition.ExtendedOutwards);
-        }
-
     }
 
     /*
@@ -211,10 +174,7 @@ public class Robot extends CommandV2Robot {
             cargoHolder.outputToDashboard();
             climber.outputToDashboard();
         }
-        elevator.outputToDashboard();
-//        panelHolder.outputToDashboard();
-//        cargoHolder.outputToDashboard();
-//        drive.outputToDashboard();
+        climber.outputToDashboard();
     }
 
     public static boolean hasCargoInIntakeZone() {

@@ -15,7 +15,7 @@ public class ReleaseLatch extends Command {
 
     @Override
     protected void execute() {
-        Robot.climber.setPosition(Climber.ClimberLatchPosition.Released);
+        Robot.climber.setPosition(latchPosition);
     }
 
     @Override
