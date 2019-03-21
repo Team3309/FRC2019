@@ -3,6 +3,8 @@ package org.usfirst.frc.team3309.commands.drive;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 import org.usfirst.frc.team3309.OI;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.VisionHelper;
@@ -24,8 +26,6 @@ import java.awt.*;
 public class DriveManual extends Command {
 
     private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
-
-    private boolean hasDeployedFinger;
 
     public DriveManual() {
         require(Robot.drive);
@@ -52,17 +52,16 @@ public class DriveManual extends Command {
                 signal = VisionHelper.getDriveSignal();
                 if (Robot.panelHolder.hasPanel() && VisionHelper.getTimeElasped() > 0.25) {
                     double dist = VisionHelper.getDist();
-                    if (Math.abs(dist) < 2.0 && hasDeployedFinger) {
+                    PanelHolder.ExtendedPosition currentPosition = Robot.panelHolder.getExtendedPosition();
+                    if (Math.abs(dist) < 2.0 &&
+                            currentPosition == PanelHolder.ExtendedPosition.ExtendedOutwards) {
                         RemoveFingerKt.RemoveFinger().start();
-                        hasDeployedFinger = false;
                         DriverStation.reportError("Removed finger automatically", false);
-                    } else if (Util.within(dist, 3.0, 15.0) && !hasDeployedFinger) {
+                    } else if (Util.within(dist, 3.0, 15.0) &&
+                            currentPosition == PanelHolder.ExtendedPosition.RetractedInwards) {
                         PlacePanelKt.PlacePanel().start();
-                        hasDeployedFinger = true;
                         DriverStation.reportError("Extended to place panel automatically", false);
                     }
-                } else if (!Robot.panelHolder.hasPanel()) {
-                    hasDeployedFinger = false;
                 }
             }
         } else if (OI.getOperatorController().getRightStick().get()) {

@@ -1,8 +1,9 @@
-package org.usfirst.frc.team3309.commands;
+package org.usfirst.frc.team3309.commands.climber;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import org.usfirst.frc.team3309.OI;
 import org.usfirst.frc.team3309.Robot;
+import org.usfirst.frc.team3309.subsystems.Climber;
 import org.usfirst.frc.team4322.commandv2.Command;
 
 public class ClimberManual extends Command {
@@ -13,6 +14,9 @@ public class ClimberManual extends Command {
 
     @Override
     protected void execute() {
+        if (OI.getOperatorController().getLeftStick().get()) {
+            Robot.climber.setPosition(Climber.ClimberLatchPosition.Released);
+        }
         Robot.climber.setPower(OI.getOperatorController().getY(GenericHID.Hand.kLeft));
     }
 

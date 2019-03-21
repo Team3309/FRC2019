@@ -6,9 +6,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
-import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
-import org.usfirst.frc.team3309.commands.ClimberManual;
+import org.usfirst.frc.team3309.commands.climber.ClimberManual;
 
 public class Climber extends Subsystem {
 
@@ -20,27 +19,13 @@ public class Climber extends Subsystem {
         latchingSolenoid = new Solenoid(Constants.CLIMBER_LATCHING_SOLENOID_ID);
 
         winchMotor.configFactoryDefault();
-        winchMotor.config_kP(0, 0.0);
-        winchMotor.config_kI(0, 0.0);
-        winchMotor.config_kD(0, 0.0);
         winchMotor.setNeutralMode(NeutralMode.Brake);
-    }
-
-    @Override
-    public void initDefaultCommand() {
-        setDefaultCommand(new ClimberManual());
     }
 
     public void outputToDashboard() {
         SmartDashboard.putNumber("Climber current", winchMotor.getOutputCurrent());
         SmartDashboard.putNumber("Climber position", winchMotor.getSelectedSensorPosition());
-        SmartDashboard.putNumber("Climber goal", winchMotor.getClosedLoopTarget());
-        SmartDashboard.putNumber("Climber closed loop error", winchMotor.getClosedLoopError());
         SmartDashboard.putBoolean("Climber raw latch postion", latchingSolenoid.get());
-    }
-
-    public void setAngle(ClimberAngle angle) {
-        winchMotor.set(ControlMode.Position, angle.get());
     }
 
     public void setPosition(ClimberLatchPosition position) {
@@ -49,23 +34,6 @@ public class Climber extends Subsystem {
 
     public void setPower(double power) {
         winchMotor.set(ControlMode.PercentOutput, power);
-    }
-
-    public enum ClimberAngle {
-
-
-        Extended(0.0);
-
-        private double angle;
-
-        ClimberAngle(double angle) {
-            this.angle = angle;
-        }
-
-        public double get() {
-            return angle;
-        }
-
     }
 
     public enum ClimberLatchPosition {

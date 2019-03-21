@@ -3,16 +3,11 @@ package org.usfirst.frc.team3309;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team3309.commands.ClimberManual;
 import org.usfirst.frc.team3309.commands.Elevate;
 import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeManual;
-import org.usfirst.frc.team3309.commands.drive.DriveManual;
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderManual;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team3309.subsystems.*;
@@ -57,6 +52,8 @@ public class Robot extends CommandV2Robot {
         climber = new Climber();
         vision = new Vision();
         lightComm = new LightComm();
+
+        VisionHelper.turnOff();
 
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
         camera.setFPS(15);
@@ -111,7 +108,6 @@ public class Robot extends CommandV2Robot {
         new CargoIntakeManual().start();
         new CargoHolderManual().start();
         new PanelHolderManual().start();
-        new ClimberManual().start();
         new Elevate(Elevate.Level.Home).start();
     }
 
@@ -137,7 +133,6 @@ public class Robot extends CommandV2Robot {
         drive.reset();
         new CargoIntakeManual().start();
         new CargoHolderManual().start();
-        new ClimberManual().start();
         new PanelHolderManual().start();
     }
 

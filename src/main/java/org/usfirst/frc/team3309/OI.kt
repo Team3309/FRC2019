@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.DriverStation
 import org.usfirst.frc.team3309.commands.*
 import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderSetRollers
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate
+import org.usfirst.frc.team3309.commands.climber.ClimberManual
+import org.usfirst.frc.team3309.commands.climber.ReleaseLatch
 import org.usfirst.frc.team3309.commands.drive.DriveSetHighGear
 import org.usfirst.frc.team3309.commands.drive.DriveSetLowGear
 import org.usfirst.frc.team3309.subsystems.CargoIntake
@@ -11,6 +13,7 @@ import org.usfirst.frc.team3309.subsystems.Climber
 import org.usfirst.frc.team3309.subsystems.PanelHolder
 import org.usfirst.frc.team4322.commandv2.Command
 import org.usfirst.frc.team4322.commandv2.Trigger
+import org.usfirst.frc.team4322.commandv2.group
 import org.usfirst.frc.team4322.commandv2.router
 import org.usfirst.frc.team4322.input.InputThrustmaster
 import org.usfirst.frc.team4322.input.InputXbox
@@ -102,10 +105,13 @@ object OI {
             Robot.cargoIntake.position = CargoIntake.CargoIntakePosition.Stowed
         })
 
-        operatorController.leftStick.whenPressed(
-                ReleaseLatch(Climber.ClimberLatchPosition.Released)
-        )
-
+        operatorController.leftStick.whenPressed(router {
+            if (operatorController.rightStick.get()) {
+                ClimberManual()
+            } else {
+                Command.empty
+            }
+        })
     }
 
 }
