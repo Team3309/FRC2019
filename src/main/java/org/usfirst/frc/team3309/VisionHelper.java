@@ -35,6 +35,7 @@ public class VisionHelper {
         throttleController.outputToDashboard();
         skewController.outputToDashboard();
         VisionHelper.turnOff();
+        setCamMode(Limelight.CamMode.VisionProcessor);
     }
 
     public static DriveSignal getDriveSignal() {
@@ -65,7 +66,6 @@ public class VisionHelper {
 
     public static void turnOn() {
         init();
-        setCamMode(Limelight.CamMode.VisionProcessor);
         setPipeline(0);
         setLed(Limelight.LEDMode.On);
         if (!timerStarted) {
@@ -75,8 +75,8 @@ public class VisionHelper {
     }
 
     public static void turnOff() {
-        setCamMode(Limelight.CamMode.DriverCamera);
         setLed(Limelight.LEDMode.Off);
+        setPipeline(1);
         if (timerStarted) {
             timer.stop();
             timerStarted = false;
