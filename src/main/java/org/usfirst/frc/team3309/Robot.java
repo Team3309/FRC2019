@@ -1,17 +1,14 @@
 package org.usfirst.frc.team3309;
 
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team3309.commands.ClimberManual;
 import org.usfirst.frc.team3309.commands.Elevate;
 import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeManual;
-import org.usfirst.frc.team3309.commands.drive.DriveManual;
+import org.usfirst.frc.team3309.commands.panelholder.PanelHolderManual;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team3309.subsystems.*;
 import org.usfirst.frc.team4322.commandv2.Command;
@@ -56,9 +53,12 @@ public class Robot extends CommandV2Robot {
         vision = new Vision();
         lightComm = new LightComm();
 
+        VisionHelper.turnOff();
+
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
         camera.setFPS(15);
         camera.setResolution(320, 240);
+        camera.setPixelFormat(VideoMode.PixelFormat.kYUYV);
 
         AutoModeExecutor.displayAutos();
 
@@ -107,8 +107,7 @@ public class Robot extends CommandV2Robot {
         // TODO: switch to default commands
         new CargoIntakeManual().start();
         new CargoHolderManual().start();
-//        new ClimberManual().start();
-        //        new ElevatorManual().start();
+        new PanelHolderManual().start();
         new Elevate(Elevate.Level.Home).start();
     }
 
@@ -134,11 +133,7 @@ public class Robot extends CommandV2Robot {
         drive.reset();
         new CargoIntakeManual().start();
         new CargoHolderManual().start();
-        new ClimberManual().start();
-        if (!DriverStation.getInstance().isFMSAttached()) {
-            elevator.zeroEncoder();
-//            new ClimberManual().start();
-        }
+        new PanelHolderManual().start();
     }
 
     /*
@@ -155,52 +150,6 @@ public class Robot extends CommandV2Robot {
      */
     @Override
     public void testInit() {
-    }
-
-
-    /*
-     * This function is called every 2 milliseconds while the Robot is in test mode.
-     */
-    @Override
-    public void testPeriodic() {
-        super.testPeriodic();
-
-        NetworkTable testTable = NetworkTableInstance.getDefault().getTable("test");
-        NetworkTable pneumaticsTable = testTable.getSubTable("pneumatics");
-
-        boolean cargoIntakeExtend = pneumaticsTable.getEntry("CargoIntake extend").getBoolean(false);
-        boolean panelIntakeExtend = pneumaticsTable.getEntry("PanelIntake extend").getBoolean(false);
-        boolean panelHolderJointedExtended = pneumaticsTable
-                .getEntry("PanelHolder jointed extended").getBoolean(false);
-        boolean panelHolderTelescopingExtended = pneumaticsTable
-                .getEntry("PanelHolder telescoping extended").getBoolean(false);
-        boolean climberReleased = pneumaticsTable.getEntry("Climber released").getBoolean(false);
-
-//        cargoIntake.setPosition(CargoIntake.CargoIntakePosition.fromBoolean(cargoIntakeExtend));
-        panelIntake.setPosition(PanelIntake.PanelIntakePosition.fromBoolean(panelIntakeExtend));
-//        panelHolder.setPosition(PanelHolder.JointedPosition.fromBoolean(panelHolderJointedExtended),
-//                PanelHolder.ExtendedPosition.fromBoolean(panelHolderTelescopingExtended));
-        climber.setPosition(Climber.ClimberLatchPosition.fromBoolean(climberReleased));
-
-        // TODO: remove require(cargoIntake) in actuate
-        if (OI.getOperatorController().getA().get()) {
-            cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Extended);
-        } else if (OI.getOperatorController().getB().get()) {
-            cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Stowed);
-        }
-
-        if (OI.getOperatorController().getX().get()) {
-            panelHolder.setJointedSolenoid(PanelHolder.JointedPosition.Vertical);
-        } else if (OI.getOperatorController().getY().get()) {
-            panelHolder.setJointedSolenoid(PanelHolder.JointedPosition.PointingOutwards);
-        }
-
-        if (OI.getOperatorController().getDPad().getDown().get()) {
-            panelHolder.setExtendingSolenoid(PanelHolder.ExtendedPosition.RetractedInwards);
-        } else if (OI.getOperatorController().getDPad().getUp().get()) {
-            panelHolder.setExtendingSolenoid(PanelHolder.ExtendedPosition.ExtendedOutwards);
-        }
-
     }
 
     /*
@@ -220,10 +169,7 @@ public class Robot extends CommandV2Robot {
             cargoHolder.outputToDashboard();
             climber.outputToDashboard();
         }
-        elevator.outputToDashboard();
-//        panelHolder.outputToDashboard();
-//        cargoHolder.outputToDashboard();
-//        drive.outputToDashboard();
+        climber.outputToDashboard();
     }
 
     public static boolean hasCargoInIntakeZone() {

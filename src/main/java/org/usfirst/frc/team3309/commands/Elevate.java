@@ -13,8 +13,6 @@ public class Elevate extends Command {
     private Level level;
 
     private Elevator.CarriagePosition carriageGoalPosition;
-    private Elevator.WristFacing wristFacing;
-
 
     public Elevate(Level level) {
         super(Constants.ELEVATOR_TIMEOUT);
@@ -22,22 +20,17 @@ public class Elevate extends Command {
         this.level = level;
     }
 
-    public Elevate(Elevator.CarriagePosition carriageGoalPosition, Elevator.WristFacing wristFacing) {
+    public Elevate(Elevator.CarriagePosition carriageGoalPosition) {
         super(Constants.ELEVATOR_TIMEOUT);
         require(Robot.elevator);
         this.carriageGoalPosition = carriageGoalPosition;
-        this.wristFacing = wristFacing;
-    }
-
-    public Elevate(Elevator.CarriagePosition carriageGoalPosition) {
-        this(carriageGoalPosition, null);
     }
 
     @Override
     protected void initialize() {
         if (level != null) {
             boolean hasCargo = Robot.cargoHolder.hasCargo();
-            boolean hasPanel = Robot.panelIntake.hasPanel();
+//            boolean hasPanel = Robot.panelIntake.hasPanel();
 
             switch (level) {
                 case Home:
@@ -58,23 +51,21 @@ public class Elevate extends Command {
                 case Low:
                     if (hasCargo) {
                         carriageGoalPosition = Elevator.CarriagePosition.CargoLow;
-                    } else if (hasPanel) {
-                        carriageGoalPosition = Elevator.CarriagePosition.PanelLow;
                     } else {
-                        carriageGoalPosition = Elevator.CarriagePosition.Home;
+                        carriageGoalPosition = Elevator.CarriagePosition.PanelLow;
                     }
                     break;
                 case Middle:
                     if (hasCargo) {
                         carriageGoalPosition = Elevator.CarriagePosition.CargoMiddle;
-                    } else if (hasPanel) {
+                    } else {
                         carriageGoalPosition = Elevator.CarriagePosition.PanelMiddle;
                     }
                     break;
                 case High:
                     if (hasCargo) {
                         carriageGoalPosition = Elevator.CarriagePosition.CargoHigh;
-                    } else if (hasPanel) {
+                    } else {
                         carriageGoalPosition = Elevator.CarriagePosition.PanelHigh;
                     }
                     break;
@@ -97,7 +88,7 @@ public class Elevate extends Command {
         } else {
             goalPosition = carriageGoalPosition.getCarriagePercentage();
         }
-        Robot.elevator.setPosition(goalPosition, wristFacing);
+        Robot.elevator.setPosition(goalPosition);
         SmartDashboard.putBoolean("Within tolerance", isFinished());
     }
 

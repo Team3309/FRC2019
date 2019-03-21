@@ -19,13 +19,11 @@ fun IntakeCargoNear(): Command {
     return group {
         parallel {
             +CargoIntakeActuate(CargoIntake.CargoIntakePosition.Extended)
-//            parallel {
-//                +CargoIntakeManual()
-//                +CargoHolderManual()
-//            }
-            +Elevate(Elevate.Level.Home)
             sequential {
-                // TODO: add or for operator override
+                +Elevate(Elevate.Level.Home)
+                +LowerElevatorToLimitSwitch()
+            }
+            sequential {
                 +WaitUntilCargoIsIn()
                 +Elevate(Elevator.CarriagePosition.CargoLow)
                 +WaitCommand(0.15)

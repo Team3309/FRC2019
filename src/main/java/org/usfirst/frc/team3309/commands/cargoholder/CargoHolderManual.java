@@ -8,9 +8,6 @@ import org.usfirst.frc.team4322.commandv2.Command;
 
 public class CargoHolderManual extends Command {
 
-    private double power;
-    private boolean hasCargo;
-
     public CargoHolderManual() {
         require(Robot.cargoHolder);
         setInterruptBehavior(InterruptBehavior.Suspend);

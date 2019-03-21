@@ -57,6 +57,7 @@ public class Limelight {
 
     public enum LEDMode {
         Off(1),
+        Blink(2),
         On(3);
 
         private int value;
