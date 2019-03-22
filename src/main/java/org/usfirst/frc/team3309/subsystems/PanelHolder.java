@@ -3,9 +3,11 @@ package org.usfirst.frc.team3309.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
+import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
 public class PanelHolder extends Subsystem {
@@ -17,6 +19,7 @@ public class PanelHolder extends Subsystem {
 
     public PanelHolder() {
         victor = new WPI_VictorSPX(Constants.PANEL_HOLDER_VICTOR_ID);
+        victor.configOpenloopRamp(0.15);
         extendingSolenoid = new Solenoid(Constants.PANEL_HOLDER_TELESCOPING_SOLENOID_ID);
         bumperSensor = new DigitalInput(Constants.PANEL_HOLDER_BUMPER_SENSOR_PORT);
         addChild(victor);
@@ -25,6 +28,9 @@ public class PanelHolder extends Subsystem {
     }
 
     public void setPower(double power) {
+  /*      if (getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT) {
+            power = -0.28;
+        }*/
         victor.set(ControlMode.PercentOutput, power);
     }
 
@@ -53,6 +59,10 @@ public class PanelHolder extends Subsystem {
         } else {
             return ExtendedPosition.RetractedInwards;
         }
+    }
+
+    public double getCurrent() {
+        return Robot.pdp.getCurrent(7);
     }
 
     public void outputToDashboard() {

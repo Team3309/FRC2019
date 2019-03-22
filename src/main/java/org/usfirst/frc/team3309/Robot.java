@@ -3,6 +3,7 @@ package org.usfirst.frc.team3309;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.commands.Elevate;
@@ -33,6 +34,8 @@ public class Robot extends CommandV2Robot {
     public static Vision vision;
     private static LightComm lightComm;
 
+    public static PowerDistributionPanel pdp;
+
     private Command autoCommand;
 
     /*
@@ -53,11 +56,13 @@ public class Robot extends CommandV2Robot {
         vision = new Vision();
         lightComm = new LightComm();
 
+        pdp = new PowerDistributionPanel();
+
         VisionHelper.turnOff();
 
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
-        camera.setFPS(15);
-        camera.setResolution(320, 240);
+        camera.setFPS(10);
+        camera.setResolution(320/2, 240/2);
         camera.setPixelFormat(VideoMode.PixelFormat.kYUYV);
 
         AutoModeExecutor.displayAutos();
@@ -169,7 +174,6 @@ public class Robot extends CommandV2Robot {
             cargoHolder.outputToDashboard();
             climber.outputToDashboard();
         }
-        climber.outputToDashboard();
     }
 
     public static boolean hasCargoInIntakeZone() {

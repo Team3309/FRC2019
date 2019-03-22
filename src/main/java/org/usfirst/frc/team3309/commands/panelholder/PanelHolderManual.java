@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309.commands.panelholder;
 
 import edu.wpi.first.wpilibj.Timer;
+import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.OI;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.util.Util;
@@ -10,6 +11,7 @@ public class PanelHolderManual extends Command {
 
     private boolean hadPanel;
     private boolean timerStarted;
+    private boolean currentLimitReached;
     private Timer holdTimer = new Timer();
 
     private double power;
@@ -27,6 +29,10 @@ public class PanelHolderManual extends Command {
         double manualPower = Util.signedMax(powerOut, powerIn, 0.1);
 
         if (!(Math.abs(manualPower) > 0)) {
+            currentLimitReached = false;
+        }
+
+        if (!(Math.abs(manualPower) > 0) || currentLimitReached) {
             if (Robot.panelHolder.hasPanel()) {
                 if (!hadPanel && !timerStarted) {
                     hadPanel = true;
@@ -46,6 +52,8 @@ public class PanelHolderManual extends Command {
         } else {
             if (OI.getOperatorCargoIntakeButton().get()) {
                 power = 0.0;
+            } else if (Robot.panelHolder.getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT) {
+                currentLimitReached = true;
             } else {
                 power = manualPower;
             }
