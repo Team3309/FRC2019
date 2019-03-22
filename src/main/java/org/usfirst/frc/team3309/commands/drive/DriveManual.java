@@ -50,7 +50,8 @@ public class DriveManual extends Command {
             VisionHelper.turnOn();
             if (VisionHelper.hasTargets()) {
                 signal = VisionHelper.getDriveSignal();
-                if (Robot.panelHolder.hasPanel() && VisionHelper.getTimeElasped() > 0.25) {
+                if ((Robot.panelHolder.hasPanel()  || Robot.panelHolder.getCurrent() > 7.0)
+                        && VisionHelper.getTimeElasped() > 0.25) {
                     double dist = VisionHelper.getDist();
                     PanelHolder.ExtendedPosition currentPosition = Robot.panelHolder.getExtendedPosition();
                     if (Math.abs(dist) < 2.0 &&

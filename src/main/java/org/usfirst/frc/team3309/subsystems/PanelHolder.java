@@ -68,7 +68,7 @@ public class PanelHolder extends Subsystem {
     public void outputToDashboard() {
         SmartDashboard.putNumber("PH power", victor.getMotorOutputPercent());
         SmartDashboard.putString("PH ExtendedPosition", getExtendedPosition().toString());
-//        SmartDashboard.putNumber("PH Current", victor.getOutputCurrent());
+        SmartDashboard.putNumber("PH Current", getCurrent());
         SmartDashboard.putBoolean("PH Extended raw", getExtendedPosition().value);
         SmartDashboard.putBoolean("PH bumper pressed", hasPanel());
     }
