@@ -21,9 +21,9 @@ public class CargoHolderManual extends Command {
         double power = Util.signedMax(powerOut, powerIn, Constants.CARGO_LAUNCHER_ROLLERS_MIN_POWER);
 
         // Hold onto cargo while in holder
-        // TODO: make this latching, or debounce the switch
-        if (Robot.cargoHolder.hasCargo() && !(power > 0)) {
-             power = -3.0 / 12;
+        if (Robot.cargoHolder.hasCargo() && !(power > 0)
+                && !OI.getRightJoystickRightClusterGroup().get()) {
+            power = -3.0 / 12;
         }
 
         Robot.cargoHolder.setPower(power);

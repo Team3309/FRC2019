@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -23,6 +24,7 @@ public class CargoIntake extends Subsystem {
 
         intakeMotor.configFactoryDefault();
         intakeMotor.setInverted(true);
+        intakeMotor.setNeutralMode(NeutralMode.Brake);
 
         addChild(intakeMotor);
         addChild(solenoid);

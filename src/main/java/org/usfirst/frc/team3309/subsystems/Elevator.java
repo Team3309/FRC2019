@@ -65,6 +65,7 @@ public class Elevator extends Subsystem {
 
         if (getLimitSwitchPressed()) {
             zeroEncoder();
+            DriverStation.reportError("Zeroed lift", false);
         }
     }
 
@@ -115,8 +116,10 @@ public class Elevator extends Subsystem {
     public boolean getLimitSwitchPressed() {
         if (Constants.currentRobot == Constants.Robot.COMPETITION) {
             return !limitSwitch.get();
+        } else if (Constants.currentRobot == Constants.Robot.PRACTICE) {
+            return limitSwitch.get();
         }
-        return limitSwitch.get();
+        return false;
     }
 
     public double getCarriagePercentage() {
