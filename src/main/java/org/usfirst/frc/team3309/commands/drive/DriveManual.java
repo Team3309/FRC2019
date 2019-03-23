@@ -54,7 +54,7 @@ public class DriveManual extends Command {
                         && VisionHelper.getTimeElasped() > 0.25) {
                     double dist = VisionHelper.getDist();
                     PanelHolder.ExtendedPosition currentPosition = Robot.panelHolder.getExtendedPosition();
-                    if (Math.abs(dist) < 2.0 &&
+                    if (Math.abs(dist) < 2.5 &&
                             currentPosition == PanelHolder.ExtendedPosition.ExtendedOutwards) {
                         RemoveFingerKt.RemoveFinger().start();
                         DriverStation.reportError("Removed finger automatically", false);

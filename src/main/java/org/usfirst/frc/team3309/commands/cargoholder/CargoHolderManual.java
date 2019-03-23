@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3309.commands.cargoholder;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.OI;
 import org.usfirst.frc.team3309.Robot;
@@ -26,6 +27,7 @@ public class CargoHolderManual extends Command {
             power = -3.0 / 12;
         }
 
+        SmartDashboard.putNumber("Cargo holder power", power);
         Robot.cargoHolder.setPower(power);
     }
 
