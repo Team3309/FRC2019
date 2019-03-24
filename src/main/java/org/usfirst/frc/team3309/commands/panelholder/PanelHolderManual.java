@@ -50,9 +50,7 @@ public class PanelHolderManual extends Command {
                 power = -0.28;
             }
         } else {
-            if (OI.getOperatorCargoIntakeButton().get()) {
-                power = 0.0;
-            } else if (Robot.panelHolder.getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT) {
+            if (Robot.panelHolder.getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT) {
                 currentLimitReached = true;
             } else {
                 power = manualPower;
