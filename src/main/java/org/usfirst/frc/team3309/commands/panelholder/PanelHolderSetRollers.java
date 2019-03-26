@@ -9,6 +9,7 @@ public class PanelHolderSetRollers extends Command {
 
     public PanelHolderSetRollers(double power, double timeout) {
         super(timeout);
+        setInterruptBehavior(InterruptBehavior.Terminate);
         require(Robot.panelHolder);
         this.power = power;
     }

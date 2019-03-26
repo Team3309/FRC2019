@@ -13,12 +13,12 @@ public class VisionHelper {
     private static Limelight limelight = Vision.panelLimelight;
 
     private static PIDController turnController = new PIDController("turn", 0.012, 0.000, 0.00);
-    private static PIDController throttleController = new PIDController("throttle", 0.013, 0.0011, 0.0);
+    private static PIDController throttleController = new PIDController("throttle", 0.010, 0.0007, 0.0);
     private static PIDController skewController = new PIDController("skew", 0.0, 0.0, 0.0);
 
     private static Timer timer = new Timer();
 
-    private static final boolean isDashboard = false;
+    private static final boolean isDashboard = true;
     private static Limelight.CamMode curCamMode = Limelight.CamMode.DriverCamera;
     private static int curPipeline = 0;
     private static Limelight.LEDMode curLed;
@@ -31,9 +31,9 @@ public class VisionHelper {
     private static final double LIMELIGHT_FRONT_OFFSET = 24.0;
 
     static {
-//        turnController.outputToDashboard();
-//        throttleController.outputToDashboard();
-//        skewController.outputToDashboard();
+        turnController.outputToDashboard();
+        throttleController.outputToDashboard();
+        skewController.outputToDashboard();
         VisionHelper.turnOff();
         setCamMode(Limelight.CamMode.VisionProcessor);
     }

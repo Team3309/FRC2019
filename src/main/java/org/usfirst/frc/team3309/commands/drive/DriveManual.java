@@ -27,6 +27,10 @@ public class DriveManual extends Command {
 
     private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
 
+    private boolean hadPanel;
+    private boolean extendedForPanel;
+    private Command command;
+
     public DriveManual() {
         require(Robot.drive);
         setInterruptBehavior(InterruptBehavior.Suspend);
@@ -54,6 +58,7 @@ public class DriveManual extends Command {
                 double dist = VisionHelper.getDist();
                 if ((Robot.panelHolder.hasPanel()  || Robot.panelHolder.getCurrent() > 7.0)
                         && VisionHelper.getTimeElasped() > 0.25) {
+                    hadPanel = true;
                     PanelHolder.ExtendedPosition currentPosition = Robot.panelHolder.getExtendedPosition();
 
                     // extend in preparation to go on the rocket
@@ -69,8 +74,10 @@ public class DriveManual extends Command {
                     }
                 } else {
                     // extend to check for panel for autograb
-                    if (Util.within(dist, 0.0, 15.0)) {
-                       IntakePanelFromStationKt.IntakePanelFromStation().start();
+                    if (Util.within(dist, 0.0, 40.0) && !hadPanel) {
+                        command = IntakePanelFromStationKt.IntakePanelFromStation();
+                        command.start();
+                        extendedForPanel = true;
                     }
                 }
             }
@@ -80,6 +87,12 @@ public class DriveManual extends Command {
             SmartDashboard.putNumber("Mounting angle", VisionHelper.getCameraMountingAngle(trueDistance));
         } else {
             VisionHelper.turnOff();
+            hadPanel = false;
+            if (extendedForPanel) {
+                command.cancel();
+                RetractFingerFromFeederStationKt.RetractFingerFromFeederStation().start();
+                extendedForPanel = false;
+            }
         }
 
         double leftPower = signal.getLeft();

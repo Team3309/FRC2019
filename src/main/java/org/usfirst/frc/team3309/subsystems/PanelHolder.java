@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
@@ -17,6 +18,11 @@ public class PanelHolder extends Subsystem {
     private Solenoid extendingSolenoid;
 
     private DigitalInput bumperSensor;
+
+    private boolean hadPanel;
+    private boolean currentLimitReached;
+    private Timer holdTimer = new Timer();
+    private double power;
 
     public PanelHolder() {
         victor = new WPI_VictorSPX(Constants.PANEL_HOLDER_VICTOR_ID);
@@ -30,10 +36,37 @@ public class PanelHolder extends Subsystem {
     }
 
     public void setPower(double power) {
-  /*      if (getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT) {
-            power = -0.28;
-        }*/
-        victor.set(ControlMode.PercentOutput, power);
+
+        double manualPower = power;
+
+        if (!(Math.abs(manualPower) > 0)) {
+            currentLimitReached = false;
+        }
+
+        if (!(Math.abs(manualPower) > 0) || currentLimitReached) {
+            if (hasPanel()) {
+                if (!hadPanel) {
+                    hadPanel = true;
+                    holdTimer.reset();
+                    holdTimer.start();
+                    this.power = -0.6;
+                } else if (holdTimer.get() > 0.25) {
+                    this.power = Constants.PANEL_HOLDER_HOLDING_POWER;
+                    holdTimer.stop();
+                }
+            } else {
+                hadPanel = false;
+                this.power = Constants.PANEL_HOLDER_HOLDING_POWER;
+            }
+        } else {
+            if (Robot.panelHolder.getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT) {
+                currentLimitReached = true;
+            } else {
+                this.power = manualPower;
+            }
+            hadPanel = false;
+        }
+        victor.set(ControlMode.PercentOutput, this.power);
     }
 
     /*
