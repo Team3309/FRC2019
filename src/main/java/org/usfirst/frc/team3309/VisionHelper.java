@@ -27,7 +27,7 @@ public class VisionHelper {
     private static final double skewGain = 1.0;
     private static final double PANEL_HEIGHT = 28.875;
     private static final double CAMERA_HEIGHT = 33.1875;
-    private static final double CAMERA_MOUNTING_ANGLE = -10.236;
+    private static final double CAMERA_MOUNTING_ANGLE = -9.2;
     private static final double LIMELIGHT_FRONT_OFFSET = 24.0;
 
     static {
@@ -121,6 +121,10 @@ public class VisionHelper {
                 - LIMELIGHT_FRONT_OFFSET;
     }
 
+    public static double getCameraMountingAngle(double trueDistance) {
+        return Math.toDegrees(Math.atan((PANEL_HEIGHT - CAMERA_HEIGHT) / trueDistance)) - limelight.getTy();
+    }
+
     private static void setCamMode(Limelight.CamMode camMode) {
         if (curCamMode != camMode) {
             limelight.setCamMode(camMode);
@@ -141,6 +145,8 @@ public class VisionHelper {
             curLed = led;
         }
     }
+
+
 
     public static double getTimeElasped() {
         return timer.get();

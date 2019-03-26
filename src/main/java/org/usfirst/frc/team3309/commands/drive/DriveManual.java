@@ -30,6 +30,7 @@ public class DriveManual extends Command {
     public DriveManual() {
         require(Robot.drive);
         setInterruptBehavior(InterruptBehavior.Suspend);
+        SmartDashboard.putNumber("true distance", 24.0);
     }
 
     @Override
@@ -50,9 +51,9 @@ public class DriveManual extends Command {
             VisionHelper.turnOn();
             if (VisionHelper.hasTargets()) {
                 signal = VisionHelper.getDriveSignal();
+                double dist = VisionHelper.getDist();
                 if ((Robot.panelHolder.hasPanel()  || Robot.panelHolder.getCurrent() > 7.0)
                         && VisionHelper.getTimeElasped() > 0.25) {
-                    double dist = VisionHelper.getDist();
                     PanelHolder.ExtendedPosition currentPosition = Robot.panelHolder.getExtendedPosition();
                     if (Math.abs(dist) < 2.5 &&
                             currentPosition == PanelHolder.ExtendedPosition.ExtendedOutwards) {
@@ -63,10 +64,16 @@ public class DriveManual extends Command {
                         PlacePanelKt.PlacePanel().start();
                         DriverStation.reportError("Extended to place panel automatically", false);
                     }
+                } else {
+                    if (Util.within(dist, 0.0, 15.0)) {
+                       IntakePanelFromStationKt.IntakePanelFromStation().start();
+                    }
                 }
             }
         } else if (OI.getOperatorController().getRightStick().get()) {
             VisionHelper.turnOn();
+            double trueDistance = SmartDashboard.getNumber("true distance", 24.0);
+            SmartDashboard.putNumber("Mounting angle", VisionHelper.getCameraMountingAngle(trueDistance));
         } else {
             VisionHelper.turnOff();
         }
