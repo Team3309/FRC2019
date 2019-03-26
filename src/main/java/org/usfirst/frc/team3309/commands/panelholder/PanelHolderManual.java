@@ -28,8 +28,12 @@ public class PanelHolderManual extends Command {
 
         double manualPower = Util.signedMax(powerOut, powerIn, 0.1);
 
-        if (!(Math.abs(manualPower) > 0) || currentLimitReached) {
+
+        if (!(Math.abs(manualPower) > 0)) {
             currentLimitReached = false;
+        }
+
+        if (!(Math.abs(manualPower) > 0) || currentLimitReached) {
             if (Robot.panelHolder.hasPanel()) {
                 if (!hadPanel && !timerStarted) {
                     hadPanel = true;
