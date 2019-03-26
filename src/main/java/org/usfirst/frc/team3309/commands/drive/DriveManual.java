@@ -57,12 +57,12 @@ public class DriveManual extends Command {
                     PanelHolder.ExtendedPosition currentPosition = Robot.panelHolder.getExtendedPosition();
 
                     // extend in preparation to go on the rocket
-                    if (Math.abs(dist) < 2.5 &&
+                    if (Math.abs(dist) < 4 &&
                             currentPosition == PanelHolder.ExtendedPosition.ExtendedOutwards) {
                         RemoveFingerKt.RemoveFinger().start();
                         DriverStation.reportError("Removed finger automatically", false);
                     // place panel on rocket after having exteded
-                    } else if (Util.within(dist, 3.0, 15.0) &&
+                    } else if (Util.within(dist, 4, 25.0) &&
                             currentPosition == PanelHolder.ExtendedPosition.RetractedInwards) {
                         PlacePanelKt.PlacePanel().start();
                         DriverStation.reportError("Extended to place panel automatically", false);
