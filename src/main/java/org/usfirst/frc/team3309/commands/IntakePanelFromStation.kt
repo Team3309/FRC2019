@@ -15,7 +15,7 @@ fun IntakePanelFromStation(): Command {
         parallel {
             +PanelHolderActuate(PanelHolder.PanelHolderPosition.TelescopeForwards)
             +CargoIntakeActuate(CargoIntake.CargoIntakePosition.Stowed)
-            +PanelHolderManual()
+            +PanelHolderSetRollers(-1.0)
             sequential {
                 +LowerElevatorToLimitSwitch()
                 +Elevate(Elevator.CarriagePosition.PanelFeederStation)

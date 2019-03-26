@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,6 +19,7 @@ public class CargoHolder extends Subsystem {
         motor = new WPI_VictorSPX(Constants.CARGO_HOLDER_VICTOR_ID);
 
         motor.configFactoryDefault();
+        motor.setNeutralMode(NeutralMode.Brake);
 
         addChild(bumperSensor);
         addChild(motor);

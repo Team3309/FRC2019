@@ -8,7 +8,7 @@ import org.usfirst.frc.team4322.commandv2.group
 
 fun RemoveFinger(): Command {
     return group {
-        sequential {
+        parallel {
             +PanelHolderSetRollers(1.0, 0.5)
             +PanelHolderActuate(PanelHolder.PanelHolderPosition.TelescopeBack)
         }

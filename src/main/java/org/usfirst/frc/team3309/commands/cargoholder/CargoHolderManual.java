@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3309.commands.cargoholder;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.OI;
 import org.usfirst.frc.team3309.Robot;
@@ -21,11 +22,12 @@ public class CargoHolderManual extends Command {
         double power = Util.signedMax(powerOut, powerIn, Constants.CARGO_LAUNCHER_ROLLERS_MIN_POWER);
 
         // Hold onto cargo while in holder
-        // TODO: make this latching, or debounce the switch
-        if (Robot.cargoHolder.hasCargo() && !(power > 0)) {
-             power = -3.0 / 12;
+        if (Robot.cargoHolder.hasCargo() && !(power > 0)
+                && !OI.getRightJoystickRightClusterGroup().get()) {
+            power = -3.0 / 12;
         }
 
+        SmartDashboard.putNumber("Cargo holder power", power);
         Robot.cargoHolder.setPower(power);
     }
 

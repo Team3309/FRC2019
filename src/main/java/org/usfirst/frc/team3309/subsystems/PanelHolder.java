@@ -1,32 +1,39 @@
 package org.usfirst.frc.team3309.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
-import org.usfirst.frc.team3309.commands.panelholder.PanelHolderManual;
+import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
 public class PanelHolder extends Subsystem {
 
-    private WPI_TalonSRX talon;
+    private WPI_VictorSPX victor;
     private Solenoid extendingSolenoid;
 
     private DigitalInput bumperSensor;
 
     public PanelHolder() {
-        talon = new WPI_TalonSRX(Constants.PANEL_HOLDER_TALON_ID);
+        victor = new WPI_VictorSPX(Constants.PANEL_HOLDER_VICTOR_ID);
+        victor.configOpenloopRamp(0.15);
+        victor.setNeutralMode(NeutralMode.Brake);
         extendingSolenoid = new Solenoid(Constants.PANEL_HOLDER_TELESCOPING_SOLENOID_ID);
         bumperSensor = new DigitalInput(Constants.PANEL_HOLDER_BUMPER_SENSOR_PORT);
-        addChild(talon);
+        addChild(victor);
         addChild(extendingSolenoid);
         addChild(bumperSensor);
     }
 
     public void setPower(double power) {
-        talon.set(ControlMode.PercentOutput, power);
+  /*      if (getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT) {
+            power = -0.28;
+        }*/
+        victor.set(ControlMode.PercentOutput, power);
     }
 
     /*
@@ -56,10 +63,14 @@ public class PanelHolder extends Subsystem {
         }
     }
 
+    public double getCurrent() {
+        return Robot.pdp.getCurrent(7);
+    }
+
     public void outputToDashboard() {
-        SmartDashboard.putNumber("PH power", talon.getMotorOutputPercent());
+        SmartDashboard.putNumber("PH power", victor.getMotorOutputPercent());
         SmartDashboard.putString("PH ExtendedPosition", getExtendedPosition().toString());
-        SmartDashboard.putNumber("PH Current", talon.getOutputCurrent());
+        SmartDashboard.putNumber("PH Current", getCurrent());
         SmartDashboard.putBoolean("PH Extended raw", getExtendedPosition().value);
         SmartDashboard.putBoolean("PH bumper pressed", hasPanel());
     }

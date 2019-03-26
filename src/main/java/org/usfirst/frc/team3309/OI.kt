@@ -90,6 +90,9 @@ object OI {
         operatorPanelIntakeButton.whenPressed(IntakePanelFromStation())
         operatorPanelIntakeButton.whenReleased(RetractFingerFromFeederStation())
 
+        operatorController.y.whenPressed(PlacePanel())
+        operatorController.y.whenReleased(RemoveFinger())
+
         operatorCargoIntakeButton.whenPressed(IntakeCargoNear())
         operatorCargoIntakeButton.whenReleased(Command.lambda {
             if (!Robot.cargoHolder.hasCargo()) {

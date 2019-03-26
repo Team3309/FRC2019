@@ -17,7 +17,7 @@ public class Constants {
      * They are used to identify which robot the code is running on, because some values are specific to each robot.
      */
     private static final byte[] PRACTICEBOT_MAC_ADDR = {0x00, (byte) 0x80, 0x2F, 0x17, (byte) 0x85, (byte) 0xD3};
-    private static final byte[] COMPBOT_MAC_ADDR = {0x00, (byte) 0x80, 0x2F, 0x22, (byte) 0xAE, (byte) 0x85}; // find this at comp
+    private static final byte[] COMPBOT_MAC_ADDR = {0x00, (byte) 0x80, 0x2F, 0x22, (byte) 0xB0, (byte) 0x6C}; // find this at comp
 
     /*
      * This enum defines a type with 2 values, PRACTICE and COMPETITION
@@ -68,14 +68,12 @@ public class Constants {
     /**
      * Elevator Mappings
      */
-    // TODO: rename lift to elevator prefix
     public static final int ELEVATOR_MASTER_TALON_ID = 6;
     public static final int ELEVATOR_SLAVE_VICTOR_ID = 10;
 
     public static final double ELEVATOR_P = 0.05;
     public static final double ELEVATOR_I = 5.56e-6;
     public static final double ELEVATOR_D = 0;
-    public static final double ELEVATOR_F = 0;
 
     // max position used for conversions (encoder counts)
     public static final double ELEVATOR_ENCODER_COUNTS_FOR_MAX_HEIGHT = 116000;
@@ -85,10 +83,6 @@ public class Constants {
 
     // amount elevator drops for placing a panel
     public static final double ELEVATOR_PANEL_DROP_DISTANCE = 0.02;
-
-
-    // [0, 1], manual elevator speed
-    public static final double LIFT_NUDGE_PCT_PER_SEC = 0.001;
 
     // TODO: to be used with wrist when added
 //    // [0, 1], minimum value where it is safe to rotate arm
@@ -132,9 +126,10 @@ public class Constants {
     /**
      * Panel placer mappings
      */
-    public static final int PANEL_HOLDER_TALON_ID = 13;
+    public static final int PANEL_HOLDER_VICTOR_ID = 13;
     public static final int PANEL_HOLDER_TELESCOPING_SOLENOID_ID = 4;
     public static final int PANEL_HOLDER_BUMPER_SENSOR_PORT = 0;
+    public static final double PANEL_HOLDER_MAX_CURRENT = 25;
 
     /**
      * Climber mappings

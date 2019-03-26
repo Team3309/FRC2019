@@ -30,6 +30,7 @@ public class DriveManual extends Command {
     public DriveManual() {
         require(Robot.drive);
         setInterruptBehavior(InterruptBehavior.Suspend);
+        SmartDashboard.putNumber("true distance", 24.0);
     }
 
     @Override
@@ -50,22 +51,33 @@ public class DriveManual extends Command {
             VisionHelper.turnOn();
             if (VisionHelper.hasTargets()) {
                 signal = VisionHelper.getDriveSignal();
-                if (Robot.panelHolder.hasPanel() && VisionHelper.getTimeElasped() > 0.25) {
-                    double dist = VisionHelper.getDist();
+                double dist = VisionHelper.getDist();
+                if ((Robot.panelHolder.hasPanel()  || Robot.panelHolder.getCurrent() > 7.0)
+                        && VisionHelper.getTimeElasped() > 0.25) {
                     PanelHolder.ExtendedPosition currentPosition = Robot.panelHolder.getExtendedPosition();
-                    if (Math.abs(dist) < 2.0 &&
+
+                    // extend in preparation to go on the rocket
+                    if (Math.abs(dist) < 4 &&
                             currentPosition == PanelHolder.ExtendedPosition.ExtendedOutwards) {
                         RemoveFingerKt.RemoveFinger().start();
                         DriverStation.reportError("Removed finger automatically", false);
-                    } else if (Util.within(dist, 3.0, 15.0) &&
+                    // place panel on rocket after having exteded
+                    } else if (Util.within(dist, 4, 25.0) &&
                             currentPosition == PanelHolder.ExtendedPosition.RetractedInwards) {
                         PlacePanelKt.PlacePanel().start();
                         DriverStation.reportError("Extended to place panel automatically", false);
+                    }
+                } else {
+                    // extend to check for panel for autograb
+                    if (Util.within(dist, 0.0, 15.0)) {
+                       IntakePanelFromStationKt.IntakePanelFromStation().start();
                     }
                 }
             }
         } else if (OI.getOperatorController().getRightStick().get()) {
             VisionHelper.turnOn();
+            double trueDistance = SmartDashboard.getNumber("true distance", 24.0);
+            SmartDashboard.putNumber("Mounting angle", VisionHelper.getCameraMountingAngle(trueDistance));
         } else {
             VisionHelper.turnOff();
         }
