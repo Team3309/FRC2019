@@ -28,11 +28,8 @@ public class PanelHolderManual extends Command {
 
         double manualPower = Util.signedMax(powerOut, powerIn, 0.1);
 
-        if (!(Math.abs(manualPower) > 0)) {
-            currentLimitReached = false;
-        }
-
         if (!(Math.abs(manualPower) > 0) || currentLimitReached) {
+            currentLimitReached = false;
             if (Robot.panelHolder.hasPanel()) {
                 if (!hadPanel && !timerStarted) {
                     hadPanel = true;
@@ -47,7 +44,7 @@ public class PanelHolderManual extends Command {
                 }
             } else {
                 hadPanel = false;
-                power = -0.28;
+                power = 0.0;
             }
         } else {
             if (Robot.panelHolder.getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT) {

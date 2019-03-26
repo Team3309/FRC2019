@@ -55,16 +55,20 @@ public class DriveManual extends Command {
                 if ((Robot.panelHolder.hasPanel()  || Robot.panelHolder.getCurrent() > 7.0)
                         && VisionHelper.getTimeElasped() > 0.25) {
                     PanelHolder.ExtendedPosition currentPosition = Robot.panelHolder.getExtendedPosition();
+
+                    // extend in preparation to go on the rocket
                     if (Math.abs(dist) < 2.5 &&
                             currentPosition == PanelHolder.ExtendedPosition.ExtendedOutwards) {
                         RemoveFingerKt.RemoveFinger().start();
                         DriverStation.reportError("Removed finger automatically", false);
+                    // place panel on rocket after having exteded
                     } else if (Util.within(dist, 3.0, 15.0) &&
                             currentPosition == PanelHolder.ExtendedPosition.RetractedInwards) {
                         PlacePanelKt.PlacePanel().start();
                         DriverStation.reportError("Extended to place panel automatically", false);
                     }
                 } else {
+                    // extend to check for panel for autograb
                     if (Util.within(dist, 0.0, 15.0)) {
                        IntakePanelFromStationKt.IntakePanelFromStation().start();
                     }
