@@ -72,22 +72,13 @@ public class Elevate extends Command {
                 case Test:
                     carriageGoalPosition = Elevator.CarriagePosition.Test;
                     break;
-                case DropATad:
-                    carriageGoalPosition = Elevator.CarriagePosition.DropATad;
-                    break;
             }
         }
     }
 
     @Override
     protected void execute() {
-        double goalPosition;
-        // TODO: switch into command / remove if unnecessary with new panel holder
-        if (carriageGoalPosition == Elevator.CarriagePosition.DropATad) {
-            goalPosition = Robot.elevator.getCarriagePercentage() - Constants.ELEVATOR_PANEL_DROP_DISTANCE;
-        } else {
-            goalPosition = carriageGoalPosition.getCarriagePercentage();
-        }
+        double goalPosition = carriageGoalPosition.getCarriagePercentage();
         Robot.elevator.setPosition(goalPosition);
         SmartDashboard.putBoolean("Within tolerance", isFinished());
     }
@@ -105,7 +96,6 @@ public class Elevate extends Command {
         CargoShipCargo,
         Home,
         Test,
-        DropATad
     }
 
 }

@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
+import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
 public class CargoHolder extends Subsystem {
@@ -23,6 +24,11 @@ public class CargoHolder extends Subsystem {
 
         addChild(bumperSensor);
         addChild(motor);
+    }
+
+    @Override
+    public void initDefaultCommand() {
+        setDefaultCommand(new CargoHolderManual());
     }
 
     public void outputToDashboard() {

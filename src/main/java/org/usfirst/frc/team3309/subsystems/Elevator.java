@@ -155,7 +155,6 @@ public class Elevator extends Subsystem {
         SmartDashboard.putNumber("Elevator voltage", liftMaster.getMotorOutputVoltage());
     }
 
-    // TODO: fill out goal percentages
     // Goal in percentage [0, 1]
     public enum CarriagePosition {
 
@@ -167,12 +166,8 @@ public class Elevator extends Subsystem {
         CargoLow(0.26),
         CargoMiddle(0.64),
         CargoHigh(0.95),
-        //        CargoLow(PanelLow.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
-//        CargoMiddle(PanelMiddle.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
-//        CargoHigh(PanelHigh.getCarriagePercentage() + Constants.PANEL_CARGO_OFFSET),
         CargoShipCargo(0.45),
-        Test(0.0),
-        DropATad(0.0);
+        Test(0.0);
 
         private double carriagePercentage;
 

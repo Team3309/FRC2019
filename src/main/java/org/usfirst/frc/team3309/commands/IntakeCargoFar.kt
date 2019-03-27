@@ -17,7 +17,6 @@ fun IntakeCargoFar(): Command {
             +CargoHolderManual()
             +Elevate(Elevate.Level.Home)
             sequential {
-                // TODO: add or for operator override
                 +WaitUntilCargoIsIn()
                 +CargoIntakeStopRollers()
                 +CargoHolderSetRollers(3.0 / 12.0)

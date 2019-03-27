@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
+import org.usfirst.frc.team3309.commands.panelholder.PanelHolderActuate;
+import org.usfirst.frc.team3309.commands.panelholder.PanelHolderManual;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
 public class PanelHolder extends Subsystem {
@@ -33,6 +35,11 @@ public class PanelHolder extends Subsystem {
         addChild(victor);
         addChild(extendingSolenoid);
         addChild(bumperSensor);
+    }
+
+    @Override
+    public void initDefaultCommand() {
+        setDefaultCommand(new PanelHolderManual());
     }
 
     public void setPower(double power) {

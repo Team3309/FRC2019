@@ -74,7 +74,7 @@ public class Drive extends Subsystem {
     }
 
     private void configSlave(WPI_VictorSPX slave, WPI_TalonSRX master) {
-        // TODO: add configFactoryDefault
+        slave.configFactoryDefault();
         slave.follow(master);
         slave.setNeutralMode(NeutralMode.Brake);
         slave.setInverted(InvertType.FollowMaster);

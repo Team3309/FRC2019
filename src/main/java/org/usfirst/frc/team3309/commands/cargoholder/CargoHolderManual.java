@@ -25,6 +25,8 @@ public class CargoHolderManual extends Command {
         if (Robot.cargoHolder.hasCargo() && !(power > 0)
                 && !OI.getRightJoystickRightClusterGroup().get()) {
             power = -3.0 / 12;
+        } else  if (OI.getRightJoystickRightClusterGroup().get()) {
+            power = 1.0;
         }
 
         SmartDashboard.putNumber("Cargo holder power", power);

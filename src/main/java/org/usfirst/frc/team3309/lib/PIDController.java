@@ -37,7 +37,7 @@ public class PIDController {
             integral = Math.signum(integral) * integralCeiling / kI;
         }
 
-        double derivative = kD * (prevError - error);
+        double derivative = kD * (error - prevError);
 
         prevError = error;
         return proportional + integral + derivative;

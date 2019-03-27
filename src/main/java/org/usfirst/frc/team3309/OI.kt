@@ -69,7 +69,8 @@ object OI {
             } else if (Robot.panelHolder.hasPanel()) {
                 PlacePanel()
             } else {
-                CargoHolderSetRollers(1.0)
+                // rollers run in CargoHolderManual
+                Command.empty
             }
         })
         rightJoystickRightClusterGroup.whenReleased(router {
@@ -78,7 +79,7 @@ object OI {
             } else if (Robot.panelHolder.extendedPosition == PanelHolder.ExtendedPosition.ExtendedOutwards) {
                 RemoveFinger()
             } else {
-                CargoHolderSetRollers(0.0)
+                Command.empty
             }
         })
 

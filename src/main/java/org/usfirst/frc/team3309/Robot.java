@@ -69,12 +69,10 @@ public class Robot extends CommandV2Robot {
 
         RobotLogger.INSTANCE.setCurrentLogLevel(RobotLogger.LogLevel.INFO);
 
-        // TODO: flip every joystick?
         // invert turning joystick's left to right
         OI.getRightJoystick().getXAxis().setRampFunction((x) -> (-x));
         OI.getLeftJoystick().getYAxis().setRampFunction((x) -> (-x));
 
-        // TODO: temporary until limit switch
         elevator.zeroEncoder();
 
         drive.initDefaultCommand();
@@ -109,10 +107,6 @@ public class Robot extends CommandV2Robot {
         if (autoCommand != null) {
             autoCommand.start();
         }
-        // TODO: switch to default commands
-        new CargoIntakeManual().start();
-        new CargoHolderManual().start();
-        new PanelHolderManual().start();
         new Elevate(Elevate.Level.Home).start();
     }
 
