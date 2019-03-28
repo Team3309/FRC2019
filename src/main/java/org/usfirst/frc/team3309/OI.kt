@@ -2,18 +2,14 @@ package org.usfirst.frc.team3309
 
 import edu.wpi.first.wpilibj.DriverStation
 import org.usfirst.frc.team3309.commands.*
-import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderSetRollers
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate
 import org.usfirst.frc.team3309.commands.climber.ClimberManual
-import org.usfirst.frc.team3309.commands.climber.ReleaseLatch
 import org.usfirst.frc.team3309.commands.drive.DriveSetHighGear
 import org.usfirst.frc.team3309.commands.drive.DriveSetLowGear
 import org.usfirst.frc.team3309.subsystems.CargoIntake
-import org.usfirst.frc.team3309.subsystems.Climber
 import org.usfirst.frc.team3309.subsystems.PanelHolder
 import org.usfirst.frc.team4322.commandv2.Command
 import org.usfirst.frc.team4322.commandv2.Trigger
-import org.usfirst.frc.team4322.commandv2.group
 import org.usfirst.frc.team4322.commandv2.router
 import org.usfirst.frc.team4322.input.InputThrustmaster
 import org.usfirst.frc.team4322.input.InputXbox
@@ -93,6 +89,9 @@ object OI {
 
         operatorController.y.whenPressed(PlacePanel())
         operatorController.y.whenReleased(RemoveFinger())
+
+        operatorController.x.whenPressed(IntakePanelFromGround())
+        operatorController.x.whenReleased(MovePanelFromIntakeToPanelHolder())
 
         operatorCargoIntakeButton.whenPressed(IntakeCargoNear())
         operatorCargoIntakeButton.whenReleased(Command.lambda {

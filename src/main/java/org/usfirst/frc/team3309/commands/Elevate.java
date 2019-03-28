@@ -72,6 +72,9 @@ public class Elevate extends Command {
                 case Test:
                     carriageGoalPosition = Elevator.CarriagePosition.Test;
                     break;
+                case PanelClearingPanelIntake:
+                    carriageGoalPosition = Elevator.CarriagePosition.PanelClearingPanelIntake;
+                    break;
             }
         }
     }
@@ -93,6 +96,7 @@ public class Elevate extends Command {
         Low,
         Middle,
         High,
+        PanelClearingPanelIntake,
         CargoShipCargo,
         Home,
         Test,
