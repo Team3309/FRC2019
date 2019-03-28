@@ -65,7 +65,7 @@ public class Elevator extends Subsystem {
 
         if (getLimitSwitchPressed()) {
             zeroEncoder();
-            DriverStation.reportError("Zeroed lift", false);
+            DriverStation.reportWarning("Zeroed lift", false);
         }
     }
 

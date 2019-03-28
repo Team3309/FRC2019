@@ -13,7 +13,7 @@ public class VisionHelper {
     private static Limelight limelight = Vision.panelLimelight;
 
     private static PIDController turnController = new PIDController("turn", 0.012, 0.000, 0.012);
-    private static PIDController throttleController = new PIDController("throttle", 0.007, 0.0007, 0.0);
+    private static PIDController throttleController = new PIDController("throttle", 0.013, 0.0011, 0.0);
     private static PIDController skewController = new PIDController("skew", 0.0, 0.0, 0.0);
 
     private static Timer timer = new Timer();
@@ -145,7 +145,6 @@ public class VisionHelper {
             curLed = led;
         }
     }
-
 
 
     public static double getTimeElasped() {

@@ -90,8 +90,8 @@ object OI {
         operatorController.y.whenPressed(PlacePanel())
         operatorController.y.whenReleased(RemoveFinger())
 
-        operatorController.x.whenPressed(IntakePanelFromGround())
-        operatorController.x.whenReleased(MovePanelFromIntakeToPanelHolder())
+//        operatorController.x.whenPressed(IntakePanelFromGround())
+//        operatorController.x.whenReleased(MovePanelFromIntakeToPanelHolder())
 
         operatorCargoIntakeButton.whenPressed(IntakeCargoNear())
         operatorCargoIntakeButton.whenReleased(Command.lambda {

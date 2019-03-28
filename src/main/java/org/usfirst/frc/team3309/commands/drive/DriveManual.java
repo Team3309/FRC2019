@@ -56,7 +56,7 @@ public class DriveManual extends Command {
             if (VisionHelper.hasTargets()) {
                 signal = VisionHelper.getDriveSignal();
                 double dist = VisionHelper.getDist();
-                if ((Robot.panelHolder.hasPanel()  || Robot.panelHolder.getCurrent() > 7.0)
+                if ((Robot.panelHolder.hasPanel() || Robot.panelHolder.getCurrent() > 7.0)
                         && VisionHelper.getTimeElasped() > 0.25) {
                     hadPanel = true;
                     PanelHolder.ExtendedPosition currentPosition = Robot.panelHolder.getExtendedPosition();
@@ -66,7 +66,7 @@ public class DriveManual extends Command {
                             currentPosition == PanelHolder.ExtendedPosition.ExtendedOutwards) {
                         RemoveFingerKt.RemoveFinger().start();
                         DriverStation.reportError("Removed finger automatically", false);
-                    // place panel on rocket after having extended
+                        // place panel on rocket after having extended
                     } else if (Util.within(dist, 4, 25.0) &&
                             currentPosition == PanelHolder.ExtendedPosition.RetractedInwards) {
                         PlacePanelKt.PlacePanel().start();
@@ -75,6 +75,7 @@ public class DriveManual extends Command {
                 } else {
                     // extend to check for panel for autograb
                     if (Util.within(dist, 0.0, 40.0) && !hadPanel) {
+                        DriverStation.reportError("Intaking panel from feeder station", false);
                         command = IntakePanelFromStationKt.IntakePanelFromStation();
                         command.start();
                         extendedForPanel = true;
@@ -91,6 +92,7 @@ public class DriveManual extends Command {
             if (extendedForPanel) {
                 command.cancel();
                 RetractFingerFromFeederStationKt.RetractFingerFromFeederStation().start();
+                DriverStation.reportError("Retraced finger from feeder station", false);
                 extendedForPanel = false;
             }
         }
