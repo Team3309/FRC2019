@@ -66,6 +66,7 @@ public class DriveManual extends Command {
                             currentPosition == PanelHolder.ExtendedPosition.ExtendedOutwards) {
                         RemoveFingerKt.RemoveFinger().start();
                         DriverStation.reportError("Removed finger automatically", false);
+                        VisionHelper.stopCrawl();
                         // place panel on rocket after having extended
                     } else if (Util.within(dist, 4, 25.0) &&
                             currentPosition == PanelHolder.ExtendedPosition.RetractedInwards) {

@@ -62,11 +62,8 @@ object OI {
         rightJoystickRightClusterGroup.whileHeld(router {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
-            } else if (Robot.panelHolder.hasPanel()) {
+            } else  {
                 PlacePanel()
-            } else {
-                // rollers run in CargoHolderManual
-                Command.empty
             }
         })
         rightJoystickRightClusterGroup.whenReleased(router {
