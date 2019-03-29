@@ -13,7 +13,7 @@ public class VisionHelper {
     private static Limelight limelight = Vision.panelLimelight;
 
     private static PIDController turnController = new PIDController("turn", 0.012, 0.000, 0.012);
-    private static PIDController throttleController = new PIDController("throttle", 0.012, 0.0011, 0.0);
+    private static PIDController throttleController = new PIDController("throttle", 0.0112, 0.0011, 0.0);
     private static PIDController skewController = new PIDController("skew", 0.0, 0.0, 0.0);
 
     private static Timer timer = new Timer();
@@ -42,6 +42,9 @@ public class VisionHelper {
         init();
         if (limelight.getArea() < 15.0) {
             double linearPower = getThrottleCorrection();
+//            if (Math.abs(linearPower) < 0.1) {
+//                linearPower = 0.1;
+//            }
             double angularPower = getTurnCorrection();
             double skewPower = -getSkewCorrection();
             SmartDashboard.putNumber("Skew vision power", skewPower);
