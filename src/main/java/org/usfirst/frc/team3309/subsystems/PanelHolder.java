@@ -60,7 +60,8 @@ public class PanelHolder extends Subsystem {
                 }
             } else {
                 hadPanel = false;
-                this.power = Constants.PANEL_HOLDER_HOLDING_POWER;
+                double sign = Math.signum(manualPower) == 0 ? -1 : Math.signum(manualPower);
+                this.power = Math.abs(Constants.PANEL_HOLDER_HOLDING_POWER) * sign;
             }
         } else {
             if (Robot.panelHolder.getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT) {
