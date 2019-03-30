@@ -52,7 +52,6 @@ public class Elevate extends Command {
                     if (hasCargo) {
                         carriageGoalPosition = Elevator.CarriagePosition.CargoLow;
                     } else {
-                        ExtendCargoIntakeWaitAndRetractKt.ExtendCargoIntakeWaitAndRetract(2.0).start();
                         carriageGoalPosition = Elevator.CarriagePosition.PanelLow;
                     }
                     break;
