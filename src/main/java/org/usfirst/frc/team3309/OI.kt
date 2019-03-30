@@ -2,6 +2,7 @@ package org.usfirst.frc.team3309
 
 import edu.wpi.first.wpilibj.DriverStation
 import org.usfirst.frc.team3309.commands.*
+import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderSetRollers
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate
 import org.usfirst.frc.team3309.commands.climber.ClimberManual
 import org.usfirst.frc.team3309.commands.drive.DriveSetHighGear
@@ -62,8 +63,10 @@ object OI {
         rightJoystickRightClusterGroup.whileHeld(router {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
-            } else  {
+            } else  if (!Robot.cargoHolder.hasCargo()) {
                 PlacePanel()
+            }else {
+                Command.empty
             }
         })
         rightJoystickRightClusterGroup.whenReleased(router {
