@@ -104,7 +104,7 @@ object OI {
             Robot.cargoIntake.position = CargoIntake.CargoIntakePosition.Extended
         })
 
-        operatorController.a.whenPressed(Command.lambda {
+         operatorController.a.whenPressed(Command.lambda {
             Robot.cargoIntake.position = CargoIntake.CargoIntakePosition.Stowed
         })
 

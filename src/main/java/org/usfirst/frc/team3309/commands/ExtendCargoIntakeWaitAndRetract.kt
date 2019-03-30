@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3309.commands
 
+import org.usfirst.frc.team3309.OI
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate
 import org.usfirst.frc.team3309.subsystems.CargoIntake
 import org.usfirst.frc.team4322.commandv2.Command
@@ -10,7 +11,13 @@ fun ExtendCargoIntakeWaitAndRetract(waitTime: Double): Command {
         sequential {
             +CargoIntakeActuate(CargoIntake.CargoIntakePosition.Extended)
             +WaitCommand(waitTime)
-            +CargoIntakeActuate(CargoIntake.CargoIntakePosition.Stowed)
+            router {
+                if (!OI.operatorCargoIntakeButton.get()) {
+                    CargoIntakeActuate(CargoIntake.CargoIntakePosition.Stowed)
+                } else {
+                    Command.empty
+                }
+            }
         }
     }
 }

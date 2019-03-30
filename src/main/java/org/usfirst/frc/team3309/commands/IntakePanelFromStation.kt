@@ -22,6 +22,7 @@ fun IntakePanelFromStation(): Command {
                 +WaitCommand(2.0)
                 +CargoIntakeActuate(CargoIntake.CargoIntakePosition.Stowed)
             }
+
             sequential {
                 +LowerElevatorToLimitSwitch()
                 +Elevate(Elevator.CarriagePosition.PanelFeederStation)
