@@ -16,6 +16,8 @@ public class ClimberManual extends Command {
     protected void execute() {
         if (OI.getOperatorController().getLeftStick().get()) {
             Robot.climber.setPosition(Climber.ClimberLatchPosition.Released);
+        } else if (OI.getOperatorController().getX().get()) {
+            Robot.climber.setPosition(Climber.ClimberLatchPosition.Latched);
         }
         Robot.climber.setPower(OI.getOperatorController().getY(GenericHID.Hand.kLeft));
     }

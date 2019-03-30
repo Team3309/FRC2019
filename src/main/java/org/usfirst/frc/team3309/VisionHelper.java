@@ -44,9 +44,9 @@ public class VisionHelper {
         init();
         if (limelight.getArea() < 15.0) {
             double linearPower = getThrottleCorrection();
-            if (Math.abs(linearPower) < 0.2) {
+            if (Math.abs(linearPower) < 0.3) {
                 DriverStation.reportWarning("Crawling to target", false);
-                linearPower = 0.2;
+                linearPower = 0.3;
             }
 
             if (isStopCrawl) {
