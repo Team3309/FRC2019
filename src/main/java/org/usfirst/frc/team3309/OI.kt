@@ -60,7 +60,7 @@ object OI {
         leftJoystick.trigger.whenPressed(DriveSetLowGear())
         leftJoystick.trigger.whenReleased(DriveSetHighGear())
 
-        rightJoystickRightClusterGroup.whileHeld(router {
+        rightJoystickRightClusterGroup.whenPressed(router {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
             } else  if (!Robot.cargoHolder.hasCargo()) {
