@@ -42,12 +42,14 @@ public class Vision extends Subsystem {
 //            sentMessage = false;
 //        }
 
-
-
     }
 
     public void setLed(Limelight.LEDMode mode) {
         panelLimelight.setLed(mode);
+    }
+
+    public double getTargetArea() {
+        return panelLimelight.getArea();
     }
 
 }

@@ -2,7 +2,6 @@ package org.usfirst.frc.team3309
 
 import edu.wpi.first.wpilibj.DriverStation
 import org.usfirst.frc.team3309.commands.*
-import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderSetRollers
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate
 import org.usfirst.frc.team3309.commands.climber.ClimberManual
 import org.usfirst.frc.team3309.commands.drive.DriveSetHighGear
@@ -90,8 +89,6 @@ object OI {
         operatorController.y.whenPressed(PlacePanel())
         operatorController.y.whenReleased(RemoveFinger())
 
-//        operatorController.x.whenPressed(IntakePanelFromGround())
-//        operatorController.x.whenReleased(MovePanelFromIntakeToPanelHolder())
 
         operatorCargoIntakeButton.whenPressed(IntakeCargoNear())
         operatorCargoIntakeButton.whenReleased(Command.lambda {

@@ -25,7 +25,6 @@ public class Drive extends Subsystem {
 
     private AHRS navx;
 
-
     public Drive() {
 
         driveLeftMaster = new WPI_TalonSRX(Constants.DRIVE_LEFT_MASTER_TALON_ID);
@@ -101,8 +100,6 @@ public class Drive extends Subsystem {
         driveLeftMaster.setSelectedSensorPosition(0, 0, 0);
         driveRightMaster.setSelectedSensorPosition(0, 0, 0);
         zeroNavx();
-//        driveRobotStateEstimator.reset(Timer.getFPGATimestamp(), new Pose2d());
-//        driveRobotStateEstimator.start();
     }
 
     public void zeroNavx() {
