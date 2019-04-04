@@ -10,6 +10,7 @@ public class Vision extends Subsystem {
     public static Limelight panelLimelight;
 
     private boolean hasBlinked;
+    private boolean sentMessage;
 
     public Vision() {
         panelLimelight = new Limelight("limelight-panel");
@@ -19,13 +20,30 @@ public class Vision extends Subsystem {
 
     @Override
     public void periodic() {
-        boolean hasGamePiece = Robot.cargoHolder.hasCargo() || Robot.panelHolder.hasPanel();
-        if (hasGamePiece && !hasBlinked) {
-            LimelightBlinkKt.LimelightBlink().start();
-            hasBlinked = true;
-        }  else if (!hasGamePiece) {
-            hasBlinked = false;
+        boolean hasCargo = Robot.cargoHolder.hasCargo();
+        boolean hasPanel = Robot.panelHolder.hasPanel();
+
+        boolean hasGamePiece = hasCargo || hasPanel;
+        boolean hasBothGamePieces = hasCargo && hasPanel;
+
+        if (!hasBothGamePieces) {
+            if (hasGamePiece && !hasBlinked) {
+                LimelightBlinkKt.LimelightFlash().start();
+                hasBlinked = true;
+            } else if (!hasGamePiece) {
+                hasBlinked = false;
+            }
         }
+
+//        if (hasBothGamePieces && !sentMessage) {
+//            new LimelightMorseCode().start();
+//            sentMessage = true;
+//        } else if (!hasBothGamePieces) {
+//            sentMessage = false;
+//        }
+
+
+
     }
 
     public void setLed(Limelight.LEDMode mode) {

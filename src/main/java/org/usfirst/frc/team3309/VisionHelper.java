@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3309;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.lib.Limelight;
@@ -12,17 +13,18 @@ public class VisionHelper {
 
     private static Limelight limelight = Vision.panelLimelight;
 
-    private static PIDController turnController = new PIDController("turn", 0.012, 0.000, 0.00);
-    private static PIDController throttleController = new PIDController("throttle", 0.013, 0.0011, 0.0);
+    private static PIDController turnController = new PIDController("turn", 1/30.0, 0.000, 0.0);
+    private static PIDController throttleController = new PIDController("throttle", 0.005, 0.0011, 0.0);
     private static PIDController skewController = new PIDController("skew", 0.0, 0.0, 0.0);
 
     private static Timer timer = new Timer();
 
-    private static final boolean isDashboard = false;
+    private static final boolean isDashboard = true;
     private static Limelight.CamMode curCamMode = Limelight.CamMode.DriverCamera;
     private static int curPipeline = 0;
     private static Limelight.LEDMode curLed;
     private static boolean timerStarted;
+    private static boolean isStopCrawl;
 
     private static final double skewGain = 1.0;
     private static final double PANEL_HEIGHT = 28.875;
@@ -31,9 +33,9 @@ public class VisionHelper {
     private static final double LIMELIGHT_FRONT_OFFSET = 24.0;
 
     static {
-//        turnController.outputToDashboard();
-//        throttleController.outputToDashboard();
-//        skewController.outputToDashboard();
+        turnController.outputToDashboard();
+        throttleController.outputToDashboard();
+        skewController.outputToDashboard();
         VisionHelper.turnOff();
         setCamMode(Limelight.CamMode.VisionProcessor);
     }
@@ -42,6 +44,15 @@ public class VisionHelper {
         init();
         if (limelight.getArea() < 15.0) {
             double linearPower = getThrottleCorrection();
+            if (Math.abs(linearPower) < 0.2) {
+                DriverStation.reportWarning("Crawling to target", false);
+                linearPower = 0.2;
+            }
+
+            if (isStopCrawl) {
+                linearPower = 0.0;
+            }
+//            linearPower = 0.0;
             double angularPower = getTurnCorrection();
             double skewPower = -getSkewCorrection();
             SmartDashboard.putNumber("Skew vision power", skewPower);
@@ -81,6 +92,7 @@ public class VisionHelper {
             timer.stop();
             timerStarted = false;
         }
+        isStopCrawl = false;
     }
 
     public static double getThrottleCorrection() {
@@ -146,6 +158,9 @@ public class VisionHelper {
         }
     }
 
+    public static void stopCrawl() {
+        isStopCrawl = true;
+    }
 
 
     public static double getTimeElasped() {

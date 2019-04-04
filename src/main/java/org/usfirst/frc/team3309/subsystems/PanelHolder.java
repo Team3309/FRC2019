@@ -3,12 +3,12 @@ package org.usfirst.frc.team3309.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
+import org.usfirst.frc.team3309.commands.panelholder.PanelHolderActuate;
+import org.usfirst.frc.team3309.commands.panelholder.PanelHolderManual;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
 public class PanelHolder extends Subsystem {
@@ -18,9 +18,14 @@ public class PanelHolder extends Subsystem {
 
     private DigitalInput bumperSensor;
 
+    private boolean hadPanel;
+    private boolean currentLimitReached;
+    private Timer holdTimer = new Timer();
+    private double power;
+
     public PanelHolder() {
         victor = new WPI_VictorSPX(Constants.PANEL_HOLDER_VICTOR_ID);
-        victor.configOpenloopRamp(0.15);
+        victor.configOpenloopRamp(0.3);
         victor.setNeutralMode(NeutralMode.Brake);
         extendingSolenoid = new Solenoid(Constants.PANEL_HOLDER_TELESCOPING_SOLENOID_ID);
         bumperSensor = new DigitalInput(Constants.PANEL_HOLDER_BUMPER_SENSOR_PORT);
@@ -29,11 +34,50 @@ public class PanelHolder extends Subsystem {
         addChild(bumperSensor);
     }
 
+    @Override
+    public void initDefaultCommand() {
+        setDefaultCommand(new PanelHolderManual());
+    }
+
     public void setPower(double power) {
-  /*      if (getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT) {
-            power = -0.28;
-        }*/
-        victor.set(ControlMode.PercentOutput, power);
+
+        double manualPower = power;
+
+        if (!(Math.abs(manualPower) > 0)) {
+            currentLimitReached = false;
+        }
+
+        if (!(Math.abs(manualPower) > 0) || currentLimitReached) {
+            if (hasPanel()) {
+                if (!hadPanel) {
+                    hadPanel = true;
+                    holdTimer.reset();
+                    holdTimer.start();
+                    this.power = -0.6;
+                } else if (holdTimer.get() > 0.25) {
+                    this.power = Constants.PANEL_HOLDER_HOLDING_POWER;
+                    holdTimer.stop();
+                }
+            } else {
+                hadPanel = false;
+                int sign = (int) (Math.signum(manualPower) == 0 ? -1 : Math.signum(manualPower));
+                if (sign == 1.0) {
+                    this.power = 0.48;
+                } else {
+                    // -0.28
+                    this.power = Math.abs(Constants.PANEL_HOLDER_HOLDING_POWER) * sign;
+                }
+            }
+        } else {
+            if (Robot.panelHolder.getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT) {
+                currentLimitReached = true;
+                DriverStation.reportError("Panel holder current limit reached", false);
+            } else {
+                this.power = manualPower;
+            }
+            hadPanel = false;
+        }
+        victor.set(ControlMode.PercentOutput, this.power);
     }
 
     /*

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
+import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeManual;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
@@ -29,6 +30,11 @@ public class CargoIntake extends Subsystem {
         addChild(intakeMotor);
         addChild(solenoid);
         solenoidValue = solenoid.get();
+    }
+
+    @Override
+    public void initDefaultCommand() {
+        setDefaultCommand(new CargoIntakeManual());
     }
 
     public void setPower(double power) {

@@ -27,6 +27,10 @@ public class DriveManual extends Command {
 
     private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
 
+    private boolean hadPanel;
+    private boolean extendedForPanel;
+    private Command command;
+
     public DriveManual() {
         require(Robot.drive);
         setInterruptBehavior(InterruptBehavior.Suspend);
@@ -52,8 +56,9 @@ public class DriveManual extends Command {
             if (VisionHelper.hasTargets()) {
                 signal = VisionHelper.getDriveSignal();
                 double dist = VisionHelper.getDist();
-                if ((Robot.panelHolder.hasPanel()  || Robot.panelHolder.getCurrent() > 7.0)
+                if ((Robot.panelHolder.hasPanel() || Robot.panelHolder.getCurrent() > 2.5)
                         && VisionHelper.getTimeElasped() > 0.25) {
+                    hadPanel = true;
                     PanelHolder.ExtendedPosition currentPosition = Robot.panelHolder.getExtendedPosition();
 
                     // extend in preparation to go on the rocket
@@ -61,7 +66,8 @@ public class DriveManual extends Command {
                             currentPosition == PanelHolder.ExtendedPosition.ExtendedOutwards) {
                         RemoveFingerKt.RemoveFinger().start();
                         DriverStation.reportError("Removed finger automatically", false);
-                    // place panel on rocket after having exteded
+                        VisionHelper.stopCrawl();
+                        // place panel on rocket after having extended
                     } else if (Util.within(dist, 4, 25.0) &&
                             currentPosition == PanelHolder.ExtendedPosition.RetractedInwards) {
                         PlacePanelKt.PlacePanel().start();
@@ -69,8 +75,11 @@ public class DriveManual extends Command {
                     }
                 } else {
                     // extend to check for panel for autograb
-                    if (Util.within(dist, 0.0, 15.0)) {
-                       IntakePanelFromStationKt.IntakePanelFromStation().start();
+                    if (Util.within(dist, 0.0, 40.0) && !hadPanel) {
+                        DriverStation.reportError("Intaking panel from feeder station", false);
+                        command = IntakePanelFromStationKt.IntakePanelFromStation();
+                        command.start();
+                        extendedForPanel = true;
                     }
                 }
             }
@@ -80,6 +89,13 @@ public class DriveManual extends Command {
             SmartDashboard.putNumber("Mounting angle", VisionHelper.getCameraMountingAngle(trueDistance));
         } else {
             VisionHelper.turnOff();
+            hadPanel = false;
+            if (extendedForPanel) {
+                command.cancel();
+                RetractFingerFromFeederStationKt.RetractFingerFromFeederStation().start();
+                DriverStation.reportError("Retraced finger from feeder station", false);
+                extendedForPanel = false;
+            }
         }
 
         double leftPower = signal.getLeft();

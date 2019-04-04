@@ -57,12 +57,12 @@ public class PanelIntake extends Subsystem {
     }
 
     public boolean hasPanel() {
-        return sharpSensor.getAverageValue() > 0.0;
+        return sharpSensor.getAverageValue() < 2.55;
     }
 
     public enum PanelIntakePosition {
-        Up(true),
-        Down(false);
+        Up(false),
+        Down(true);
 
         private boolean value;
 

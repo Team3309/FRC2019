@@ -84,19 +84,9 @@ public class Constants {
     // amount elevator drops for placing a panel
     public static final double ELEVATOR_PANEL_DROP_DISTANCE = 0.02;
 
-    // TODO: to be used with wrist when added
-//    // [0, 1], minimum value where it is safe to rotate arm
-//    public static final double LIFT_BEGIN_SAFE_ZONE = 0;
-//
-//    // [0, 1], maximum value where it is safe to rotate arm
-//    public static final double LIFT_END_SAFE_ZONE = 0;
-
     // these can NEVER be the same
     public static final double CARGO_INTAKE_ZONE_MIN = -0.1;
     public static final double CARGO_INTAKE_ZONE_MAX = 0.24;
-
-    // difference between cargo and panel in rocket [0, 1]
-    public static final double PANEL_CARGO_OFFSET = 0.0;
 
     /**
      * Cargo intake mappings
@@ -130,6 +120,7 @@ public class Constants {
     public static final int PANEL_HOLDER_TELESCOPING_SOLENOID_ID = 4;
     public static final int PANEL_HOLDER_BUMPER_SENSOR_PORT = 0;
     public static final double PANEL_HOLDER_MAX_CURRENT = 25;
+    public static final double PANEL_HOLDER_HOLDING_POWER = -0.2;
 
     /**
      * Climber mappings
