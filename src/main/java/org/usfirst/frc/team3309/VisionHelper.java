@@ -1,11 +1,11 @@
 package org.usfirst.frc.team3309;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.lib.Limelight;
 import org.usfirst.frc.team3309.lib.PIDController;
 import org.usfirst.frc.team3309.lib.util.DriveSignal;
+import org.usfirst.frc.team3309.lib.util.PolynomialRegression;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team3309.subsystems.Vision;
 
@@ -13,9 +13,9 @@ public class VisionHelper {
 
     private static Limelight limelight = Vision.panelLimelight;
 
-    private static PIDController turnController = new PIDController("turn", 1/30.0, 0.000, 0.0);
-    private static PIDController throttleController = new PIDController("throttle", 0.005, 0.0011, 0.0);
-    private static PIDController skewController = new PIDController("skew", 0.0, 0.0, 0.0);
+    private static PIDController turnController = new PIDController("turn", 0.01, 0.000, 0.0);
+
+    private static PolynomialRegression linearRegression;
 
     private static Timer timer = new Timer();
 
@@ -26,52 +26,45 @@ public class VisionHelper {
     private static boolean timerStarted;
     private static boolean isStopCrawl;
 
-    private static final double skewGain = 1.0;
-    private static final double PANEL_HEIGHT = 28.875;
-    private static final double CAMERA_HEIGHT = 33.1875;
-    private static final double CAMERA_MOUNTING_ANGLE = -9.2;
-    private static final double LIMELIGHT_FRONT_OFFSET = 24.0;
-
     static {
         turnController.outputToDashboard();
-        throttleController.outputToDashboard();
-        skewController.outputToDashboard();
         VisionHelper.turnOff();
         setCamMode(Limelight.CamMode.VisionProcessor);
+
+        // points for line to vision target (target area, motor power)
+        double[][] motorTrajectory = new double[][]{
+                {0.5, 0.4},
+                {9.71, 0.03},
+        };
+
+        linearRegression = new PolynomialRegression(motorTrajectory, 1);
     }
 
     public static DriveSignal getDriveSignal() {
         init();
         if (limelight.getArea() < 15.0) {
             double linearPower = getThrottleCorrection();
-            if (Math.abs(linearPower) < 0.2) {
-                DriverStation.reportWarning("Crawling to target", false);
-                linearPower = 0.2;
-            }
 
-            if (isStopCrawl) {
+            if (limelight.getArea() < 0.05) {
+                linearPower = 0.5;
+            } else if (isStopCrawl) {
                 linearPower = 0.0;
             }
-//            linearPower = 0.0;
+
             double angularPower = getTurnCorrection();
-            double skewPower = -getSkewCorrection();
-            SmartDashboard.putNumber("Skew vision power", skewPower);
             SmartDashboard.putNumber("Throttle vision power", linearPower);
             SmartDashboard.putNumber("Turn vision power", angularPower);
-            return new DriveSignal(linearPower + angularPower + skewPower,
-                    linearPower - angularPower - skewPower);
+            SmartDashboard.putNumber("linearRegression", linearRegression.R2());
+            return new DriveSignal(linearPower + angularPower,
+                    linearPower - angularPower);
         }
         return DriveSignal.NEUTRAL;
     }
 
     private static void init() {
         turnController.reset();
-        throttleController.reset();
-        skewController.reset();
         if (isDashboard) {
             turnController.readDashboard();
-            throttleController.readDashboard();
-            skewController.readDashboard();
         }
     }
 
@@ -96,16 +89,13 @@ public class VisionHelper {
     }
 
     public static double getThrottleCorrection() {
-        return -throttleController.update(getDist(), 0.0);
+        double throttle = linearRegression.predict(limelight.getArea());
+//        throttle =  Math.signum(throttle) * Util.clamp(Math.abs(throttle), 0.2, 0.4);
+        return throttle;
     }
 
     public static double getTurnCorrection() {
         return turnController.update(limelight.getTx(), 0.0);
-    }
-
-    public static double getSkewCorrection() {
-        return skewGain * skewController.update(getSkew()) * getSkewScale(getDist(),
-                10, 100);
     }
 
     public static double getSkew() {
@@ -117,24 +107,6 @@ public class VisionHelper {
             skew = limelight.getSkew();
         }
         return skew;
-    }
-
-
-    private static double getSkewScale(double dist, double min, double max) {
-        if (!Util.within(dist, min, max)) {
-            return 0.0;
-        }
-        return (dist - min) / (max - min);
-    }
-
-    public static double getDist() {
-        return ((PANEL_HEIGHT - CAMERA_HEIGHT) /
-                Math.tan(Math.toRadians(limelight.getTy() + CAMERA_MOUNTING_ANGLE)))
-                - LIMELIGHT_FRONT_OFFSET;
-    }
-
-    public static double getCameraMountingAngle(double trueDistance) {
-        return Math.toDegrees(Math.atan((PANEL_HEIGHT - CAMERA_HEIGHT) / trueDistance)) - limelight.getTy();
     }
 
     private static void setCamMode(Limelight.CamMode camMode) {
@@ -162,7 +134,6 @@ public class VisionHelper {
         isStopCrawl = true;
     }
 
-
     public static double getTimeElasped() {
         return timer.get();
     }
@@ -172,7 +143,6 @@ public class VisionHelper {
     }
 
     public static void outputToDashboard() {
-        SmartDashboard.putNumber("Distance from target", getDist());
     }
 
 }

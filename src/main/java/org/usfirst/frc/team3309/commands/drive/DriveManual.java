@@ -55,27 +55,27 @@ public class DriveManual extends Command {
             VisionHelper.turnOn();
             if (VisionHelper.hasTargets()) {
                 signal = VisionHelper.getDriveSignal();
-                double dist = VisionHelper.getDist();
+                double area = Robot.vision.getTargetArea();
                 if ((Robot.panelHolder.hasPanel() || Robot.panelHolder.getCurrent() > 2.5)
                         && VisionHelper.getTimeElasped() > 0.25) {
                     hadPanel = true;
                     PanelHolder.ExtendedPosition currentPosition = Robot.panelHolder.getExtendedPosition();
 
                     // extend in preparation to go on the rocket
-                    if (Math.abs(dist) < 4 &&
+                    if (Math.abs(area) > 9.0 &&
                             currentPosition == PanelHolder.ExtendedPosition.ExtendedOutwards) {
                         RemoveFingerKt.RemoveFinger().start();
                         DriverStation.reportError("Removed finger automatically", false);
                         VisionHelper.stopCrawl();
                         // place panel on rocket after having extended
-                    } else if (Util.within(dist, 4, 25.0) &&
+                    } else if (Util.within(area, 0.05, 8.0) &&
                             currentPosition == PanelHolder.ExtendedPosition.RetractedInwards) {
                         PlacePanelKt.PlacePanel().start();
                         DriverStation.reportError("Extended to place panel automatically", false);
                     }
                 } else {
                     // extend to check for panel for autograb
-                    if (Util.within(dist, 0.0, 40.0) && !hadPanel) {
+                    if (Util.within(area, 0.1, 20.0) && !hadPanel) {
                         DriverStation.reportError("Intaking panel from feeder station", false);
                         command = IntakePanelFromStationKt.IntakePanelFromStation();
                         command.start();
@@ -85,8 +85,6 @@ public class DriveManual extends Command {
             }
         } else if (OI.getOperatorController().getRightStick().get()) {
             VisionHelper.turnOn();
-            double trueDistance = SmartDashboard.getNumber("true distance", 24.0);
-            SmartDashboard.putNumber("Mounting angle", VisionHelper.getCameraMountingAngle(trueDistance));
         } else {
             VisionHelper.turnOff();
             hadPanel = false;

@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.commands.drive.DriveManual;
-import org.usfirst.frc.team3309.commands.drive.RobotStateEstimator;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
 /*
@@ -26,10 +25,7 @@ public class Drive extends Subsystem {
 
     private AHRS navx;
 
-    private RobotStateEstimator driveRobotStateEstimator;
-
     public Drive() {
-        driveRobotStateEstimator = new RobotStateEstimator();
 
         driveLeftMaster = new WPI_TalonSRX(Constants.DRIVE_LEFT_MASTER_TALON_ID);
         driveLeftSlave1 = new WPI_VictorSPX(Constants.DRIVE_LEFT_SLAVE_VICTOR_1_ID);
@@ -104,8 +100,6 @@ public class Drive extends Subsystem {
         driveLeftMaster.setSelectedSensorPosition(0, 0, 0);
         driveRightMaster.setSelectedSensorPosition(0, 0, 0);
         zeroNavx();
-//        driveRobotStateEstimator.reset(Timer.getFPGATimestamp(), new Pose2d());
-//        driveRobotStateEstimator.start();
     }
 
     public void zeroNavx() {
@@ -142,10 +136,6 @@ public class Drive extends Subsystem {
 
     public double getAngularVelocity() {
         return navx.getRate();
-    }
-
-    public RobotStateEstimator getRobotStateEstimator() {
-        return driveRobotStateEstimator;
     }
 
     public void setHighGear() {
@@ -192,7 +182,6 @@ public class Drive extends Subsystem {
     }
 
     public void outputToDashboard() {
-        driveRobotStateEstimator.outputToSmartDashboard();
         SmartDashboard.putNumber("Drive left power get", driveLeftMaster.getMotorOutputPercent());
         SmartDashboard.putNumber("Drive right power get", driveRightMaster.getMotorOutputPercent());
         SmartDashboard.putNumber("Raw angle", getAngularPosition());
