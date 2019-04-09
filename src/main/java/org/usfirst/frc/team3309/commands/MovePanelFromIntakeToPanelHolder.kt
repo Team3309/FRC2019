@@ -11,16 +11,16 @@ import org.usfirst.frc.team4322.commandv2.group
 fun MovePanelFromIntakeToPanelHolder(): Command {
     return group {
         sequential {
-            sequential {
-                parallel {
-                    +PanelHolderSetRollers(-1.0, 0.5)
-                    +PanelIntakeActuate(PanelIntake.PanelIntakePosition.Up)
-                }
-            }
-            +PanelIntakeSetRollers(-0.1)
-
+            parallel {
+                +PanelHolderSetRollers(-1.0, 0.8)
+            +PanelIntakeActuate(PanelIntake.PanelIntakePosition.Up)
+        }
+        +PanelIntakeSetRollers(-0.1)
+        sequential {
+            +WaitCommand(0.3)
             +WaitUntilPanelIsInPanelHolder()
-            +WaitCommand(0.25)
+        }
+        +WaitCommand(0.25)
             +PanelIntakeSetRollers(1.0)
 
             +Elevate(Elevator.CarriagePosition.PanelClearingPanelIntake)

@@ -101,7 +101,7 @@ public class Constants {
      */
     public static final int PANEL_INTAKE_VICTOR_ID = 11;
     public static final int PANEL_INTAKE_SOLENOID_ID = 5;
-    public static final int PANEL_INTAKE_SENSOR_PORT = 3;
+    public static final int PANEL_INTAKE_SENSOR_PORT = 2;
 
     public static final double PANEL_INTAKE_MIN_POWER = 0.1;
 

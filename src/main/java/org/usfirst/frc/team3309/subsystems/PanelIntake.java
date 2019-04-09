@@ -2,10 +2,13 @@ package org.usfirst.frc.team3309.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
+import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
 
@@ -46,6 +49,8 @@ public class PanelIntake extends Subsystem {
         SmartDashboard.putString("PI position", getPosition().toString());
         SmartDashboard.putBoolean("PI position raw", getPosition().value);
         SmartDashboard.putBoolean("PI has panel", hasPanel());
+        SmartDashboard.putNumber("Dustpan Sharp Value", sharpSensor.getAverageValue());
+        SmartDashboard.putNumber("Dustpan Sharp Voltage", sharpSensor.getAverageVoltage());
     }
 
     private void setSolenoid(boolean on) {
@@ -57,7 +62,13 @@ public class PanelIntake extends Subsystem {
     }
 
     public boolean hasPanel() {
-        return sharpSensor.getAverageValue() < 2.55;
+        double threshold = 0.0;
+        if (Constants.currentRobot == Constants.Robot.PRACTICE) {
+            threshold = 2.65;
+        } else if (Constants.currentRobot == Constants.Robot.COMPETITION) {
+            threshold = 2.55;
+        }
+        return Util.within(sharpSensor.getAverageVoltage(), threshold - 0.5, threshold + 0.5);
     }
 
     public enum PanelIntakePosition {
