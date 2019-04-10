@@ -76,8 +76,6 @@ public class Robot extends CommandV2Robot {
         elevator.zeroEncoder();
 
         drive.initDefaultCommand();
-
-        SmartDashboard.putBoolean("outputSubsystemsToDashboard", false);
     }
 
     /*

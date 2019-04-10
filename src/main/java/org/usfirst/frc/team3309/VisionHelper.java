@@ -19,7 +19,7 @@ public class VisionHelper {
 
     private static Timer timer = new Timer();
 
-    private static final boolean isDashboard = true;
+    private static final boolean isDashboard = false;
     private static Limelight.CamMode curCamMode = Limelight.CamMode.DriverCamera;
     private static int curPipeline = 0;
     private static Limelight.LEDMode curLed;
@@ -27,7 +27,7 @@ public class VisionHelper {
     private static boolean isStopCrawl;
 
     static {
-        turnController.outputToDashboard();
+//        turnController.outputToDashboard();
         VisionHelper.turnOff();
         setCamMode(Limelight.CamMode.VisionProcessor);
 
