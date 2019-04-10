@@ -14,6 +14,7 @@ import org.usfirst.frc.team3309.subsystems.PanelHolder
 import org.usfirst.frc.team3309.subsystems.PanelIntake
 import org.usfirst.frc.team4322.commandv2.Command
 import org.usfirst.frc.team4322.commandv2.Trigger
+import org.usfirst.frc.team4322.commandv2.group
 import org.usfirst.frc.team4322.commandv2.router
 import org.usfirst.frc.team4322.input.InputThrustmaster
 import org.usfirst.frc.team4322.input.InputXbox
@@ -66,9 +67,9 @@ object OI {
         rightJoystickRightClusterGroup.whenPressed(router {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
-            } else  if (!Robot.cargoHolder.hasCargo()) {
+            } else if (!Robot.cargoHolder.hasCargo() && Robot.panelHolder.hasPanel()) {
                 PlacePanel()
-            }else {
+            } else {
                 Command.empty
             }
         })
@@ -91,15 +92,11 @@ object OI {
         operatorPanelIntakeButton.whenReleased(RetractFingerFromFeederStation())
 
         operatorController.y.whenPressed(IntakePanelFromGround())
-        operatorController.y.whenReleased(router {
-            if (Robot.panelIntake.hasPanel()) {
-                MovePanelFromIntakeToPanelHolder()
-            } else {
-                PanelIntakeActuate(PanelIntake.PanelIntakePosition.Up)
-
+        operatorController.y.whenReleased(Command.lambda {
+            if (!Robot.panelIntake.hasPanel()) {
+               PanelIntakeStopRollersAndBringUp().start()
             }
         })
-
 
         operatorCargoIntakeButton.whenPressed(IntakeCargoNear())
         operatorCargoIntakeButton.whenReleased(Command.lambda {
@@ -112,7 +109,7 @@ object OI {
             Robot.cargoIntake.position = CargoIntake.CargoIntakePosition.Extended
         })
 
-         operatorController.a.whenPressed(Command.lambda {
+        operatorController.a.whenPressed(Command.lambda {
             Robot.cargoIntake.position = CargoIntake.CargoIntakePosition.Stowed
         })
 
@@ -123,6 +120,15 @@ object OI {
                 Command.empty
             }
         })
+    }
+
+    fun PanelIntakeStopRollersAndBringUp(): Command {
+        return group {
+            parallel {
+                +PanelIntakeSetRollers(0.0)
+                +PanelIntakeActuate(PanelIntake.PanelIntakePosition.Up)
+            }
+        }
     }
 
 }
