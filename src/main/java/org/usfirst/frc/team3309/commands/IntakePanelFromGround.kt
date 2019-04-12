@@ -15,10 +15,11 @@ fun IntakePanelFromGround(): Command {
         parallel {
             +PanelIntakeActuate(PanelIntake.PanelIntakePosition.Down)
             +Elevate(Elevator.CarriagePosition.PanelLow)
-            +PanelIntakeSetRollers(-1.0)
             +PanelHolderActuate(PanelHolder.PanelHolderPosition.TelescopeBack)
 
             sequential {
+                +PanelIntakeSetRollers(-1.0)
+                +WaitCommand(0.8)
                 +WaitUntilPanelIsInIntake()
                 +MovePanelFromIntakeToPanelHolder()
             }
