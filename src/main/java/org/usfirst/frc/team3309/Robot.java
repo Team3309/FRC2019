@@ -6,10 +6,14 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team3309.commands.Elevate;
+import jaci.pathfinder.Trajectory;
+import org.usfirst.frc.team3309.commands.RocketAndCargoShipKt;
+import org.usfirst.frc.team3309.commands.elevator.Elevate;
 import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeManual;
+import org.usfirst.frc.team3309.commands.drive.auto.MoveCommand;
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderManual;
+import org.usfirst.frc.team3309.lib.Ramsete;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team3309.subsystems.*;
 import org.usfirst.frc.team4322.commandv2.Command;
@@ -17,12 +21,20 @@ import org.usfirst.frc.team4322.commandv2.CommandV2Robot;
 import org.usfirst.frc.team4322.commandv2.Scheduler;
 import org.usfirst.frc.team4322.logging.RobotLogger;
 
+import java.util.LinkedHashMap;
+
 /*
  * This is the Robot class.
  * It handles the setup for the rest of the robot code.
  */
 
 public class Robot extends CommandV2Robot {
+
+    public enum Side {
+        BALL, PANEL,
+    }
+
+    public static Side activeSide;
 
     public static Drive drive;
     public static Elevator elevator;
@@ -32,11 +44,13 @@ public class Robot extends CommandV2Robot {
     public static PanelHolder panelHolder;
     public static Climber climber;
     public static Vision vision;
-    private static LightComm lightComm;
 
     public static PowerDistributionPanel pdp;
 
+    //Map of all autonomous paths
     private Command autoCommand;
+    public static LinkedHashMap<PathLoader.Path, Trajectory> autonPaths;
+
 
     /*
      * This function is called when the Robot program starts. use it to initialize your subsystems,
@@ -54,7 +68,6 @@ public class Robot extends CommandV2Robot {
         panelHolder = new PanelHolder();
         climber = new Climber();
         vision = new Vision();
-        lightComm = new LightComm();
 
         pdp = new PowerDistributionPanel();
 
@@ -62,7 +75,7 @@ public class Robot extends CommandV2Robot {
 
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
         camera.setFPS(10);
-        camera.setResolution(320/2, 240/2);
+        camera.setResolution(320 / 2, 240 / 2);
         camera.setPixelFormat(VideoMode.PixelFormat.kYUYV);
 
         AutoModeExecutor.displayAutos();
@@ -72,6 +85,8 @@ public class Robot extends CommandV2Robot {
         // invert turning joystick's left to right
         OI.getRightJoystick().getXAxis().setRampFunction((x) -> (-x));
         OI.getLeftJoystick().getYAxis().setRampFunction((x) -> (-x));
+
+        autonPaths = PathLoader.loadPaths();
 
         elevator.zeroEncoder();
 
@@ -88,6 +103,7 @@ public class Robot extends CommandV2Robot {
         Scheduler.killAllCommands();
         drive.reset();
         drive.setHighGear();
+        Ramsete.getInstance().stop();
     }
 
     /*
@@ -98,13 +114,12 @@ public class Robot extends CommandV2Robot {
     public void autonomousInit() {
         super.autonomousInit();
         Scheduler.killAllCommands();
-        drive.reset();
         drive.setHighGear();
+        drive.zeroSensor();
         elevator.zeroEncoder();
-        autoCommand = AutoModeExecutor.getAutoSelected();
-        if (autoCommand != null) {
-            autoCommand.start();
-        }
+
+        autoCommand = RocketAndCargoShipKt.RocketAndCargoShip();
+        autoCommand.start();
         new Elevate(Elevate.Level.Home).start();
     }
 
@@ -131,6 +146,7 @@ public class Robot extends CommandV2Robot {
         new CargoIntakeManual().start();
         new CargoHolderManual().start();
         new PanelHolderManual().start();
+        Ramsete.getInstance().stop();
     }
 
     /*
@@ -165,6 +181,12 @@ public class Robot extends CommandV2Robot {
             cargoIntake.outputToDashboard();
             cargoHolder.outputToDashboard();
             climber.outputToDashboard();
+        }
+
+        if (Robot.panelHolder.hasPanel()) {
+            activeSide = Side.PANEL;
+        } else if (Robot.cargoHolder.hasCargo()) {
+            activeSide = Side.BALL;
         }
     }
 

@@ -1,7 +1,9 @@
 package org.usfirst.frc.team3309.commands
 
+import org.usfirst.frc.team3309.commands.elevator.Elevate
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderActuate
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderSetRollers
+import org.usfirst.frc.team3309.commands.panelholder.WaitUntilPanelIsInPanelHolder
 import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeActuate
 import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeSetRollers
 import org.usfirst.frc.team3309.subsystems.Elevator

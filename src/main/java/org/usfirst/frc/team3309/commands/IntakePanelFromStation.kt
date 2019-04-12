@@ -1,10 +1,10 @@
 package org.usfirst.frc.team3309.commands
 
-import org.usfirst.frc.team3309.Robot
-import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate
+import org.usfirst.frc.team3309.commands.elevator.Elevate
+import org.usfirst.frc.team3309.commands.elevator.LowerElevatorToLimitSwitch
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderActuate
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderSetRollers
-import org.usfirst.frc.team3309.subsystems.CargoIntake
+import org.usfirst.frc.team3309.commands.panelholder.WaitUntilPanelIsInPanelHolder
 import org.usfirst.frc.team3309.subsystems.Elevator
 import org.usfirst.frc.team3309.subsystems.PanelHolder
 import org.usfirst.frc.team4322.commandv2.Command

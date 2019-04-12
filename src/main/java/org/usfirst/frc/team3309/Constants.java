@@ -129,41 +129,30 @@ public class Constants {
     public static final int CLIMBER_TALON_ID = 12;
     public static final int CLIMBER_LATCHING_SOLENOID_ID = 2;
 
-    /**
-     * ROBOT PHYSICAL CONSTANTS
-     */
-    public static final double DRIVE_ENCODER_COUNTS_PER_REV = 4096 * 9.6;
-    public static final double WHEEL_DIAMETER_INCHES = 6.0; // 6.0
-    public static final double WHEEL_RADIUS_INCHES = WHEEL_DIAMETER_INCHES / 2.0;
-    public static final double kDriveWheelTrackWidthInches = 24.9;
-    public static final double kTrackScrubFactor = 1.0;  // Tune me!
-
     /* DRIVEBASE TUNING CONSTANTS */
     public static final double DRIVE_P = 0.019;
+    public static final double DRIVE_I = 0.0;
     public static final double DRIVE_D = 0.0006;
     public static final double DRIVE_F = 0.002;
     public static final double DRIVE_CLOSED_LOOP_RAMP_RATE = 0.0;
     public static final double DRIVE_OPEN_LOOP_RAMP_RATE = 0.15; // don't go below 0.15, due to rebound power in cheezy
 
-    // Tuned dynamics
-    public static final double kRobotMass = 60.0;  // kg
-    public static final double kRobotMomentOfInertia = 10.0;  // kg m^2
-    public static final double kRobotAngularDrag = 12.0;  // N*m / (rad/sec)
 
-    private static final boolean isMarios = true;
-    public static final double kDriveVIntercept = isMarios ? 1.055 : 1.223;  // V
-    public static final double kDriveKv = isMarios ? 0.135 : 0.022;  // V per rad/s
-    public static final double kDriveKa = isMarios ? 0.012 : 0.0068;  // V per rad/s^2
+    public static final int kCTREpidIDX = 0;
+    public static final int kCTREtimeout = 0;
 
-    // Trajectory constants
-    public static final double kMaxVelocity = 190.0; // in / s
-    public static final double kMaxAccel = 190.0;  // in / s^2
-    public static final double kMaxCentripetalAccel = 160.0;
-    public static final double kMaxVoltage = 9.0;
+    public static final double kFeet2Ticks= 3833;
+    public static final double kTicks2Feet= 1/kFeet2Ticks;
 
-    // Pure pursuit constants
-    public static final double kPathKX = 4.0;  // units/s per unit of error
-    public static final double kPathLookaheadTime = 0.4;  // seconds to look ahead along the path for steering
-    public static final double kPathMinLookaheadDistance = 24.0;  // inches
+    public static final double kWheelBase = 2.325;
+    public static final double kMagEncoderPerRev = 4096;
+
+    public static final double kWheelRadius = (kMagEncoderPerRev * kTicks2Feet) / (2*Math.PI);
+
+    public static final double kNativeU2FPS = kTicks2Feet * 10;
+    public static final double kFPS2NativeU = 1/kNativeU2FPS;
+
+    public static final double kMeters2Feet = 3.28084;
+    public static final double kFeet2Meters = 1/kMeters2Feet;
 
 }

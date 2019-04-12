@@ -4,11 +4,14 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import jaci.pathfinder.Pathfinder;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.commands.drive.DriveManual;
+import org.usfirst.frc.team3309.lib.RobotPos;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
 /*
@@ -22,8 +25,20 @@ public class Drive extends Subsystem {
     private WPI_VictorSPX driveLeftSlave2, driveRightSlave2;
 
     private Solenoid shifter;
-
     private AHRS navx;
+
+    //Zero Offsets:
+    private double mLeftZeroOffset = 0;
+    private double mRightZeroOffset = 0;
+    private double mGyroOffset = 0;
+
+    //Odometery variables:
+    private double mLastPos, mCurrentPos, mDeltaPos;
+    double x, y, theta;
+    private Notifier odometery;
+    private static final double kOdometeryFix = 0.973;
+
+    private double kFriction = 0; //0.1
 
     public Drive() {
 
@@ -51,6 +66,20 @@ public class Drive extends Subsystem {
         addChild(driveRightMaster);
         addChild(shifter);
         addChild(navx);
+
+        //Zero Odometery:
+        x = 0;
+        y = 0;
+        theta = 0;
+
+        odometery = new Notifier(() -> {
+            mCurrentPos = (getLeftSensorPosition() + getRightSensorPosition()) / 2.0;
+            mDeltaPos = mCurrentPos - mLastPos;
+            theta = getGyroAngle();
+            x += kOdometeryFix * Math.cos(Pathfinder.d2r((theta))) * mDeltaPos;
+            y += kOdometeryFix * Math.sin(Pathfinder.d2r((theta))) * mDeltaPos;
+            mLastPos = mCurrentPos;
+        });
     }
 
     private void configMaster(WPI_TalonSRX talon) {
@@ -59,9 +88,11 @@ public class Drive extends Subsystem {
         talon.configClosedloopRamp(Constants.DRIVE_CLOSED_LOOP_RAMP_RATE, 10);
         talon.configOpenloopRamp(Constants.DRIVE_OPEN_LOOP_RAMP_RATE, 10);
 
-        talon.config_kP(0, Constants.DRIVE_P, 10);
-        talon.config_kD(0, Constants.DRIVE_D, 10);
-        talon.config_kF(0, Constants.DRIVE_F, 10);
+        talon.config_kP(0, Constants.DRIVE_P, Constants.kCTREtimeout);
+        talon.config_kI(0, Constants.DRIVE_I, Constants.kCTREtimeout);
+        talon.config_kD(0, Constants.DRIVE_D, Constants.kCTREtimeout);
+        talon.config_kF(0, Constants.DRIVE_F, Constants.kCTREtimeout);
+
 
         talon.setNeutralMode(NeutralMode.Brake);
         talon.setInverted(true);
@@ -77,20 +108,110 @@ public class Drive extends Subsystem {
         addChild(slave);
     }
 
-    public double encoderCountsToInches(double counts) {
-        return counts / Constants.DRIVE_ENCODER_COUNTS_PER_REV * (Math.PI * Constants.WHEEL_DIAMETER_INCHES);
+    /**
+     * Set Raw Speed Method
+     *
+     * @param left  Percent Output
+     * @param right Percent Output
+     */
+    public void setRawSpeed(double left, double right) {
+        driveLeftMaster.set(ControlMode.PercentOutput, left);
+        driveRightMaster.set(ControlMode.PercentOutput, right);
     }
 
-    public double encoderVelocityToInchesPerSecond(double encoderVelocity) {
-        return encoderCountsToInches(encoderVelocity * 10.0 / 4096.0 * (Math.PI * Constants.WHEEL_DIAMETER_INCHES));
+    /**
+     * Set Velocity Method
+     *
+     * @param left  Feet per Second
+     * @param right Feet per Second
+     */
+    public void setVelocity(double left, double right) {
+        driveLeftMaster.set(ControlMode.Velocity, left * Constants.kFPS2NativeU, DemandType.ArbitraryFeedForward, kFriction);
+        driveRightMaster.set(ControlMode.Velocity, right * Constants.kFPS2NativeU, DemandType.ArbitraryFeedForward, kFriction);
     }
 
-    public double inchesToEncoderCounts(double inches) {
-        return inches * (Constants.DRIVE_ENCODER_COUNTS_PER_REV / (Math.PI * Constants.WHEEL_DIAMETER_INCHES));
+    /**
+     * Zero Sensor
+     *
+     * <p> Zeroes all sensors (encoders + gyro) and odometery information </p>
+     */
+    public void zeroSensor() {
+        mLeftZeroOffset = driveLeftMaster.getSelectedSensorPosition(Constants.kCTREpidIDX);
+        mRightZeroOffset = driveRightMaster.getSelectedSensorPosition(Constants.kCTREpidIDX);
+        mGyroOffset = navx.getFusedHeading();
+
+        x = 0;
+        y = 0;
+        theta = 0;
+
+        mCurrentPos = 0;
+        mDeltaPos = 0;
+        mLastPos = 0;
     }
 
-    public double radiansPerSecondToTicksPer100ms(double rad_s) {
-        return rad_s / (Math.PI * 2.0) * 4096.0 / 10.0;
+    public void setOdometery(RobotPos pos) {
+        x = pos.getX();
+        y = pos.getY();
+        theta = pos.getHeading();
+        // mGyroOffset = (mGyro.getFusedHeading() + pos.getHeading());
+        mGyroOffset = (navx.getFusedHeading() - pos.getHeading());
+    }
+
+    /**
+     * Start Odometery Method
+     *
+     * <p> Starts tracking the robot position </p>
+     *
+     * @param period timestep to update at.
+     */
+    public void startOdometery(double period) {
+        odometery.startPeriodic(period);
+    }
+
+    /**
+     * Stop Odometery Method
+     *
+     * <p> Stops tracking the robot position </p>
+     */
+    public void stopOdometery() {
+        odometery.stop();
+    }
+
+    /**
+     * Get Robot Position Method.
+     *
+     * @return The position of the robot.
+     */
+    public RobotPos getRobotPos() {
+        return new RobotPos(x, y, theta);
+    }
+
+    /**
+     * @return Left Sensor Position in Feet
+     */
+    public double getLeftSensorPosition() {
+        return Constants.kTicks2Feet * (driveLeftMaster.getSelectedSensorPosition(Constants.kCTREpidIDX) - mLeftZeroOffset);
+    }
+
+    /**
+     * @return Right Sensor Position in Feet
+     */
+    public double getRightSensorPosition() {
+        return Constants.kTicks2Feet * (driveRightMaster.getSelectedSensorPosition(Constants.kCTREpidIDX) - mRightZeroOffset);
+    }
+
+    /**
+     * @return Left Sensor Velocity in Feet per Second
+     */
+    public double getLeftSensorVelocity() {
+        return Constants.kNativeU2FPS * driveLeftMaster.getSelectedSensorVelocity(Constants.kCTREpidIDX);
+    }
+
+    /**
+     * @return Left Sensor Velocity in Feet per Second
+     */
+    public double getRightSensorVelocity() {
+        return Constants.kNativeU2FPS * driveRightMaster.getSelectedSensorVelocity(Constants.kCTREpidIDX);
     }
 
 
@@ -99,43 +220,15 @@ public class Drive extends Subsystem {
         driveRightMaster.clearMotionProfileTrajectories();
         driveLeftMaster.setSelectedSensorPosition(0, 0, 0);
         driveRightMaster.setSelectedSensorPosition(0, 0, 0);
-        zeroNavx();
     }
 
-    public void zeroNavx() {
-        navx.zeroYaw();
-    }
-
-    public double getEncoderDistance() {
-        return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2.0;
-    }
-
-    public double getLeftEncoderDistance() {
-        return driveLeftMaster.getSelectedSensorPosition(0);
-    }
-
-    public double getRightEncoderDistance() {
-        return -driveRightMaster.getSelectedSensorPosition(0);
-    }
-
-    public double getEncoderVelocity() {
-        return (getLeftEncoderVelocity() + getRightEncoderVelocity()) / 2.0;
-    }
-
-    public int getLeftEncoderVelocity() {
-        return driveLeftMaster.getSelectedSensorVelocity(0);
-    }
-
-    public double getRightEncoderVelocity() {
-        return -driveRightMaster.getSelectedSensorVelocity(0);
-    }
-
-    public double getAngularPosition() {
-        return -navx.getAngle();
-    }
-
-    public double getAngularVelocity() {
-        return navx.getRate();
+    /**
+     * Get Gyro Angle.
+     *
+     * @return The fused heading from the sensors.
+     */
+    public double getGyroAngle() {
+        return navx.getFusedHeading() - mGyroOffset;
     }
 
     public void setHighGear() {
@@ -170,11 +263,6 @@ public class Drive extends Subsystem {
 
     }
 
-    public void setNeutralMode(NeutralMode mode) {
-        driveLeftMaster.setNeutralMode(mode);
-        driveRightMaster.setNeutralMode(mode);
-    }
-
     public void setRight(ControlMode mode,
                          double right, DemandType demandType,
                          double rightFeedforward) {
@@ -184,11 +272,7 @@ public class Drive extends Subsystem {
     public void outputToDashboard() {
         SmartDashboard.putNumber("Drive left power get", driveLeftMaster.getMotorOutputPercent());
         SmartDashboard.putNumber("Drive right power get", driveRightMaster.getMotorOutputPercent());
-        SmartDashboard.putNumber("Raw angle", getAngularPosition());
-        SmartDashboard.putNumber("Encoder left", getLeftEncoderDistance());
-        SmartDashboard.putNumber("Encoder right", getRightEncoderDistance());
-        SmartDashboard.putNumber("Left encoder velocity", getLeftEncoderVelocity());
-        SmartDashboard.putNumber("Right encoder velocity", getRightEncoderVelocity());
+        SmartDashboard.putNumber("Raw angle", getGyroAngle());
     }
 
     @Override
