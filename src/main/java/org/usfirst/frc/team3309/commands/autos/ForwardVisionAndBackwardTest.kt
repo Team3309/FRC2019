@@ -14,10 +14,14 @@ fun ForwardVisionAndBackwardTest(): Command {
             +MoveCommand(Robot.autonPaths.get(PathLoader.Path.ForwardToCargoShipTest), Robot.Side.PANEL, MoveCommand.VisionCancel.CANCEL_ON_VISION)
             +VisionApproach(true)
             +WaitCommand(2.0)
-            +Command.waitFor {
-                !Robot.panelHolder.hasPanel()
+            first {
+                +Command.waitFor {
+                    !Robot.panelHolder.hasPanel()
+                }
+                +WaitCommand(1.0)
             }
             +VisionApproach(false)
+            +WaitCommand(0.1)
             +MoveCommand(Robot.autonPaths.get(PathLoader.Path.BackFromCargoShipTest), Robot.Side.BALL, MoveCommand.VisionCancel.RUN_FULL_PATH)
         }
     }
