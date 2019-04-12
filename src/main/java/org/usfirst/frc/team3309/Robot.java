@@ -7,11 +7,10 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Trajectory;
-import org.usfirst.frc.team3309.commands.RocketAndCargoShipKt;
+import org.usfirst.frc.team3309.commands.autos.ForwardVisionAndBackwardTestKt;
 import org.usfirst.frc.team3309.commands.elevator.Elevate;
 import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeManual;
-import org.usfirst.frc.team3309.commands.drive.auto.MoveCommand;
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderManual;
 import org.usfirst.frc.team3309.lib.Ramsete;
 import org.usfirst.frc.team3309.lib.util.Util;
@@ -117,8 +116,7 @@ public class Robot extends CommandV2Robot {
         drive.setHighGear();
         drive.zeroSensor();
         elevator.zeroEncoder();
-
-        autoCommand = RocketAndCargoShipKt.RocketAndCargoShip();
+        autoCommand = ForwardVisionAndBackwardTestKt.ForwardVisionAndBackwardTest();
         autoCommand.start();
         new Elevate(Elevate.Level.Home).start();
     }

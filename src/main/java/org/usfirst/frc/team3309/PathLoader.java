@@ -14,7 +14,9 @@ public class PathLoader {
         HabToRocketLeft("HAB_To_FR_F"),
         RocketToTurnLeft("FR_To_FRTurn_B"),
         TurnToFeederLeft("FRTurn_To_Feeder_F"),
-        FeederToBR("Feeder_To_BR_B");
+        FeederToBR("Feeder_To_BR_B"),
+        ForwardToCargoShipTest("Hab_To_FCS_F"),
+        BackFromCargoShipTest("FCS_To_HAB_B");
 
         public String name;
 

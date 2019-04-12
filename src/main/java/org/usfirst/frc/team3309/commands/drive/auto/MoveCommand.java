@@ -12,17 +12,17 @@ import org.usfirst.frc.team4322.commandv2.Command;
 
 public class MoveCommand extends Command {
 
-    public enum FieldSide{
+    public enum FieldSide {
         LEFT,
         RIGHT
     }
 
-    public enum VisionCancel{
+    public enum VisionCancel {
         CANCEL_ON_VISION,
         RUN_FULL_PATH
     }
 
-    public enum ZeroOdometeryMode{
+    public enum ZeroOdometeryMode {
         FIRST_PATH,
         NO_ZERO
     }
@@ -35,16 +35,16 @@ public class MoveCommand extends Command {
 
     private static Robot.Side lastPathInverted = Robot.Side.BALL;
 
-    public MoveCommand(Trajectory path){
+    public MoveCommand(Trajectory path) {
         this(path, Side.BALL, VisionCancel.RUN_FULL_PATH);
     }
 
-    public MoveCommand(Trajectory path, Side invertPath, VisionCancel lookForVision){
+    public MoveCommand(Trajectory path, Side invertPath, VisionCancel lookForVision) {
         mPath = path;
-        if(invertPath == Side.PANEL){
-            mInvertPath = true;
-        }else{
+        if (invertPath == Side.PANEL) {
             mInvertPath = false;
+        } else {
+            mInvertPath = true;
         }
         mIsFirstPath = false;
         mIsRightPath = FieldSide.LEFT;
@@ -52,12 +52,12 @@ public class MoveCommand extends Command {
         mLookForVision = lookForVision;
     }
 
-    public MoveCommand(Trajectory path, Side invertPath, VisionCancel lookForVision, ZeroOdometeryMode isFirstPath){
+    public MoveCommand(Trajectory path, Side invertPath, VisionCancel lookForVision, ZeroOdometeryMode isFirstPath) {
         this(path, invertPath, lookForVision);
         mIsFirstPath = (isFirstPath == ZeroOdometeryMode.FIRST_PATH);
     }
 
-    public MoveCommand(Trajectory path, Side invertPath, VisionCancel lookForVision, ZeroOdometeryMode isFirstPath, FieldSide fieldSide){
+    public MoveCommand(Trajectory path, Side invertPath, VisionCancel lookForVision, ZeroOdometeryMode isFirstPath, FieldSide fieldSide) {
         this(path, invertPath, lookForVision);
         mIsRightPath = fieldSide;
         mIsFirstPath = (isFirstPath == ZeroOdometeryMode.FIRST_PATH);
@@ -69,19 +69,19 @@ public class MoveCommand extends Command {
         // System.out.println("INITIAL POSIIION:\t\t" + Drivetrain.getInstance().getRobotPos().getX() + "\t\t\t" + Drivetrain.getInstance().getRobotPos().getY());
         // System.out.println(((mInvertPath) ? -1 : 1) * mPath.get(0).x +"\t\t\t\t" + ((mInvertPath) ? 1 : 1) * mPath.get(0).y + "\t\t\t\t" + (mInvertPath ? -1 : 1) *  Pathfinder.r2d(mPath.get(0).heading));
         // Drivetrain.getInstance().zeroSensor();
-        if(mIsFirstPath){
+        if (mIsFirstPath) {
             Robot.drive.setOdometery(new RobotPos(mPath.get(0).x, ((mIsRightPath == FieldSide.LEFT) ? -1 : 1) * mPath.get(0).y, ((mInvertPath) ? 180 : 0) + (((mIsRightPath == FieldSide.LEFT) ? -1 : 1) * Pathfinder.r2d(mPath.get(0).heading))));
-        }else{
+        } else {
             // Drivetrain.getInstance().setOdometery(new RobotPos(Drivetrain.getInstance().getRobotPos(), mInvertPath));
         }
 
-        System.out.println("INITIAL POSIIION:\t\t" + Robot.drive.getRobotPos().getX() + "\t\t\t" +  Robot.drive.getRobotPos().getY() + "\t\t\t\t"
-                +  Robot.drive.getRobotPos().getHeading());
-        System.out.println(((mInvertPath) ? -1 : 1) * mPath.get(0).x +"\t\t\t\t" + ((mInvertPath) ? 1 : 1) * mPath.get(0).y + "\t\t\t\t" + (mInvertPath ? -1 : 1) *  Pathfinder.r2d(mPath.get(0).heading));
+        System.out.println("INITIAL POSIIION:\t\t" + Robot.drive.getRobotPos().getX() + "\t\t\t" + Robot.drive.getRobotPos().getY() + "\t\t\t\t"
+                + Robot.drive.getRobotPos().getHeading());
+        System.out.println(((mInvertPath) ? -1 : 1) * mPath.get(0).x + "\t\t\t\t" + ((mInvertPath) ? 1 : 1) * mPath.get(0).y + "\t\t\t\t" + (mInvertPath ? -1 : 1) * Pathfinder.r2d(mPath.get(0).heading));
 
-        if (!Ramsete.isRunning()){
+        if (!Ramsete.isRunning()) {
             System.out.println("!!!!!!!!!! Attempted to start movement without starting Ramsete Controller !!!!!!!!!!");
-        }else{
+        } else {
             Ramsete.getInstance().trackPath(mPath, mInvertPath);
         }
         System.out.println("Starting Move");

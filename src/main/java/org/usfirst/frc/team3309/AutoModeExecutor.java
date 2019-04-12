@@ -3,7 +3,6 @@ package org.usfirst.frc.team3309;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.commands.drive.auto.MoveCommand;
-import org.usfirst.frc.team4322.commandv2.Command;
 
 public class AutoModeExecutor {
 
