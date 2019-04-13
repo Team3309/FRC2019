@@ -62,7 +62,7 @@ public class DriveManual extends Command {
                     PanelHolder.ExtendedPosition currentPosition = Robot.panelHolder.getExtendedPosition();
 
                     // extend in preparation to go on the rocket
-                    if (Math.abs(area) > 9.0 &&
+                    if (Math.abs(area) > 8.3 &&
                             currentPosition == PanelHolder.ExtendedPosition.ExtendedOutwards) {
                         RemoveFingerKt.RemoveFinger().start();
                         DriverStation.reportError("Removed finger automatically", false);

@@ -139,7 +139,7 @@ public class VisionHelper {
     }
 
     public static boolean hasTargets() {
-        return limelight.hasTarget() && Util.within(getSkew(), -5.0, 5.0);
+        return limelight.hasTarget() && Util.within(getSkew(), -10.0, 10.0);
     }
 
     public static void outputToDashboard() {
