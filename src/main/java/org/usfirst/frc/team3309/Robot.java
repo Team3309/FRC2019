@@ -7,10 +7,7 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.commands.Elevate;
-import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
-import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeManual;
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderManual;
-import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team3309.subsystems.*;
 import org.usfirst.frc.team4322.commandv2.Command;
 import org.usfirst.frc.team4322.commandv2.CommandV2Robot;
@@ -26,12 +23,12 @@ public class Robot extends CommandV2Robot {
 
     public static Drive drive;
     public static Elevator elevator;
-    public static CargoIntake cargoIntake;
-    public static PanelIntake panelIntake;
-    public static CargoHolder cargoHolder;
-    public static PanelHolder panelHolder;
     public static Climber climber;
     public static Vision vision;
+    public static PanelHolder panelHolder;
+    public static PanelIntake panelIntake;
+    public static CargoHolder cargoHolder;
+    public static CargoIntake cargoIntake;
 
     public static PowerDistributionPanel pdp;
 
@@ -47,12 +44,12 @@ public class Robot extends CommandV2Robot {
 
         drive = new Drive();
         elevator = new Elevator();
-        cargoIntake = new CargoIntake();
-        panelIntake = new PanelIntake();
-        cargoHolder = new CargoHolder();
-        panelHolder = new PanelHolder();
         climber = new Climber();
         vision = new Vision();
+        panelHolder = new PanelHolder();
+        panelIntake = new PanelIntake();
+        cargoHolder = new CargoHolder();
+        cargoIntake = new CargoIntake();
 
         pdp = new PowerDistributionPanel();
 
@@ -126,8 +123,8 @@ public class Robot extends CommandV2Robot {
             autoCommand.cancel();
         drive.setHighGear();
         drive.reset();
-        new CargoIntakeManual().start();
-        new CargoHolderManual().start();
+//        new CargoIntakeManual().start();
+//        new CargoHolderManual().start();
         new PanelHolderManual().start();
     }
 
@@ -160,18 +157,18 @@ public class Robot extends CommandV2Robot {
             elevator.outputToDashboard();
             panelHolder.outputToDashboard();
             panelIntake.outputToDashboard();
-            cargoIntake.outputToDashboard();
-            cargoHolder.outputToDashboard();
+//            cargoIntake.outputToDashboard();
+//            cargoHolder.outputToDashboard();
             climber.outputToDashboard();
         }
     }
-
-    public static boolean hasCargoInIntakeZone() {
-        return cargoHolder.hasCargo()
-                && Util.within(elevator.getCarriagePercentage(),
-                Constants.CARGO_INTAKE_ZONE_MIN,
-                Constants.CARGO_INTAKE_ZONE_MAX);
-    }
+//
+//    public static boolean hasCargoInIntakeZone() {
+//        return cargoHolder.hasCargo()
+//                && Util.within(elevator.getCarriagePercentage(),
+//                Constants.CARGO_INTAKE_ZONE_MIN,
+//                Constants.CARGO_INTAKE_ZONE_MAX);
+//    }
 
     /*
      * This is the main function, which is where every java program starts.

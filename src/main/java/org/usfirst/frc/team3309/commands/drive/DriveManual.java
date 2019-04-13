@@ -1,27 +1,12 @@
 package org.usfirst.frc.team3309.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
 import org.usfirst.frc.team3309.OI;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.VisionHelper;
-import org.usfirst.frc.team3309.commands.IntakePanelFromStationKt;
-import org.usfirst.frc.team3309.commands.PlacePanelKt;
-import org.usfirst.frc.team3309.commands.RemoveFingerKt;
-import org.usfirst.frc.team3309.commands.RetractFingerFromFeederStationKt;
-import org.usfirst.frc.team3309.commands.panelholder.PanelHolderSetRollers;
-import org.usfirst.frc.team3309.lib.PIDController;
 import org.usfirst.frc.team3309.lib.util.CheesyDriveHelper;
 import org.usfirst.frc.team3309.lib.util.DriveSignal;
-import org.usfirst.frc.team3309.lib.util.Util;
-import org.usfirst.frc.team3309.subsystems.PanelHolder;
-import org.usfirst.frc.team3309.subsystems.Vision;
 import org.usfirst.frc.team4322.commandv2.Command;
-
-import java.awt.*;
 
 public class DriveManual extends Command {
 
@@ -51,7 +36,7 @@ public class DriveManual extends Command {
 
         VisionHelper.outputToDashboard();
 
-        if (isAutoTurn) {
+ /*       if (isAutoTurn) {
             VisionHelper.turnOn();
             if (VisionHelper.hasTargets()) {
                 signal = VisionHelper.getDriveSignal();
@@ -95,7 +80,7 @@ public class DriveManual extends Command {
                 extendedForPanel = false;
             }
         }
-
+*/
         double leftPower = signal.getLeft();
         double rightPower = signal.getRight();
 

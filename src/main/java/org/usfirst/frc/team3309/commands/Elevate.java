@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.util.Util;
-import org.usfirst.frc.team3309.subsystems.CargoIntake;
 import org.usfirst.frc.team3309.subsystems.Elevator;
 import org.usfirst.frc.team4322.commandv2.Command;
 
@@ -28,7 +27,7 @@ public class Elevate extends Command {
 
     @Override
     protected void initialize() {
-        if (level != null) {
+      /*  if (level != null) {
             boolean hasCargo = Robot.cargoHolder.hasCargo();
 //            boolean hasPanel = Robot.panelIntake.hasPanel();
 
@@ -76,7 +75,7 @@ public class Elevate extends Command {
                     carriageGoalPosition = Elevator.CarriagePosition.PanelClearingPanelIntake;
                     break;
             }
-        }
+        }*/
     }
 
     @Override

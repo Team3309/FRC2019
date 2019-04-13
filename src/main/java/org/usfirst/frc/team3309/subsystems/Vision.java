@@ -20,8 +20,10 @@ public class Vision extends Subsystem {
 
     @Override
     public void periodic() {
-        boolean hasCargo = Robot.cargoHolder.hasCargo();
-        boolean hasPanel = Robot.panelHolder.hasPanel();
+//        boolean hasCargo = Robot.cargoHolder.hasCargo();
+//        boolean hasPanel = Robot.panelHolder.hasPanel();
+        boolean hasCargo = false;
+        boolean hasPanel = false;
 
         boolean hasGamePiece = hasCargo || hasPanel;
         boolean hasBothGamePieces = hasCargo && hasPanel;
