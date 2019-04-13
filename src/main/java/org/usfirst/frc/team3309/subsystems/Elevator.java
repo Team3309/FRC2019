@@ -163,7 +163,7 @@ public class Elevator extends Subsystem {
         PanelLow(0.0),
         PanelMiddle(0.40),
         PanelHigh(0.76),
-        PanelClearingPanelIntake(0.2),
+        PanelClearingPanelIntake(0.12),
         CargoLow(0.26),
         CargoMiddle(0.64),
         CargoHigh(0.95),
