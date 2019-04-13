@@ -80,6 +80,9 @@ public class PanelHolder extends Subsystem {
         victor.set(ControlMode.PercentOutput, this.power);
     }
 
+    /*
+     * @param position, the desired configuration
+     * */
     public void setPosition(PanelHolderPosition position) {
         switch (position) {
             case TelescopeBack:

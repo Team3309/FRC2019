@@ -1,4 +1,3 @@
-/*
 package org.usfirst.frc.team3309.commands;
 
 import org.usfirst.frc.team3309.Robot;
@@ -11,4 +10,4 @@ public class WaitUntilPanelIsInIntake extends Command {
         return Robot.panelIntake.hasPanel();
     }
 
-}*/
+}

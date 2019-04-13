@@ -1,4 +1,3 @@
-/*
 package org.usfirst.frc.team3309.commands
 
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderActuate
@@ -24,4 +23,3 @@ fun RemoveFinger(): Command {
     }
 }
 
-*/
