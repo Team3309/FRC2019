@@ -32,7 +32,6 @@ public class Robot extends CommandV2Robot {
     public static PanelHolder panelHolder;
     public static Climber climber;
     public static Vision vision;
-    private static LightComm lightComm;
 
     public static PowerDistributionPanel pdp;
 
@@ -54,7 +53,6 @@ public class Robot extends CommandV2Robot {
         panelHolder = new PanelHolder();
         climber = new Climber();
         vision = new Vision();
-        lightComm = new LightComm();
 
         pdp = new PowerDistributionPanel();
 

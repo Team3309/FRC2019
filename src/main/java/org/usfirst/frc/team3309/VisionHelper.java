@@ -52,9 +52,9 @@ public class VisionHelper {
             }
 
             double angularPower = getTurnCorrection();
-            SmartDashboard.putNumber("Throttle vision power", linearPower);
-            SmartDashboard.putNumber("Turn vision power", angularPower);
-            SmartDashboard.putNumber("linearRegression", linearRegression.R2());
+//            SmartDashboard.putNumber("Throttle vision power", linearPower);
+//            SmartDashboard.putNumber("Turn vision power", angularPower);
+//            SmartDashboard.putNumber("linearRegression", linearRegression.R2());
             return new DriveSignal(linearPower + angularPower,
                     linearPower - angularPower);
         }

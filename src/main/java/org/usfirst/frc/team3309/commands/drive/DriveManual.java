@@ -34,7 +34,7 @@ public class DriveManual extends Command {
     public DriveManual() {
         require(Robot.drive);
         setInterruptBehavior(InterruptBehavior.Suspend);
-        SmartDashboard.putNumber("true distance", 24.0);
+//        SmartDashboard.putNumber("true distance", 24.0);
     }
 
     @Override

@@ -29,7 +29,7 @@ public class CargoHolderManual extends Command {
             power = 1.0;
         }
 
-        SmartDashboard.putNumber("Cargo holder power", power);
+//        SmartDashboard.putNumber("Cargo holder power", power);
         Robot.cargoHolder.setPower(power);
     }
 
