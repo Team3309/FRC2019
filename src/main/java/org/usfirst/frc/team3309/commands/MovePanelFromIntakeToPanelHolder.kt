@@ -25,10 +25,10 @@ fun MovePanelFromIntakeToPanelHolder(): Command {
 
             +Elevate(Elevator.CarriagePosition.PanelClearingPanelIntake)
             +PanelHolderActuate(PanelHolder.PanelHolderPosition.TelescopeForwards)
-            +WaitCommand(0.3)
+            +WaitCommand(0.2)
             +PanelIntakeSetRollers(0.0)
-            +PanelHolderActuate(PanelHolder.PanelHolderPosition.TelescopeBack)
             +Elevate(Elevator.CarriagePosition.PanelLow)
+            +PanelHolderActuate(PanelHolder.PanelHolderPosition.TelescopeBack)
 
         }
     }

@@ -65,7 +65,7 @@ public class Robot extends CommandV2Robot {
 
         AutoModeExecutor.displayAutos();
 
-        RobotLogger.INSTANCE.setCurrentLogLevel(RobotLogger.LogLevel.INFO);
+        RobotLogger.INSTANCE.setCurrentLogLevel(RobotLogger.LogLevel.ERR);
 
         // invert turning joystick's left to right
         OI.getRightJoystick().getXAxis().setRampFunction((x) -> (-x));
@@ -126,9 +126,6 @@ public class Robot extends CommandV2Robot {
             autoCommand.cancel();
         drive.setHighGear();
         drive.reset();
-        new CargoIntakeManual().start();
-        new CargoHolderManual().start();
-        new PanelHolderManual().start();
     }
 
     /*

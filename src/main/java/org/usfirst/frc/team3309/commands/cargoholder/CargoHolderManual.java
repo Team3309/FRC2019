@@ -24,7 +24,7 @@ public class CargoHolderManual extends Command {
         // Hold onto cargo while in holder
         if (Robot.cargoHolder.hasCargo() && !(power > 0)
                 && !OI.getRightJoystickRightClusterGroup().get()) {
-            power = -3.0 / 12;
+            power = -0.3;
         } else  if (OI.getRightJoystickRightClusterGroup().get()) {
             power = 1.0;
         }
