@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3309.subsystems;
 
+import org.usfirst.frc.team3309.OI;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.commands.LimelightBlinkKt;
 import org.usfirst.frc.team3309.lib.Limelight;
@@ -26,7 +27,7 @@ public class Vision extends Subsystem {
         boolean hasGamePiece = hasCargo || hasPanel;
         boolean hasBothGamePieces = hasCargo && hasPanel;
 
-        if (!hasBothGamePieces) {
+        if (!hasBothGamePieces && !OI.getLeftJoystickLeftClusterGroup().get()) {
             if (hasGamePiece && !hasBlinked) {
                 LimelightBlinkKt.LimelightFlash().start();
                 hasBlinked = true;

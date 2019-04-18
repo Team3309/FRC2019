@@ -13,7 +13,7 @@ public class VisionHelper {
 
     private static Limelight limelight = Vision.panelLimelight;
 
-    private static PIDController turnController = new PIDController("turn", 0.012, 0.000, 0.0);
+    private static PIDController turnController = new PIDController("turn", 0.03, 0.000, 0.0);
 
     private static PolynomialRegression linearRegression;
 
@@ -50,7 +50,6 @@ public class VisionHelper {
             } else if (isStopCrawl) {
                 linearPower = 0.0;
             }
-
             double angularPower = getTurnCorrection();
 //            SmartDashboard.putNumber("Throttle vision power", linearPower);
 //            SmartDashboard.putNumber("Turn vision power", angularPower);
