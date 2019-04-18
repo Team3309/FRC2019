@@ -5,6 +5,7 @@ import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.commands.Elevate;
 import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
@@ -44,7 +45,7 @@ public class Robot extends CommandV2Robot {
     @Override
     public void robotInit() {
         super.robotInit();
-
+        LiveWindow.disableAllTelemetry();
         drive = new Drive();
         elevator = new Elevator();
         cargoIntake = new CargoIntake();

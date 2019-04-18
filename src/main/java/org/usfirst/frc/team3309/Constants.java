@@ -100,7 +100,7 @@ public class Constants {
      * Panel intake mappings
      */
     public static final int PANEL_INTAKE_VICTOR_ID = 11;
-    public static final int PANEL_INTAKE_SOLENOID_ID = 5;
+    public static final int PANEL_INTAKE_SOLENOID_ID = 2;
     public static final int PANEL_INTAKE_SHARP_SENSOR_PORT = 2;
     public static final int PANEL_INTAKE_BANNER_SENSOR_PORT = 3;
 
@@ -127,7 +127,7 @@ public class Constants {
      * Climber mappings
      * */
     public static final int CLIMBER_TALON_ID = 12;
-    public static final int CLIMBER_LATCHING_SOLENOID_ID = 2;
+    public static final int CLIMBER_LATCHING_SOLENOID_ID = 5;
 
     /**
      * ROBOT PHYSICAL CONSTANTS
