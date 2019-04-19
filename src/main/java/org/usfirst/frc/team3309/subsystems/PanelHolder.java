@@ -64,11 +64,12 @@ public class PanelHolder extends Subsystem {
                     this.power = 0.48;
                 } else {
                     // -0.28
-                    this.power = manualPower;
+                    this.power = (Constants.PANEL_HOLDER_HOLDING_POWER);
                 }
             }
         } else {
-            if (Robot.panelHolder.getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT) {
+            if (Robot.panelHolder.getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT
+                    && manualPower < 0.0) {
                 currentLimitReached = true;
                 DriverStation.reportError("Panel holder current limit reached", false);
             } else {
