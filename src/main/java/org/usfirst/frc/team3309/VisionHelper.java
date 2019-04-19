@@ -13,13 +13,13 @@ public class VisionHelper {
 
     private static Limelight limelight = Vision.panelLimelight;
 
-    private static PIDController turnController = new PIDController("turn", 0.03, 0.000, 0.0);
+    private static PIDController turnController = new PIDController("turn", 0.0224, 0.008, 0.0);
 
     private static PolynomialRegression linearRegression;
 
     private static Timer timer = new Timer();
 
-    private static final boolean isDashboard = false;
+    private static final boolean isDashboard = true;
     private static Limelight.CamMode curCamMode = Limelight.CamMode.DriverCamera;
     private static int curPipeline = 0;
     private static Limelight.LEDMode curLed;
@@ -27,7 +27,7 @@ public class VisionHelper {
     private static boolean isStopCrawl;
 
     static {
-//        turnController.outputToDashboard();
+        turnController.outputToDashboard();
         VisionHelper.turnOff();
         setCamMode(Limelight.CamMode.VisionProcessor);
 
@@ -88,6 +88,7 @@ public class VisionHelper {
     }
 
     public static double getThrottleCorrection() {
+
         double throttle = linearRegression.predict(limelight.getArea());
 //        throttle =  Math.signum(throttle) * Util.clamp(Math.abs(throttle), 0.2, 0.4);
         return throttle;
