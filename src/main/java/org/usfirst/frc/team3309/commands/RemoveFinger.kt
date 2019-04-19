@@ -13,9 +13,9 @@ fun RemoveFinger(): Command {
         parallel {
             +PanelHolderSetRollersInstantly(1.0)
             sequential {
-                +WaitCommand(0.4)
+                +WaitCommand(0.25)
                 +PanelHolderActuate(PanelHolder.PanelHolderPosition.TelescopeBack)
-                +WaitCommand(0.2)
+                +WaitCommand(1.0)
                 +PanelHolderManual()
             }
 
