@@ -18,8 +18,9 @@ fun IntakePanelFromStation(): Command {
             +PanelHolderSetRollers(-1.0)
 
             sequential {
-                +LowerElevatorToLimitSwitch()
+                //+LowerElevatorToLimitSwitch()
                 +Elevate(Elevator.CarriagePosition.PanelFeederStation)
+
             }
             sequential {
                 +WaitUntilPanelIsInPanelHolder()
