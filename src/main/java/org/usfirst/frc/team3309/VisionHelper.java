@@ -13,7 +13,7 @@ public class VisionHelper {
 
     private static Limelight limelight = Vision.panelLimelight;
 
-    private static PIDController turnController = new PIDController("turn", 0.012, 0.000, 0.0);
+    private static PIDController  turnController = new PIDController("turn", 0.012, 0.000, 0.01);
 
     private static PolynomialRegression linearRegression;
 
