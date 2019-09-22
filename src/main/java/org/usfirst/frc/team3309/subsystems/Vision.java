@@ -9,7 +9,6 @@ public class Vision extends Subsystem {
 
     public static Limelight panelLimelight;
 
-    private boolean hasBlinked;
     private boolean sentMessage;
 
     public Vision() {
@@ -25,15 +24,6 @@ public class Vision extends Subsystem {
 
         boolean hasGamePiece = hasCargo || hasPanel;
         boolean hasBothGamePieces = hasCargo && hasPanel;
-
-        if (!hasBothGamePieces) {
-            if (hasGamePiece && !hasBlinked) {
-                LimelightBlinkKt.LimelightFlash().start();
-                hasBlinked = true;
-            } else if (!hasGamePiece) {
-                hasBlinked = false;
-            }
-        }
 
 //        if (hasBothGamePieces && !sentMessage) {
 //            new LimelightMorseCode().start();
