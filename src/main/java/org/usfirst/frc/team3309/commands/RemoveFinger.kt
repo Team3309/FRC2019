@@ -10,16 +10,20 @@ import org.usfirst.frc.team4322.commandv2.group
 
 fun RemoveFinger(): Command {
     return group {
-        parallel {
-            +PanelHolderSetRollersInstantly(1.0)
-            sequential {
-                +WaitCommand(0.4)
-                +PanelHolderActuate(PanelHolder.PanelHolderPosition.TelescopeBack)
-                +WaitCommand(0.2)
-                +PanelHolderManual()
-            }
+        sequential {
+            +WaitCommand(0.25)
+            parallel {
+                +PanelHolderSetRollersInstantly(1.0)
+                sequential {
+                    +WaitCommand(0.25)
+                    +PanelHolderActuate(PanelHolder.PanelHolderPosition.TelescopeBack)
+                    +WaitCommand(1.0)
+                    +PanelHolderManual()
+                }
 
+            }
         }
+
     }
 }
 

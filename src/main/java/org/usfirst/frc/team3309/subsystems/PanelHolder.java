@@ -60,16 +60,16 @@ public class PanelHolder extends Subsystem {
                 }
             } else {
                 hadPanel = false;
-                int sign = (int) (Math.signum(manualPower) == 0 ? -1 : Math.signum(manualPower));
-                if (sign == 1.0) {
+                if (manualPower > 0) {
                     this.power = 0.48;
                 } else {
                     // -0.28
-                    this.power = Math.abs(Constants.PANEL_HOLDER_HOLDING_POWER) * sign;
+                    this.power = (Constants.PANEL_HOLDER_HOLDING_POWER);
                 }
             }
         } else {
-            if (Robot.panelHolder.getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT) {
+            if (Robot.panelHolder.getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT
+                    && manualPower < 0.0) {
                 currentLimitReached = true;
                 DriverStation.reportError("Panel holder current limit reached", false);
             } else {
