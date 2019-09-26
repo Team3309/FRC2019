@@ -151,7 +151,7 @@ public class Constants {
     public static final int kPdpChannelDriveRight8 = 14;
     public static final int kPdpChannelDriveRight9 = 13;
     public static final int kPdpChannelLift10 = 12;
-    public static final int kPdpChannelLift6 = 4;
+    public static final int kPdpChannelLift6 = 3;
 
     /* DRIVEBASE TUNING CONSTANTS */
     public static final double DRIVE_P = 0.019;
