@@ -77,4 +77,56 @@ public class Limelight {
         DriverCamera
     }
 
+    private double[] lastPos = new double [0];
+    private double lastArea = 0;
+
+    // Cache all 3D values simultaneously and check for validity.
+    // Only call once each time through the processing loop.
+    public boolean has3D()
+    {
+        boolean dataValid = false;
+
+        double[] defaultValue = new double [0];
+        double[] newPos = table.getEntry("camtran").getDoubleArray(defaultValue);
+        double newArea = getArea();
+
+        // check that we are locked on a target and have a full set of 3D values
+        if (hasTarget() && newPos.length == 6)
+        {
+            if (newArea == lastArea)
+            {
+                // no frame update since last call, use prior 3D position
+                dataValid = true;
+            }
+            else
+            {
+                // frame update received, check that 3D values are not frozen
+                for (int i = 0; i < newPos.length; i++)
+                {
+                    if (i >= lastPos.length || newPos[i] != lastPos[i])
+                    {
+                        dataValid = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (dataValid)
+        {
+            lastPos = newPos;
+            lastArea = newArea;
+            return true;
+        }
+        else
+        {
+            lastPos = new double [0];
+            lastArea = 0;
+            return false;
+        }
+    }
+
+    // These methods are only valid after getting a true result from has3D()
+    public double get3dX() { return lastPos[0]; }
+    public double get3dZ() { return lastPos[2]; }
+    public double get3dDegrees() { return lastPos[4]; }
 }
