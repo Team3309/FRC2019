@@ -161,6 +161,7 @@ public class Robot extends CommandV2Robot {
             cargoIntake.outputToDashboard();
             cargoHolder.outputToDashboard();
             climber.outputToDashboard();
+            Vision.panelLimelight.outputToDashboard();
         }
     }
 

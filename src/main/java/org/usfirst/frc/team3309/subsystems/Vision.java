@@ -4,7 +4,9 @@ import org.usfirst.frc.team3309.OI;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.commands.LimelightBlinkKt;
 import org.usfirst.frc.team3309.lib.Limelight;
+import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
+
 
 public class Vision extends Subsystem {
 
@@ -13,7 +15,8 @@ public class Vision extends Subsystem {
     private boolean sentMessage;
 
     public Vision() {
-        panelLimelight = new Limelight("limelight-panel");
+        panelLimelight = new Limelight("limelight-panel",
+                Constants.kPanelLimelightInchesX, Constants.kPanelLimelightInchesZ);
         panelLimelight.setLed(Limelight.LEDMode.Off);
         panelLimelight.setCamMode(Limelight.CamMode.DriverCamera);
     }

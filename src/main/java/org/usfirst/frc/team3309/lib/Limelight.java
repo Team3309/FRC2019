@@ -2,13 +2,23 @@ package org.usfirst.frc.team3309.lib;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import static java.lang.Math.*;
 
 public class Limelight {
 
     private NetworkTable table;
+    private double xOffsetInches;
+    private double zOffsetInches;
+    private String limelightName;
 
-    public Limelight(String tablename) {
-        table = NetworkTableInstance.getDefault().getTable(tablename);
+    public Limelight(String limelightName, double xOffsetInches, double zOffsetInches)
+    {
+        table = NetworkTableInstance.getDefault().getTable(limelightName);
+        this.limelightName = limelightName;
+        this.xOffsetInches = xOffsetInches;
+        this.zOffsetInches = zOffsetInches;
     }
 
     public boolean hasTarget() {
@@ -130,7 +140,30 @@ public class Limelight {
     }
 
     // These methods are only valid after getting a true result from has3D()
-    public double get3dX() { return lastPos[0]; }
-    public double get3dZ() { return lastPos[2]; }
-    public double get3dDegrees() { return lastPos[4]; }
+    private double getRaw3DxInches() { return lastPos[0]; }
+    private double getRaw3DzInches() { return lastPos[2]; }
+    private double getRaw3DyDegrees() { return lastPos[4]; }
+    private double getAdj3DxInches() { return getRaw3DxInches() + xOffsetInches; }
+    private double getAdj3DzInches() { return getRaw3DzInches() + zOffsetInches; }
+
+    // Straight line distance to the target
+    public double targetInches3D()
+    {
+        return sqrt(getAdj3DxInches() * getAdj3DxInches() + getAdj3DzInches() * getAdj3DzInches());
+    }
+
+    // Angle to the target (negative value means the bot needs to turn to the left)
+    public double targetDegrees3D()
+    {
+        return getRaw3DyDegrees() - toDegrees(atan2(-getAdj3DzInches(), getAdj3DxInches()));
+    }
+
+    public void outputToDashboard()
+    {
+        if (lastArea != 0)
+        {
+            SmartDashboard.putNumber(limelightName + " targetInches3D", targetInches3D());
+            SmartDashboard.putNumber(limelightName + " targetDegrees3D", targetDegrees3D());
+        }
+    }
 }
