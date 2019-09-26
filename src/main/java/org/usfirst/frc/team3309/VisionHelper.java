@@ -94,7 +94,17 @@ public class VisionHelper {
     }
 
     public static double getTurnCorrection() {
-        return turnController.update(limelight.getTx(), 0.0);
+        double turnError;
+
+        // don't use 3D vision when picking up at loading station
+        // because panel blocks bottom of vision tape
+        if (limelight.has3D() && Robot.panelHolder.hasPanel()) {
+            turnError = limelight.rotationCenterDegrees3D();
+        }
+        else {
+            turnError = limelight.getTx();
+        }
+        return turnController.update(turnError, 0.0);
     }
 
     public static double getSkew() {

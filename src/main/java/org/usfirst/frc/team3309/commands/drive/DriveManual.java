@@ -47,8 +47,7 @@ public class DriveManual extends Command {
             if (VisionHelper.hasTargets()) {
                 signal = VisionHelper.getDriveSignal();
                 double area = Robot.vision.getTargetArea();
-                boolean hasPanel = (Robot.panelHolder.hasPanel() || Robot.panelHolder.getCurrent() > 2.5);
-                if (hasPanel) {
+                if (Robot.panelHolder.hasPanel()) {
                     hadPanel = true;
                     PanelHolder.ExtendedPosition currentPosition = Robot.panelHolder.getExtendedPosition();
 

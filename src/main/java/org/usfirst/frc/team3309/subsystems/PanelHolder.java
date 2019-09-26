@@ -124,7 +124,7 @@ public class PanelHolder extends Subsystem {
     }
 
     public boolean hasPanel() {
-        return !bumperSensor.get();
+        return !bumperSensor.get() || getCurrent() > 2.5;
     }
 
     public enum PanelHolderPosition {
