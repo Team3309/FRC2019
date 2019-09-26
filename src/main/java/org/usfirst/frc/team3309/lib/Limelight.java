@@ -2,6 +2,7 @@ package org.usfirst.frc.team3309.lib;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static java.lang.Math.*;
@@ -12,6 +13,7 @@ public class Limelight {
     private double xOffsetInches;
     private double zOffsetInches;
     private String limelightName;
+    private Timer latency3D = new Timer();
 
     public Limelight(String limelightName, double xOffsetInches, double zOffsetInches)
     {
@@ -88,7 +90,6 @@ public class Limelight {
     }
 
     private double[] lastPos = new double [0];
-    private double lastArea = 0;
 
     // Cache all 3D values simultaneously and check for validity.
     // Only call once each time through the processing loop.
@@ -98,48 +99,52 @@ public class Limelight {
 
         double[] defaultValue = new double [0];
         double[] newPos = table.getEntry("camtran").getDoubleArray(defaultValue);
-        double newArea = getArea();
 
         // check that we are locked on a target and have a full set of 3D values
         if (hasTarget() && newPos.length == 6)
         {
-            if (newArea == lastArea)
+            // Check for non-zero 3D values.
+            // The values can be zero when the target is partially obscured,
+            // such as at the loading station where the bottom corners of the tape
+            // are blocked by the panel.
+            // The values can also be zero when the target is too far away (~90 inches).
+            for (int i = 0; i < newPos.length; i++)
             {
-                // no frame update since last call, use prior 3D position
-                dataValid = true;
-            }
-            else
-            {
-                // frame update received, check that 3D values are not frozen
-                for (int i = 0; i < newPos.length; i++)
+                if (newPos[i] != 0)
                 {
-                    if (i >= lastPos.length || newPos[i] != lastPos[i])
-                    {
-                        dataValid = true;
+                    dataValid = true;
+                    break;
+                }
+            }
+
+            if (dataValid)
+            {
+                // check if 3D values have been refreshed so we know how much encoder history to use
+                for (int i = 0; i < newPos.length; i++) {
+                    if (i >= lastPos.length || newPos[i] != lastPos[i]) {
+                        latency3D.reset();
+                        latency3D.start();
                         break;
                     }
                 }
             }
         }
 
-        // Don't clear the last position when we drop out of 3D mode because
-        // the position from the limelight freezes until we regain 3D mode
-        // and we need to detect the freeze on subsequent updates.
         lastPos = newPos;
 
         if (dataValid)
         {
-            lastArea = newArea;
             return true;
         }
         else
         {
-            lastArea = 0;
+            latency3D.reset();
             return false;
         }
     }
 
     // These methods are only valid after getting a true result from has3D()
+    public double getLatency3D() { return latency3D.get(); }
     private double getRaw3DxInches() { return lastPos[0]; }
     private double getRaw3DzInches() { return lastPos[2]; }
     private double getRaw3DyDegrees() { return lastPos[4]; }
@@ -155,12 +160,12 @@ public class Limelight {
     // Angle to the target (negative value means the bot needs to turn to the left)
     public double targetDegrees3D()
     {
-        return getRaw3DyDegrees() - toDegrees(atan2(-getAdj3DzInches(), getAdj3DxInches()));
+        return getRaw3DyDegrees() - toDegrees(atan2(getAdj3DxInches(), -getAdj3DzInches()));
     }
 
     public void outputToDashboard()
     {
-        if (lastArea != 0)
+        if (has3D())
         {
             SmartDashboard.putNumber(limelightName + " targetInches3D", targetInches3D());
             SmartDashboard.putNumber(limelightName + " targetDegrees3D", targetDegrees3D());
