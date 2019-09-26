@@ -111,15 +111,19 @@ public class Limelight {
                 }
             }
         }
+
+        // Don't clear the last position when we drop out of 3D mode because
+        // the position from the limelight freezes until we regain 3D mode
+        // and we need to detect the freeze on subsequent updates.
+        lastPos = newPos;
+
         if (dataValid)
         {
-            lastPos = newPos;
             lastArea = newArea;
             return true;
         }
         else
         {
-            lastPos = new double [0];
             lastArea = 0;
             return false;
         }
