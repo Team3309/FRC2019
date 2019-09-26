@@ -142,6 +142,16 @@ public class Constants {
     public static final double kPanelLimelightInchesX = -4.5;  // lateral off-center
     public static final double kPanelLimelightPlacementInchesZ = 26.5;  // behind placement point
     public static final double kPanelLimelightRotationCenterInchesZ = 4.0;  // behind bot rotational center
+    
+    // PDP channels
+    public static final int kPdpChannelDriveLeft1 = 0;
+    public static final int kPdpChannelDriveLeft2 = 1;
+    public static final int kPdpChannelDriveLeft3 = 2;
+    public static final int kPdpChannelDriveRight7 = 15;
+    public static final int kPdpChannelDriveRight8 = 14;
+    public static final int kPdpChannelDriveRight9 = 13;
+    public static final int kPdpChannelLift10 = 12;
+    public static final int kPdpChannelLift6 = 4;
 
     /* DRIVEBASE TUNING CONSTANTS */
     public static final double DRIVE_P = 0.019;

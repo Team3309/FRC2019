@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
+import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
@@ -153,6 +154,8 @@ public class Elevator extends Subsystem {
         SmartDashboard.putNumber("Carriage closed loop error", liftMaster.getClosedLoopError());
         SmartDashboard.putNumber("Elevator power", liftMaster.getMotorOutputPercent());
         SmartDashboard.putNumber("Elevator voltage", liftMaster.getMotorOutputVoltage());
+        SmartDashboard.putNumber("Elevator lift 6 current", Robot.pdp.getCurrent(Constants.kPdpChannelLift6));
+        SmartDashboard.putNumber("Elevator lift 10 current", Robot.pdp.getCurrent(Constants.kPdpChannelLift10));
     }
 
     // Goal in percentage [0, 1]
