@@ -11,16 +11,19 @@ public class Limelight {
 
     private NetworkTable table;
     private double xOffsetInches;
-    private double zOffsetInches;
+    private double zPlacementOffsetInches;
+    private double zRotationOffsetInches;
     private String limelightName;
     private Timer latency3D = new Timer();
 
-    public Limelight(String limelightName, double xOffsetInches, double zOffsetInches)
+    public Limelight(String limelightName, double xOffsetInches,
+                     double zPlacementOffsetInches, double zRotationOffsetInches)
     {
         table = NetworkTableInstance.getDefault().getTable(limelightName);
         this.limelightName = limelightName;
         this.xOffsetInches = xOffsetInches;
-        this.zOffsetInches = zOffsetInches;
+        this.zPlacementOffsetInches = zPlacementOffsetInches;
+        this.zRotationOffsetInches = zRotationOffsetInches;
     }
 
     public boolean hasTarget() {
@@ -149,18 +152,25 @@ public class Limelight {
     private double getRaw3DzInches() { return lastPos[2]; }
     private double getRaw3DyDegrees() { return lastPos[4]; }
     private double getAdj3DxInches() { return getRaw3DxInches() + xOffsetInches; }
-    private double getAdj3DzInches() { return getRaw3DzInches() + zOffsetInches; }
+    private double getPlacement3DzInches() { return getRaw3DzInches() + zPlacementOffsetInches; }
+    private double getRotation3DzInches() { return getRaw3DzInches() + zRotationOffsetInches; }
 
     // Straight line distance to the target
     public double targetInches3D()
     {
-        return sqrt(getAdj3DxInches() * getAdj3DxInches() + getAdj3DzInches() * getAdj3DzInches());
+        return sqrt(getAdj3DxInches() * getAdj3DxInches() + getPlacement3DzInches() * getPlacement3DzInches());
     }
 
-    // Angle to the target (negative value means the bot needs to turn to the left)
-    public double targetDegrees3D()
+    // Angle from the placement point to the target (negative value means the bot needs to turn to the left)
+    public double placementDegrees3D()
     {
-        return getRaw3DyDegrees() - toDegrees(atan2(getAdj3DxInches(), -getAdj3DzInches()));
+        return getRaw3DyDegrees() - toDegrees(atan2(getAdj3DxInches(), -getPlacement3DzInches()));
+    }
+
+    // Angle from the placement point to the target (negative value means the bot needs to turn to the left)
+    public double rotationCenterDegrees3D()
+    {
+        return getRaw3DyDegrees() - toDegrees(atan2(getAdj3DxInches(), -getRotation3DzInches()));
     }
 
     public void outputToDashboard()
@@ -168,7 +178,9 @@ public class Limelight {
         if (has3D())
         {
             SmartDashboard.putNumber(limelightName + " targetInches3D", targetInches3D());
-            SmartDashboard.putNumber(limelightName + " targetDegrees3D", targetDegrees3D());
-        }
+            SmartDashboard.putNumber(limelightName +
+                    " placementDegrees3D", placementDegrees3D());
+            SmartDashboard.putNumber(limelightName +
+                    " rotationCenterDegrees3D", rotationCenterDegrees3D());        }
     }
 }

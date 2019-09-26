@@ -138,9 +138,10 @@ public class Constants {
     public static final double kDriveWheelTrackWidthInches = 24.9;
     public static final double kTrackScrubFactor = 1.0;  // Tune me!
 
-    // Offset from the panel limelight to the center of the panel during placement
-    public static final double kPanelLimelightInchesX = -4.5;
-    public static final double kPanelLimelightInchesZ = 26.5;
+    // Offset of the panel limelight on the bot
+    public static final double kPanelLimelightInchesX = -4.5;  // lateral off-center
+    public static final double kPanelLimelightPlacementInchesZ = 26.5;  // behind placement point
+    public static final double kPanelLimelightRotationCenterInchesZ = 4.0;  // behind bot rotational center
 
     /* DRIVEBASE TUNING CONSTANTS */
     public static final double DRIVE_P = 0.019;

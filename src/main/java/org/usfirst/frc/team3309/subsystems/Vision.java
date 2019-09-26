@@ -16,7 +16,9 @@ public class Vision extends Subsystem {
 
     public Vision() {
         panelLimelight = new Limelight("limelight-panel",
-                Constants.kPanelLimelightInchesX, Constants.kPanelLimelightInchesZ);
+                Constants.kPanelLimelightInchesX,
+                Constants.kPanelLimelightPlacementInchesZ,
+                Constants.kPanelLimelightRotationCenterInchesZ);
         panelLimelight.setLed(Limelight.LEDMode.Off);
         panelLimelight.setCamMode(Limelight.CamMode.DriverCamera);
     }
