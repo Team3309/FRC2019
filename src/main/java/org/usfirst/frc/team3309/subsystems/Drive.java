@@ -8,8 +8,10 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
+import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.commands.drive.DriveManual;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
+import org.usfirst.frc.team3309.Constants;
 
 /*
  * The Drive subsystem. This is the big one.
@@ -189,6 +191,12 @@ public class Drive extends Subsystem {
         SmartDashboard.putNumber("Encoder right", getRightEncoderDistance());
         SmartDashboard.putNumber("Left encoder velocity", getLeftEncoderVelocity());
         SmartDashboard.putNumber("Right encoder velocity", getRightEncoderVelocity());
+        SmartDashboard.putNumber("Drive left 1 current", Robot.pdp.getCurrent(Constants.kPdpChannelDriveLeft1));
+        SmartDashboard.putNumber("Drive left 2 current", Robot.pdp.getCurrent(Constants.kPdpChannelDriveLeft2));
+        SmartDashboard.putNumber("Drive left 3 current", Robot.pdp.getCurrent(Constants.kPdpChannelDriveLeft3));
+        SmartDashboard.putNumber("Drive right 7 current", Robot.pdp.getCurrent(Constants.kPdpChannelDriveRight7));
+        SmartDashboard.putNumber("Drive right 8 current", Robot.pdp.getCurrent(Constants.kPdpChannelDriveRight8));
+        SmartDashboard.putNumber("Drive right 9 current", Robot.pdp.getCurrent(Constants.kPdpChannelDriveRight9));
     }
 
     @Override

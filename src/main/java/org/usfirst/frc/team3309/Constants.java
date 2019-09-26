@@ -138,6 +138,16 @@ public class Constants {
     public static final double kDriveWheelTrackWidthInches = 24.9;
     public static final double kTrackScrubFactor = 1.0;  // Tune me!
 
+    // PDP channels
+    public static final int kPdpChannelDriveLeft1 = 0;
+    public static final int kPdpChannelDriveLeft2 = 1;
+    public static final int kPdpChannelDriveLeft3 = 2;
+    public static final int kPdpChannelDriveRight7 = 15;
+    public static final int kPdpChannelDriveRight8 = 14;
+    public static final int kPdpChannelDriveRight9 = 13;
+    public static final int kPdpChannelLift10 = 12;
+    public static final int kPdpChannelLift6 = 4;
+
     /* DRIVEBASE TUNING CONSTANTS */
     public static final double DRIVE_P = 0.019;
     public static final double DRIVE_D = 0.0006;
