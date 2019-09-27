@@ -62,9 +62,9 @@ public class PIDController {
     }
 
     public void readDashboard() {
-        kP = SmartDashboard.getNumber(name + " kP", 0.0);
-        kI = SmartDashboard.getNumber(name + " kI", 0.0);
-        kD = SmartDashboard.getNumber(name + " kD", 0.0);
+        kP = SmartDashboard.getNumber(name + " kP", kP);
+        kI = SmartDashboard.getNumber(name + " kI", kI);
+        kD = SmartDashboard.getNumber(name + " kD", kD);
     }
 
 }

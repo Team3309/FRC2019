@@ -13,22 +13,28 @@ public class VisionHelper {
 
     private static Limelight limelight = Vision.panelLimelight;
 
-    private static PIDController turnController = new PIDController("turn", 0.03, 0.000, 0.0);
+    private static PIDController turnController = new PIDController("turn", 0.05, 0.000, 0.0);
 
     private static PolynomialRegression linearRegression;
 
     private static Timer timer = new Timer();
 
-    private static final boolean isDashboard = false;
+    private static final boolean isDashboard = true;
     private static Limelight.CamMode curCamMode = Limelight.CamMode.DriverCamera;
     private static int curPipeline = 0;
     private static Limelight.LEDMode curLed;
-    private static boolean timerStarted;
     private static boolean isStopCrawl;
+    private static boolean visionOn = false;
 
     static {
-//        turnController.outputToDashboard();
-        VisionHelper.turnOff();
+        if (isDashboard) {
+            // tuning/debug mode
+            turnController.outputToDashboard();
+            enableVision();
+        }
+        else {
+            disableVision();
+        }
         setCamMode(Limelight.CamMode.VisionProcessor);
 
         // points for line to vision target (target area, motor power)
@@ -41,7 +47,6 @@ public class VisionHelper {
     }
 
     public static DriveSignal getDriveSignal() {
-        init();
         if (limelight.getArea() < 15.0) {
             double linearPower = getThrottleCorrection();
 
@@ -60,31 +65,38 @@ public class VisionHelper {
         return DriveSignal.NEUTRAL;
     }
 
-    private static void init() {
-        turnController.reset();
-        if (isDashboard) {
-            turnController.readDashboard();
-        }
-    }
-
     public static void turnOn() {
-        init();
-        setPipeline(0);
-        setLed(Limelight.LEDMode.On);
-        if (!timerStarted) {
-            timer.start();
-            timerStarted = true;
+        if (!visionOn) {
+            enableVision();
         }
     }
 
     public static void turnOff() {
-        setLed(Limelight.LEDMode.Off);
-        setPipeline(1);
-        if (timerStarted) {
-            timer.stop();
-            timerStarted = false;
+        if (visionOn) {
+            disableVision();
         }
+    }
+
+    private static void enableVision() {
+        visionOn = true;
+        turnController.reset();
+        if (isDashboard) {
+            turnController.readDashboard();
+        }
+        setPipeline(0);
+        setLed(Limelight.LEDMode.On);
+        timer.reset();
+        timer.start();
+    }
+
+    private static void disableVision(){
+        visionOn = false;
+        timer.stop();
         isStopCrawl = false;
+        if (!isDashboard) {
+            setLed(Limelight.LEDMode.Off);
+            setPipeline(1);
+        }
     }
 
     public static double getThrottleCorrection() {

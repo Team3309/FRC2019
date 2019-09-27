@@ -142,7 +142,8 @@ public class Constants {
     public static final double kPanelLimelightInchesX = -4.5;  // lateral off-center
     public static final double kPanelLimelightPlacementInchesZ = 26.5;  // behind placement point
     public static final double kPanelLimelightRotationCenterInchesZ = 4.0;  // behind bot rotational center
-    
+    public static final double kPanelHolderBiasInchesX = -0.85;
+
     // PDP channels
     public static final int kPdpChannelDriveLeft1 = 0;
     public static final int kPdpChannelDriveLeft2 = 1;

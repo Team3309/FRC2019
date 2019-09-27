@@ -57,8 +57,6 @@ public class Robot extends CommandV2Robot {
 
         pdp = new PowerDistributionPanel();
 
-        VisionHelper.turnOff();
-
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
         camera.setFPS(10);
         camera.setResolution(320/2, 240/2);
@@ -161,9 +159,8 @@ public class Robot extends CommandV2Robot {
             cargoIntake.outputToDashboard();
             cargoHolder.outputToDashboard();
             climber.outputToDashboard();
-            // Vision.panelLimelight.outputToDashboard();
+            Vision.panelLimelight.outputToDashboard();
         }
-        Vision.panelLimelight.outputToDashboard();
     }
 
     public static boolean hasCargoInIntakeZone() {

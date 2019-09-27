@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team3309.Constants;
 
 import static java.lang.Math.*;
 
@@ -151,7 +152,8 @@ public class Limelight {
     private double getRaw3DxInches() { return lastPos[0]; }
     private double getRaw3DzInches() { return lastPos[2]; }
     private double getRaw3DyDegrees() { return lastPos[4]; }
-    private double getAdj3DxInches() { return getRaw3DxInches() + xOffsetInches; }
+    private double getAdj3DxInches() { return getRaw3DxInches() +
+            xOffsetInches + Constants.kPanelHolderBiasInchesX; }
     private double getPlacement3DzInches() { return getRaw3DzInches() + zPlacementOffsetInches; }
     private double getRotation3DzInches() { return getRaw3DzInches() + zRotationOffsetInches; }
 
