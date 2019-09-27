@@ -76,20 +76,33 @@ public class Elevate extends Command {
                     carriageGoalPosition = Elevator.CarriagePosition.PanelClearingPanelIntake;
                     break;
             }
+            Robot.elevator.setPosition(carriageGoalPosition.getCarriagePercentage());
         }
     }
 
     @Override
-    protected void execute() {
-        double goalPosition = carriageGoalPosition.getCarriagePercentage();
-        Robot.elevator.setPosition(goalPosition);
-        SmartDashboard.putBoolean("Within tolerance", isFinished());
-    }
-
-    @Override
     protected boolean isFinished() {
-        return Util.withinTolerance(Robot.elevator.getCarriagePercentage(),
-                carriageGoalPosition.getCarriagePercentage(), 0.06);
+
+        // Absolute carriage positioning error is the same for all raised positions.
+        // There is no need to use a percentage tolerance.
+        // Positioning error is less when returning to the bottom.
+
+        double tolerance = 0.02;  // for raised positions, reduce if elevator is better tuned
+
+        if (carriageGoalPosition.getCarriagePercentage() == 0.0) {
+            // Get closer to the bottom before cutting power.
+            // Could also use the limit switch, but there is some question as to its reliability.
+            tolerance = 0.006;
+        }
+        boolean withinTolerance = Math.abs(Robot.elevator.getCarriagePercentage() -
+                carriageGoalPosition.getCarriagePercentage()) <= tolerance;
+        if (withinTolerance && carriageGoalPosition.getCarriagePercentage() == 0.0) {
+            // Don't overheat the motors holding the elevator 1mm above the home position while we
+            // wait for the PID controller i value to finally hit zero.
+            Robot.elevator.setPower(0.0);
+        }
+        // SmartDashboard.putBoolean("Within tolerance", withinTolerance);
+        return (withinTolerance);
     }
 
     public enum Level {
