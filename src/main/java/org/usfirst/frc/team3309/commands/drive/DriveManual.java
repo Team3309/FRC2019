@@ -21,7 +21,6 @@ public class DriveManual extends Command {
 
     private boolean placingPanel = false;
     private boolean loadingPanel = false;
-    private boolean extendedForPanel;
     private Command command;
 
     public DriveManual() {
@@ -73,21 +72,19 @@ public class DriveManual extends Command {
                     DriverStation.reportError("Intaking panel from feeder station", false);
                     command = IntakePanelFromStationKt.IntakePanelFromStation();
                     command.start();
-                    extendedForPanel = true;
                 }
             }
         } else if (OI.getOperatorController().getRightStick().get()) {
             VisionHelper.turnOn();
         } else {
             VisionHelper.turnOff();
-            placingPanel = false;
-            loadingPanel = false;
-            if (extendedForPanel) {
+            if (loadingPanel) {
                 command.cancel();
                 RetractFingerFromFeederStationKt.RetractFingerFromFeederStation().start();
                 DriverStation.reportError("Retraced finger from feeder station", false);
-                extendedForPanel = false;
             }
+            placingPanel = false;
+            loadingPanel = false;
         }
 
         double leftPower = signal.getLeft();

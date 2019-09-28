@@ -28,6 +28,16 @@ object OI {
     var rightJoystick: InputThrustmaster = InputThrustmaster(1, InputThrustmaster.Hand.Right)
 
     @JvmStatic
+    var rightJoystickLeftClusterGroup = Trigger.on {
+        rightJoystick.leftCluster.bottomCenter()
+                || rightJoystick.leftCluster.bottomLeft()
+                || rightJoystick.leftCluster.bottomRight()
+                || rightJoystick.leftCluster.topCenter()
+                || rightJoystick.leftCluster.topLeft()
+                || rightJoystick.leftCluster.topRight()
+    }
+
+    @JvmStatic
     var rightJoystickRightClusterGroup = Trigger.on {
         rightJoystick.rightCluster.bottomCenter()
                 || rightJoystick.rightCluster.bottomLeft()

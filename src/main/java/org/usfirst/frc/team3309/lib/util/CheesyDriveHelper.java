@@ -19,8 +19,8 @@ public class CheesyDriveHelper {
 
     private static final double kHighNegInertiaScalar = 4.0;
 
-    private static final double kHighSensitivity = 1.7;
-    private static final double kLowSensitiity = 1.5;
+    private static final double kHighSensitivity = 1.2;
+    private static final double kLowSensitivity = 1.2;
 
     private static final double kLowNegInertiaThreshold = 0.65;
     private static final double kLowNegInertiaTurnScalar = 1.5;
@@ -83,7 +83,7 @@ public class CheesyDriveHelper {
                     negInertiaScalar = kLowNegInertiaCloseScalar;
                 }
             }
-            sensitivity = kLowSensitiity;
+            sensitivity = kLowSensitivity;
         }
         double negInertiaPower = negInertia * negInertiaScalar;
         mNegInertiaAccumlator += negInertiaPower;
