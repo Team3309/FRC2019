@@ -55,13 +55,15 @@ public class Robot extends CommandV2Robot {
         climber = new Climber();
         vision = new Vision();
 
-        pdp = new PowerDistributionPanel();
+        UsbCamera cam0 = CameraServer.getInstance().startAutomaticCapture(0);
+        cam0.setFPS(10);
+        cam0.setResolution(320, 240);
+        cam0.setPixelFormat(VideoMode.PixelFormat.kYUYV);
 
-        UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
-        camera.setFPS(10);
-        camera.setResolution(320/2, 240/2);
-        camera.setPixelFormat(VideoMode.PixelFormat.kYUYV);
-
+        UsbCamera cam1 = CameraServer.getInstance().startAutomaticCapture(1);
+        cam1.setFPS(10);
+        cam1.setResolution(320/2, 240/2);
+        cam1.setPixelFormat(VideoMode.PixelFormat.kYUYV);
         AutoModeExecutor.displayAutos();
 
         RobotLogger.INSTANCE.setCurrentLogLevel(RobotLogger.LogLevel.ERR);
