@@ -76,8 +76,12 @@ public class Elevate extends Command {
                     carriageGoalPosition = Elevator.CarriagePosition.PanelClearingPanelIntake;
                     break;
             }
-            Robot.elevator.setPosition(carriageGoalPosition.getCarriagePercentage());
         }
+    }
+
+    @Override
+    protected void execute() {
+        Robot.elevator.setPosition(carriageGoalPosition.getCarriagePercentage());
     }
 
     @Override
@@ -96,13 +100,17 @@ public class Elevate extends Command {
         }
         boolean withinTolerance = Math.abs(Robot.elevator.getCarriagePercentage() -
                 carriageGoalPosition.getCarriagePercentage()) <= tolerance;
-        if (withinTolerance && carriageGoalPosition.getCarriagePercentage() == 0.0) {
+
+        return (withinTolerance);
+    }
+
+    @Override
+    protected void end() {
+        if (carriageGoalPosition.getCarriagePercentage() == 0.0) {
             // Don't overheat the motors holding the elevator 1mm above the home position while we
             // wait for the PID controller i value to finally hit zero.
             Robot.elevator.setPower(0.0);
         }
-        // SmartDashboard.putBoolean("Within tolerance", withinTolerance);
-        return (withinTolerance);
     }
 
     public enum Level {

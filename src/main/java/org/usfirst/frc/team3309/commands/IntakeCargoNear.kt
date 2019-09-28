@@ -21,7 +21,7 @@ fun IntakeCargoNear(): Command {
             +CargoIntakeActuate(CargoIntake.CargoIntakePosition.Extended)
             sequential {
                 +Elevate(Elevate.Level.Home)
-                +LowerElevatorToLimitSwitch()
+                // +LowerElevatorToLimitSwitch()  // limit switch broken?
             }
             sequential {
                 +WaitUntilCargoIsIn()

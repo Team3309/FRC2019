@@ -63,7 +63,6 @@ public class PanelHolder extends Subsystem {
                 if (manualPower > 0) {
                     this.power = 0.48;
                 } else {
-                    // -0.28
                     this.power = (Constants.PANEL_HOLDER_HOLDING_POWER);
                 }
             }
