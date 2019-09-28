@@ -13,6 +13,10 @@ public class VisionHelper {
 
     private static Limelight limelight = Vision.panelLimelight;
 
+    private static final boolean isDashboard = false;
+    private static final boolean forceVisionOn = true;
+    private static boolean loadStation3D = false;
+
     private static final double farTurnP = 0.028;
     private static final double farTurnI = 0.0;
     private static final double farTurnD = 0.0;
@@ -29,15 +33,12 @@ public class VisionHelper {
 
     private static Timer timer = new Timer();
 
-    private static final boolean isDashboard = false;
-    private static final boolean forceVisionOn = true;
     private static PIDController turnController = farTurnController;
     private static Limelight.CamMode curCamMode = Limelight.CamMode.DriverCamera;
-    private static int curPipeline = 0;
+    private static int curPipeline = -1;
     private static Limelight.LEDMode curLed;
     private static boolean isStopCrawl;
     private static boolean visionOn = false;
-    private static boolean loadStation3D = true;
 
     static {
         if (isDashboard) {
@@ -88,7 +89,6 @@ public class VisionHelper {
         if (!visionOn) {
             enableVision();
         }
-        turnController = farTurnController;
     }
 
     public static void turnOff() {
@@ -99,13 +99,14 @@ public class VisionHelper {
 
     private static void enableVision() {
         visionOn = true;
+        turnController = farTurnController;
         farTurnController.reset();
         closeTurnController.reset();
         if (isDashboard) {
             farTurnController.readDashboard();
             closeTurnController.readDashboard();
         }
-        setPipeline(0);
+        setPipeline(Constants.kVisionCenterPipeline);
         setLed(Limelight.LEDMode.On);
         timer.reset();
         timer.start();
@@ -117,7 +118,7 @@ public class VisionHelper {
         isStopCrawl = false;
         if (!forceVisionOn) {
             setLed(Limelight.LEDMode.Off);
-            setPipeline(1);
+            setPipeline(Constants.kDriverPipeline);
         }
     }
 

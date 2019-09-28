@@ -129,6 +129,12 @@ public class Constants {
     public static final int CLIMBER_TALON_ID = 12;
     public static final int CLIMBER_LATCHING_SOLENOID_ID = 5;
 
+    // Pipeline mappings
+    public static final int kVisionCenterPipeline = 0;
+    public static final int kDriverPipeline = 1;
+    public static final int kVisionLeftPipeline = 2;
+    public static final int kVisionRightPipeline = 3;
+
     /**
      * ROBOT PHYSICAL CONSTANTS
      */
