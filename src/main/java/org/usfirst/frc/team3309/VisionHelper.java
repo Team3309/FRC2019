@@ -30,6 +30,7 @@ public class VisionHelper {
     private static PIDController closeTurnController = new PIDController(closeTurnP, closeTurnI, closeTurnD);
 
     private static PolynomialRegression linearRegression;
+    private static boolean driverOverrideActive = false;
 
     private static Timer timer = new Timer();
 
@@ -120,6 +121,20 @@ public class VisionHelper {
             setLed(Limelight.LEDMode.Off);
             setPipeline(Constants.kDriverPipeline);
         }
+    }
+
+    public static void driverOverride(boolean mode) {
+        if (mode && !driverOverrideActive) {
+            setLed(Limelight.LEDMode.Off);
+            setPipeline(Constants.kDriverPipeline);
+            driverOverrideActive = true;
+        }
+        else if (!mode && driverOverrideActive) {
+            setPipeline(Constants.kVisionCenterPipeline);
+            setLed(Limelight.LEDMode.On);
+            driverOverrideActive = false;
+        }
+
     }
 
     public static double getThrottleCorrection() {

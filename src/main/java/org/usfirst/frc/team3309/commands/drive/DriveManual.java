@@ -19,7 +19,8 @@ public class DriveManual extends Command {
 
     private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
 
-    private boolean hadPanel;
+    private boolean placingPanel = false;
+    private boolean loadingPanel = false;
     private boolean extendedForPanel;
     private Command command;
 
@@ -37,18 +38,21 @@ public class DriveManual extends Command {
         boolean isHighGear = Robot.drive.inHighGear();
         boolean isQuickTurn = OI.getRightJoystick().getTrigger().get();
         boolean isAutoTurn = OI.getLeftJoystickLeftClusterGroup().get();
+        boolean driverPipelineOverride = OI.getLeftJoystickRightClusterGroup().get();
 
         DriveSignal signal = cheesyDrive.update(throttle, turn, isQuickTurn, isHighGear);
 
         VisionHelper.outputToDashboard();
+
+        VisionHelper.driverOverride(driverPipelineOverride);
 
         if (isAutoTurn) {
             VisionHelper.turnOn();
             if (VisionHelper.hasTargets()) {
                 signal = VisionHelper.getDriveSignal();
                 double area = Robot.vision.getTargetArea();
-                if (Robot.panelHolder.hasPanel()) {
-                    hadPanel = true;
+                if (Robot.panelHolder.hasPanel() && !loadingPanel) {
+                    placingPanel = true;
                     PanelHolder.ExtendedPosition currentPosition = Robot.panelHolder.getExtendedPosition();
 
                     // extend in preparation to go on the rocket
@@ -63,21 +67,21 @@ public class DriveManual extends Command {
                         PlacePanelKt.PlacePanel().start();
                         DriverStation.reportError("Extended to place panel automatically", false);
                     }
-                } else {
+                } else if (Util.within(area, 0.1, 20.0) && !placingPanel) {
                     // extend to check for panel for autograb
-                    if (Util.within(area, 0.1, 20.0) && !hadPanel) {
-                        DriverStation.reportError("Intaking panel from feeder station", false);
-                        command = IntakePanelFromStationKt.IntakePanelFromStation();
-                        command.start();
-                        extendedForPanel = true;
-                    }
+                    loadingPanel = true;
+                    DriverStation.reportError("Intaking panel from feeder station", false);
+                    command = IntakePanelFromStationKt.IntakePanelFromStation();
+                    command.start();
+                    extendedForPanel = true;
                 }
             }
         } else if (OI.getOperatorController().getRightStick().get()) {
             VisionHelper.turnOn();
         } else {
             VisionHelper.turnOff();
-            hadPanel = false;
+            placingPanel = false;
+            loadingPanel = false;
             if (extendedForPanel) {
                 command.cancel();
                 RetractFingerFromFeederStationKt.RetractFingerFromFeederStation().start();
