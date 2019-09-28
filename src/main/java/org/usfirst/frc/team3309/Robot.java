@@ -54,6 +54,7 @@ public class Robot extends CommandV2Robot {
         panelHolder = new PanelHolder();
         climber = new Climber();
         vision = new Vision();
+        pdp = new PowerDistributionPanel();
 
         UsbCamera cam0 = CameraServer.getInstance().startAutomaticCapture(0);
         cam0.setFPS(10);
