@@ -13,23 +13,39 @@ public class VisionHelper {
 
     private static Limelight limelight = Vision.panelLimelight;
 
-    private static PIDController turnController = new PIDController("turn", 0.05, 0.000, 0.0);
+    private static final double farTurnP = 0.028;
+    private static final double farTurnI = 0.0;
+    private static final double farTurnD = 0.0;
+    private static final double closeTurnP = 0.05;
+    private static final double closeTurnI = 0.0;
+    private static final double closeTurnD = 0.0;
+
+    // Use smaller P when far away to avoid overshoot from potentially large initial correction.
+    // Use larger P when closer to provide enough angular power for fine corrections.
+    private static PIDController farTurnController = new PIDController(farTurnP, farTurnI, farTurnD);
+    private static PIDController closeTurnController = new PIDController(closeTurnP, closeTurnI, closeTurnD);
 
     private static PolynomialRegression linearRegression;
 
     private static Timer timer = new Timer();
 
-    private static final boolean isDashboard = true;
+    private static final boolean isDashboard = false;
+    private static final boolean forceVisionOn = true;
+    private static PIDController turnController = farTurnController;
     private static Limelight.CamMode curCamMode = Limelight.CamMode.DriverCamera;
     private static int curPipeline = 0;
     private static Limelight.LEDMode curLed;
     private static boolean isStopCrawl;
     private static boolean visionOn = false;
+    private static boolean loadStation3D = true;
 
     static {
         if (isDashboard) {
-            // tuning/debug mode
-            turnController.outputToDashboard();
+            // tuning mode
+            farTurnController.outputToDashboard();
+            closeTurnController.outputToDashboard();
+        }
+        if (forceVisionOn) {
             enableVision();
         }
         else {
@@ -55,6 +71,9 @@ public class VisionHelper {
             } else if (isStopCrawl) {
                 linearPower = 0.0;
             }
+            if (limelight.getArea() >= 0.03) {
+                turnController = closeTurnController;
+            }
             double angularPower = getTurnCorrection();
 //            SmartDashboard.putNumber("Throttle vision power", linearPower);
 //            SmartDashboard.putNumber("Turn vision power", angularPower);
@@ -69,6 +88,7 @@ public class VisionHelper {
         if (!visionOn) {
             enableVision();
         }
+        turnController = farTurnController;
     }
 
     public static void turnOff() {
@@ -79,9 +99,11 @@ public class VisionHelper {
 
     private static void enableVision() {
         visionOn = true;
-        turnController.reset();
+        farTurnController.reset();
+        closeTurnController.reset();
         if (isDashboard) {
-            turnController.readDashboard();
+            farTurnController.readDashboard();
+            closeTurnController.readDashboard();
         }
         setPipeline(0);
         setLed(Limelight.LEDMode.On);
@@ -93,7 +115,7 @@ public class VisionHelper {
         visionOn = false;
         timer.stop();
         isStopCrawl = false;
-        if (!isDashboard) {
+        if (!forceVisionOn) {
             setLed(Limelight.LEDMode.Off);
             setPipeline(1);
         }
@@ -110,12 +132,13 @@ public class VisionHelper {
 
         // don't use 3D vision when picking up at loading station
         // because panel blocks bottom of vision tape
-        if (limelight.has3D() && Robot.panelHolder.hasPanel()) {
+        if (limelight.has3D() && (Robot.panelHolder.hasPanel() || loadStation3D)) {
             turnError = limelight.rotationCenterDegrees3D();
         }
         else {
             turnError = limelight.getTx();
         }
+
         return turnController.update(turnError, 0.0);
     }
 
