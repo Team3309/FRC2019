@@ -39,44 +39,42 @@ public class PanelHolder extends Subsystem {
         setDefaultCommand(new PanelHolderManual());
     }
 
-    public void setPower(double power) {
+    public void setPower(double newPower) {
 
-        double manualPower = power;
-
-        if (!(Math.abs(manualPower) > 0)) {
+        if (newPower == 0) {
             currentLimitReached = false;
         }
 
-        if (!(Math.abs(manualPower) > 0) || currentLimitReached) {
+        if (newPower == 0 || currentLimitReached) {
             if (hasPanel()) {
                 if (!hadPanel) {
                     hadPanel = true;
                     holdTimer.reset();
                     holdTimer.start();
-                    this.power = -0.6;
+                    power = -0.6;
                 } else if (holdTimer.get() > 0.25) {
-                    this.power = Constants.PANEL_HOLDER_HOLDING_POWER;
+                    power = Constants.PANEL_HOLDER_HOLDING_POWER;
                     holdTimer.stop();
                 }
             } else {
                 hadPanel = false;
-                if (manualPower > 0) {
-                    this.power = 0.48;
+                if (newPower > 0) {
+                    power = 0.48;
                 } else {
-                    this.power = (Constants.PANEL_HOLDER_HOLDING_POWER);
+                    power = (Constants.PANEL_HOLDER_HOLDING_POWER);
                 }
             }
         } else {
             if (Robot.panelHolder.getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT
-                    && manualPower < 0.0) {
+                    && newPower < 0.0) {
                 currentLimitReached = true;
                 DriverStation.reportError("Panel holder current limit reached", false);
             } else {
-                this.power = manualPower;
+                power = newPower;
             }
             hadPanel = false;
         }
-        victor.set(ControlMode.PercentOutput, this.power);
+        victor.set(ControlMode.PercentOutput, power);
     }
 
     /*

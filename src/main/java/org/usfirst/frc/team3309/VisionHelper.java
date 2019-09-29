@@ -23,6 +23,7 @@ public class VisionHelper {
     private static final double closeTurnP = 0.045;
     private static final double closeTurnI = 0.0;
     private static final double closeTurnD = 0.0;
+    private static final double kMaxVisionAngularPower = 0.2;
 
     // Use smaller P when far away to avoid overshoot from potentially large initial correction.
     // Use larger P when closer to provide enough angular power for fine corrections.
@@ -155,7 +156,8 @@ public class VisionHelper {
             turnError = limelight.getTx();
         }
 
-        return turnController.update(turnError, 0.0);
+        return Util.clamp(turnController.update(turnError, 0.0),
+                -kMaxVisionAngularPower, kMaxVisionAngularPower);
     }
 
     public static double getSkew() {

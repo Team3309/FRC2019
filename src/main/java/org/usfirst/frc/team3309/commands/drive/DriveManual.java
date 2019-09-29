@@ -41,8 +41,6 @@ public class DriveManual extends Command {
 
         DriveSignal signal = cheesyDrive.update(throttle, turn, isQuickTurn, isHighGear);
 
-        VisionHelper.outputToDashboard();
-
         VisionHelper.driverOverride(driverPipelineOverride);
 
         if (isAutoTurn) {
@@ -54,24 +52,25 @@ public class DriveManual extends Command {
                     placingPanel = true;
                     PanelHolder.ExtendedPosition currentPosition = Robot.panelHolder.getExtendedPosition();
 
-                    // extend in preparation to go on the rocket
                     if (Math.abs(area) > 7.5 &&
                             currentPosition == PanelHolder.ExtendedPosition.ExtendedOutwards) {
-                        RemoveFingerKt.RemoveFinger().start();
-                        DriverStation.reportError("Removed finger automatically", false);
-                        VisionHelper.stopCrawl();
                         // place panel on rocket after having extended
+                        RemoveFingerKt.RemoveFinger().start();
+                        VisionHelper.stopCrawl();
                     } else if (Util.within(area, 0.05, 7.0) &&
                             currentPosition == PanelHolder.ExtendedPosition.RetractedInwards) {
+                        // extend in preparation to go on the rocket
                         PlacePanelKt.PlacePanel().start();
-                        DriverStation.reportError("Extended to place panel automatically", false);
                     }
                 } else if (Util.within(area, 0.1, 20.0) && !placingPanel) {
                     // extend to check for panel for autograb
                     loadingPanel = true;
-                    DriverStation.reportError("Intaking panel from feeder station", false);
                     command = IntakePanelFromStationKt.IntakePanelFromStation();
-                    command.start();
+                    // don't restart the command to prevent cycling the pneumatic valve
+                    if (!command.isRunning()) {
+                        command.start();
+                        // DriverStation.reportError("Intaking panel from feeder station", false);
+                    }
                 }
             }
         } else if (OI.getOperatorController().getRightStick().get()) {
@@ -81,7 +80,7 @@ public class DriveManual extends Command {
             if (loadingPanel) {
                 command.cancel();
                 RetractFingerFromFeederStationKt.RetractFingerFromFeederStation().start();
-                DriverStation.reportError("Retraced finger from feeder station", false);
+                // DriverStation.reportError("Retraced finger from feeder station", false);
             }
             placingPanel = false;
             loadingPanel = false;

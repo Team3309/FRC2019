@@ -163,13 +163,7 @@ public class Limelight {
         return sqrt(getAdj3DxInches() * getAdj3DxInches() + getPlacement3DzInches() * getPlacement3DzInches());
     }
 
-    // Angle from the placement point to the target (negative value means the bot needs to turn to the left)
-    public double placementDegrees3D()
-    {
-        return getRaw3DyDegrees() - toDegrees(atan2(getAdj3DxInches(), -getPlacement3DzInches()));
-    }
-
-    // Angle from the placement point to the target (negative value means the bot needs to turn to the left)
+    // Angle from robot rotational center to the target (negative value means the bot needs to turn to the left)
     public double rotationCenterDegrees3D()
     {
         return getRaw3DyDegrees() - toDegrees(atan2(getAdj3DxInches(), -getRotation3DzInches()));
@@ -180,8 +174,6 @@ public class Limelight {
         if (has3D())
         {
             SmartDashboard.putNumber(limelightName + " targetInches3D", targetInches3D());
-            SmartDashboard.putNumber(limelightName +
-                    " placementDegrees3D", placementDegrees3D());
             SmartDashboard.putNumber(limelightName +
                     " rotationCenterDegrees3D", rotationCenterDegrees3D());        }
     }
