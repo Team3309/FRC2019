@@ -111,13 +111,6 @@ object OI {
         operatorPanelIntakeButton.whenPressed(IntakePanelFromStation())
         operatorPanelIntakeButton.whenReleased(RetractFingerFromFeederStation())
 
-        operatorController.y.whenPressed(IntakePanelFromGround())
-        operatorController.y.whenReleased(Command.lambda {
-            if (!Robot.panelIntake.hasPanel()) {
-               PanelIntakeStopRollersAndBringUp().start()
-            }
-        })
-
         operatorCargoIntakeButton.whenPressed(IntakeCargoNear())
         operatorCargoIntakeButton.whenReleased(Command.lambda {
             if (!Robot.cargoHolder.hasCargo()) {
