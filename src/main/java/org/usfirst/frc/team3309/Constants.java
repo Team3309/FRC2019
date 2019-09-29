@@ -123,7 +123,7 @@ public class Constants {
     public static final double PANEL_HOLDER_MAX_CURRENT = 25;
     public static final double PANEL_HOLDER_HOLDING_POWER = -0.20;
     public static final double PANEL_HOLDER_INTAKE_POWER = -0.75;
-    public static final double PANEL_HOLDER_EJECT_POWER = 0.75;
+    public static final double PANEL_HOLDER_EJECT_POWER = 0.65;
 
     /**
      * Climber mappings
