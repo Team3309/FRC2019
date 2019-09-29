@@ -23,7 +23,9 @@ public class VisionHelper {
     private static final double closeTurnP = 0.05;
     private static final double closeTurnI = 0.0;
     private static final double closeTurnD = 0.0;
-    private static final double kMaxVisionAngularPower = 0.35;
+    private static final double kFarMaxVisionAngularPower = 0.2;
+    private static final double kCloseMaxVisionAngularPower = 0.35;
+    private static double maxVisionAngularPower = kFarMaxVisionAngularPower;
 
     // Use smaller P when far away to avoid overshoot from potentially large initial correction.
     // Use larger P when closer to provide enough angular power for fine corrections.
@@ -76,6 +78,7 @@ public class VisionHelper {
             }
             if (limelight.getArea() >= 0.04) {
                 turnController = closeTurnController;
+                maxVisionAngularPower = kCloseMaxVisionAngularPower;
             }
             double angularPower = getTurnCorrection();
 //            SmartDashboard.putNumber("Throttle vision power", linearPower);
@@ -102,6 +105,7 @@ public class VisionHelper {
     private static void enableVision() {
         visionOn = true;
         turnController = farTurnController;
+        maxVisionAngularPower = kFarMaxVisionAngularPower;
         farTurnController.reset();
         closeTurnController.reset();
         if (isDashboard) {
@@ -157,7 +161,7 @@ public class VisionHelper {
         }
 
         return Util.clamp(turnController.update(turnError, 0.0),
-                -kMaxVisionAngularPower, kMaxVisionAngularPower);
+                -maxVisionAngularPower, maxVisionAngularPower);
     }
 
     public static double getSkew() {
