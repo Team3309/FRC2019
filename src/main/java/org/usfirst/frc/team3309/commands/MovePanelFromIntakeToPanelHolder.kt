@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3309.commands
 
+import org.usfirst.frc.team3309.Constants
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderActuate
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderSetRollers
 import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeActuate
@@ -16,12 +17,12 @@ fun MovePanelFromIntakeToPanelHolder(): Command {
             +WaitCommand(0.1)
             parallel {
                 +PanelIntakeActuate(PanelIntake.PanelIntakePosition.Up)
-                +PanelHolderSetRollers(-1.0, 0.7)
+                +PanelHolderSetRollers(Constants.PANEL_HOLDER_INTAKE_POWER, 0.7)
             }
-            +PanelIntakeSetRollers(-1.0)
+            +PanelIntakeSetRollers(Constants.PANEL_HOLDER_INTAKE_POWER)
             +WaitUntilPanelIsInPanelHolder()
 //            +WaitCommand(0.05)
-            +PanelIntakeSetRollers(1.0)
+            +PanelIntakeSetRollers(Constants.PANEL_HOLDER_EJECT_POWER)
 
             +Elevate(Elevator.CarriagePosition.PanelClearingPanelIntake)
             +PanelHolderActuate(PanelHolder.PanelHolderPosition.TelescopeForwards)

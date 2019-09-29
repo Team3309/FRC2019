@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3309.commands
 
+import org.usfirst.frc.team3309.Constants
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderActuate
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderManual
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderSetRollers
@@ -13,7 +14,7 @@ fun RemoveFinger(): Command {
         sequential {
             +WaitCommand(0.25)
             parallel {
-                +PanelHolderSetRollersInstantly(1.0)
+                +PanelHolderSetRollersInstantly(Constants.PANEL_HOLDER_EJECT_POWER)
                 sequential {
                     +WaitCommand(0.25)
                     +PanelHolderActuate(PanelHolder.PanelHolderPosition.TelescopeBack)

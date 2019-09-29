@@ -17,10 +17,10 @@ public class VisionHelper {
     private static final boolean forceVisionOn = true;
     private static boolean loadStation3D = false;
 
-    private static final double farTurnP = 0.028;
+    private static final double farTurnP = 0.02;
     private static final double farTurnI = 0.0;
     private static final double farTurnD = 0.0;
-    private static final double closeTurnP = 0.05;
+    private static final double closeTurnP = 0.045;
     private static final double closeTurnI = 0.0;
     private static final double closeTurnD = 0.0;
 
@@ -73,7 +73,7 @@ public class VisionHelper {
             } else if (isStopCrawl) {
                 linearPower = 0.0;
             }
-            if (limelight.getArea() >= 0.03) {
+            if (limelight.getArea() >= 0.04) {
                 turnController = closeTurnController;
             }
             double angularPower = getTurnCorrection();

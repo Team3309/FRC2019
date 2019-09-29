@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3309.commands
 
+import org.usfirst.frc.team3309.Constants
 import org.usfirst.frc.team3309.Robot
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderActuate
@@ -15,7 +16,7 @@ fun IntakePanelFromStation(): Command {
     return group {
         parallel {
             +PanelHolderActuate(PanelHolder.PanelHolderPosition.TelescopeForwards)
-            +PanelHolderSetRollers(-1.0)
+            +PanelHolderSetRollers(Constants.PANEL_HOLDER_INTAKE_POWER)
 
             sequential {
                 //+LowerElevatorToLimitSwitch()
