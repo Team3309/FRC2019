@@ -95,7 +95,7 @@ public class Constants {
     public static final int CARGO_INTAKE_SOLENOID_ID = 6;
 
     public static final double CARGO_INTAKE_ROLLERS_MIN_POWER = 0.15;
-    public static final double CARGO_INTAKE_ROLLERS_MAX_POWER = 0.4;
+    public static final double CARGO_INTAKE_ROLLERS_MAX_POWER = 0.45;
 
     /**
      * Panel intake mappings
