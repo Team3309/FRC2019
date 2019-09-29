@@ -95,6 +95,7 @@ public class Constants {
     public static final int CARGO_INTAKE_SOLENOID_ID = 6;
 
     public static final double CARGO_INTAKE_ROLLERS_MIN_POWER = 0.15;
+    public static final double CARGO_INTAKE_ROLLERS_MAX_POWER = 0.4;
 
     /**
      * Panel intake mappings
@@ -150,7 +151,7 @@ public class Constants {
     public static final double kPanelLimelightInchesX = -4.5;  // lateral off-center
     public static final double kPanelLimelightPlacementInchesZ = 26.5;  // behind placement point
     public static final double kPanelLimelightRotationCenterInchesZ = 4.0;  // behind bot rotational center
-    public static final double kPanelHolderBiasInchesX = 0.85;  // negative value biases placement to the right
+    public static final double kPanelHolderBiasInchesX = 0.35;  // negative value biases placement to the right
 
     // PDP channels
     public static final int kPdpChannelDriveLeft1 = 0;

@@ -18,6 +18,7 @@ public class CargoIntakeManual extends Command {
         double powerIn = OI.getOperatorController().getRt().axis();
 
         double power = Util.signedMax(powerOut, powerIn, Constants.CARGO_INTAKE_ROLLERS_MIN_POWER);
+        power = Math.min(power, Constants.CARGO_INTAKE_ROLLERS_MAX_POWER);
 
        if (!OI.getOperatorCargoIntakeButton().get()) {
             power = 0.0;
