@@ -93,6 +93,15 @@ public class DriveManual extends Command {
         double leftPower = signal.getLeft();
         double rightPower = signal.getRight();
 
+        if (Robot.isGuestDriver()) {
+            leftPower *= 0.2;
+            rightPower *= 0.2;
+        }
+        else if (Robot.isDemo()) {
+            leftPower *= 0.4;
+            rightPower *= 0.4;
+        }
+
         Robot.drive.setLeftRight(ControlMode.PercentOutput, leftPower, rightPower);
     }
 

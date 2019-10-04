@@ -128,6 +128,11 @@ public class VisionHelper {
         }
     }
 
+    // for demos
+    public static void forceVisionOff() {
+        setLed(Limelight.LEDMode.Off);
+        setPipeline(Constants.kDriverPipeline);
+    }
     public static void driverOverride(boolean mode) {
         if (mode && !driverOverrideActive) {
             setLed(Limelight.LEDMode.Off);

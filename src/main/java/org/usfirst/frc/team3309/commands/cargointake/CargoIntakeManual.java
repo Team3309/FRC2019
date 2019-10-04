@@ -25,7 +25,9 @@ public class CargoIntakeManual extends Command {
             power = 0.0;
         }
 
-        Robot.cargoIntake.setPower(power);
+        if (!Robot.isGuestDriver()) {
+            Robot.cargoIntake.setPower(power);
+        }
     }
 
     @Override

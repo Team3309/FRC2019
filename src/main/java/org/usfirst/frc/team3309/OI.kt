@@ -119,11 +119,15 @@ object OI {
         })
 
         operatorController.b.whenPressed(Command.lambda {
-            Robot.cargoIntake.position = CargoIntake.CargoIntakePosition.Extended
+            if (!Robot.isGuestDriver()) {
+                Robot.cargoIntake.position = CargoIntake.CargoIntakePosition.Extended
+            }
         })
 
         operatorController.a.whenPressed(Command.lambda {
-            Robot.cargoIntake.position = CargoIntake.CargoIntakePosition.Stowed
+            if (!Robot.isGuestDriver()) {
+                Robot.cargoIntake.position = CargoIntake.CargoIntakePosition.Stowed
+            }
         })
 
         operatorController.leftStick.whenPressed(router {

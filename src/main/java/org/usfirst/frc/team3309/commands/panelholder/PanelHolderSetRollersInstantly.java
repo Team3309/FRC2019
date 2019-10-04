@@ -13,7 +13,10 @@ public class PanelHolderSetRollersInstantly extends Command{
 
     @Override
     protected void execute() {
-        Robot.panelHolder.setPower(power);
+
+        if (!Robot.isGuestDriver()) {
+            Robot.panelHolder.setPower(power);
+        }
     }
 
     @Override

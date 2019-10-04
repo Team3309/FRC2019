@@ -101,7 +101,7 @@ public class Elevator extends Subsystem {
 
         double rawLiftGoal = liftGoalToEncoderCounts(carriageGoal);
 
-        if (!DriverStation.getInstance().isDisabled()) {
+        if (!DriverStation.getInstance().isDisabled() && !Robot.isGuestDriver()) {
 //            double kF = 0.0;
 //            if (Util.within(carriageGoal - prevCarriageGoal, 0.0 ,0.1)) {
 //                kF = 0.28;
@@ -140,7 +140,9 @@ public class Elevator extends Subsystem {
     }
 
     public void setPower(double power) {
-        liftMaster.set(ControlMode.PercentOutput, power);
+        if (!Robot.isGuestDriver()) {
+            liftMaster.set(ControlMode.PercentOutput, power);
+        }
     }
 
     public void outputToDashboard() {

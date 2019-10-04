@@ -14,7 +14,10 @@ public class CargoHolderSetRollers extends Command {
 
     @Override
     protected void initialize() {
-        Robot.cargoHolder.setPower(power);
+
+        if (!Robot.isGuestDriver()) {
+            Robot.cargoHolder.setPower(power);
+        }
     }
 
     @Override

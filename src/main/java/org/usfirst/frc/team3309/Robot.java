@@ -4,6 +4,7 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -18,6 +19,9 @@ import org.usfirst.frc.team4322.commandv2.Command;
 import org.usfirst.frc.team4322.commandv2.CommandV2Robot;
 import org.usfirst.frc.team4322.commandv2.Scheduler;
 import org.usfirst.frc.team4322.logging.RobotLogger;
+
+import static org.usfirst.frc.team3309.VisionHelper.driverOverride;
+import static org.usfirst.frc.team3309.VisionHelper.forceVisionOff;
 
 /*
  * This is the Robot class.
@@ -34,7 +38,6 @@ public class Robot extends CommandV2Robot {
     public static PanelHolder panelHolder;
     public static Climber climber;
     public static Vision vision;
-
     public static PowerDistributionPanel pdp;
 
     private Command autoCommand;
@@ -188,8 +191,9 @@ public class Robot extends CommandV2Robot {
     public static void setGuestDriverMode() {
         if (!guestDriverMode) {
             DriverStation.reportError("Guest driver mode activated", false);
+            forceVisionOff();
+            guestDriverMode = true;
         }
-        guestDriverMode = true;
     }
 
     /*

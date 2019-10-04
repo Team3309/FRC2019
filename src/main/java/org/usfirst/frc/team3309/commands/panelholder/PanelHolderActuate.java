@@ -15,9 +15,11 @@ public class PanelHolderActuate extends Command {
 
     @Override
     protected void execute() {
-        Robot.panelHolder.setPosition(position);
-        if (position == PanelHolder.PanelHolderPosition.TelescopeBack) {
-            DriverStation.reportError("Telescope back", false);
+        if (!Robot.isGuestDriver()) {
+            Robot.panelHolder.setPosition(position);
+            if (position == PanelHolder.PanelHolderPosition.TelescopeBack) {
+                DriverStation.reportError("Telescope back", false);
+            }
         }
     }
 

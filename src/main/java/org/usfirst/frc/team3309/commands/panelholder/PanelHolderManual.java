@@ -21,7 +21,9 @@ public class PanelHolderManual extends Command {
 
         double manualPower = Util.signedMax(powerOut, powerIn, 0.1);
 
-        Robot.panelHolder.setPower(manualPower);
+        if (!Robot.isGuestDriver()) {
+            Robot.panelHolder.setPower(manualPower);
+        }
     }
 
     @Override
