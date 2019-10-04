@@ -14,9 +14,7 @@ public class CargoIntakeActuate extends Command {
 
     @Override
     protected void execute() {
-        if (!Robot.isGuestDriver()) {
             Robot.cargoIntake.setPosition(position);
-        }
     }
 
     @Override

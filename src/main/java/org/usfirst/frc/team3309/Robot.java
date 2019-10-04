@@ -192,6 +192,7 @@ public class Robot extends CommandV2Robot {
         if (!guestDriverMode) {
             DriverStation.reportError("Guest driver mode activated", false);
             forceVisionOff();
+            Robot.panelHolder.setPower(0);
             guestDriverMode = true;
         }
     }

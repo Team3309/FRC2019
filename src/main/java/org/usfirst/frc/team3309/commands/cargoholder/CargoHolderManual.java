@@ -30,9 +30,7 @@ public class CargoHolderManual extends Command {
         }
 
 //        SmartDashboard.putNumber("Cargo holder power", power);
-        if (!Robot.isGuestDriver()) {
-            Robot.cargoHolder.setPower(power);
-        }
+        Robot.cargoHolder.setPower(power);
     }
 
     @Override
