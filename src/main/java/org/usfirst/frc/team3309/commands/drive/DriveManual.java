@@ -41,6 +41,10 @@ public class DriveManual extends Command {
 
         DriveSignal signal = cheesyDrive.update(throttle, turn, isQuickTurn, isHighGear);
 
+        if (Robot.isDemo() && OI.getRightJoystickLeftClusterGroup().get()) {
+            Robot.setGuestDriverMode();
+        }
+
         VisionHelper.driverOverride(driverPipelineOverride);
 
         if (isAutoTurn) {

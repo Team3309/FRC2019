@@ -3,6 +3,7 @@ package org.usfirst.frc.team3309;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -37,6 +38,9 @@ public class Robot extends CommandV2Robot {
     public static PowerDistributionPanel pdp;
 
     private Command autoCommand;
+
+    private static boolean demoMode = true;
+    private static boolean guestDriverMode = false;
 
     /*
      * This function is called when the Robot program starts. use it to initialize your subsystems,
@@ -171,6 +175,21 @@ public class Robot extends CommandV2Robot {
                 && Util.within(elevator.getCarriagePercentage(),
                 Constants.CARGO_INTAKE_ZONE_MIN,
                 Constants.CARGO_INTAKE_ZONE_MAX);
+    }
+
+    public static boolean isDemo() {
+        return demoMode;
+    }
+
+    public static boolean isGuestDriver() {
+        return guestDriverMode;
+    }
+
+    public static void setGuestDriverMode() {
+        if (!guestDriverMode) {
+            DriverStation.reportError("Guest driver mode activated", false);
+        }
+        guestDriverMode = true;
     }
 
     /*
