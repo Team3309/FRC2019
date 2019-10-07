@@ -30,6 +30,9 @@ import static org.usfirst.frc.team3309.VisionHelper.forceVisionOff;
 
 public class Robot extends CommandV2Robot {
 
+    // compile flag to activate demo mode
+    private static final boolean demoMode = false;
+
     public static Drive drive;
     public static Elevator elevator;
     public static CargoIntake cargoIntake;
@@ -41,9 +44,6 @@ public class Robot extends CommandV2Robot {
     public static PowerDistributionPanel pdp;
 
     private Command autoCommand;
-
-    private static boolean demoMode = true;
-    private static boolean guestDriverMode = false;
 
     /*
      * This function is called when the Robot program starts. use it to initialize your subsystems,
@@ -183,6 +183,8 @@ public class Robot extends CommandV2Robot {
     public static boolean isDemo() {
         return demoMode;
     }
+
+    private static boolean guestDriverMode = false;
 
     public static boolean isGuestDriver() {
         return guestDriverMode;
