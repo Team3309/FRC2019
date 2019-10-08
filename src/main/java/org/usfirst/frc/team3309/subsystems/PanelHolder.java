@@ -24,6 +24,7 @@ public class PanelHolder extends Subsystem {
     private boolean currentLimitReached = false;
     private Timer holdTimer = new Timer();
     private Timer rampDownTimer = new Timer();
+    private boolean rampingDown = false;
     private double power;
     private int logSeq = 0;
 
@@ -96,25 +97,35 @@ public class PanelHolder extends Subsystem {
 
         // check if new power setting is fast in either direction
         if (newPower < Constants.PANEL_HOLDER_HOLDING_POWER || newPower > 0) {
-            // not ramping down, so reset ramp down timer
-            rampDownTimer.stop();
-            rampDownTimer.reset();
+            if (rampingDown) {
+                // ramp down cancelled by new higher power setting
+                DriverStation.reportError(++logSeq + ": Ramp down cancelled, timer: " +
+                        rampDownTimer.get() + ", new power: " + newPower +
+                        ", current power: " + power, false);
+                rampDownTimer.stop();
+                rampDownTimer.reset();
+                rampingDown = false;
+            }
         }
-        // check if motor is currently running fast in either direction
+        // at holding power, so check if motor is currently running fast in either direction
         else if (power < Constants.PANEL_HOLDER_HOLDING_POWER || power > 0) {
-            // changing from fast speed to holding power, so start ramp down timer
+            // changing from fast speed to holding power, so start ramp down
+            DriverStation.reportError(++logSeq + ": Ramp down start, timer: " +
+                    rampDownTimer.get() + ", new power: " + newPower +
+                    ", current power: " + power, false);
             rampDownTimer.stop();
             rampDownTimer.reset();
             rampDownTimer.start();
-            DriverStation.reportError(++logSeq + ": Ramp down start, newPower: " +
-                    newPower + ", current power: " + power, false);
+            rampingDown = true;
         }
         // check if ramp down is complete
         else if (rampDownTimer.get() >= 0.5) {
+            DriverStation.reportError(++logSeq + ": Ramp down complete, timer: " +
+                    rampDownTimer.get() + ", new power: " + newPower +
+                    ", current power: " + power, false);
             rampDownTimer.stop();
             rampDownTimer.reset();
-            DriverStation.reportError(++logSeq + ": Ramp down complete, newPower: " +
-                    newPower + ", current power: " + power, false);
+            rampingDown = false;
         }
 
         power = newPower;
