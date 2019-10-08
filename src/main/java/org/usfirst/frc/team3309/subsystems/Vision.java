@@ -12,8 +12,6 @@ public class Vision extends Subsystem {
 
     public static Limelight panelLimelight;
 
-    private boolean sentMessage;
-
     public Vision() {
         panelLimelight = new Limelight("limelight-panel",
                 Constants.kPanelLimelightInchesX,
@@ -25,19 +23,6 @@ public class Vision extends Subsystem {
 
     @Override
     public void periodic() {
-        boolean hasCargo = Robot.cargoHolder.hasCargo();
-        boolean hasPanel = Robot.panelHolder.hasPanel();
-
-        boolean hasGamePiece = hasCargo || hasPanel;
-        boolean hasBothGamePieces = hasCargo && hasPanel;
-        
-//        if (hasBothGamePieces && !sentMessage) {
-//            new LimelightMorseCode().start();
-//            sentMessage = true;
-//        } else if (!hasBothGamePieces) {
-//            sentMessage = false;
-//        }
-
     }
 
     public void setLed(Limelight.LEDMode mode) {

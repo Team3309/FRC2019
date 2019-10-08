@@ -67,7 +67,7 @@ public class VisionHelper {
         linearRegression = new PolynomialRegression(motorTrajectory, 1);
     }
 
-    public static DriveSignal getDriveSignal() {
+    public static DriveSignal getDriveSignal(boolean loadingMode) {
         if (limelight.getArea() < 15.0) {
             double linearPower = getThrottleCorrection();
 
@@ -80,7 +80,7 @@ public class VisionHelper {
                 turnController = closeTurnController;
                 maxVisionAngularPower = kCloseMaxVisionAngularPower;
             }
-            double angularPower = getTurnCorrection();
+            double angularPower = getTurnCorrection(loadingMode);
 //            SmartDashboard.putNumber("Throttle vision power", linearPower);
 //            SmartDashboard.putNumber("Turn vision power", angularPower);
 //            SmartDashboard.putNumber("linearRegression", linearRegression.R2());
@@ -153,12 +153,12 @@ public class VisionHelper {
         return throttle;
     }
 
-    public static double getTurnCorrection() {
+    public static double getTurnCorrection(boolean loadingMode) {
         double turnError;
 
         // don't use 3D vision when picking up at loading station
         // because panel blocks bottom of vision tape
-        if (limelight.has3D() && (Robot.panelHolder.hasPanel() || loadStation3D)) {
+        if (limelight.has3D() && (!loadingMode || loadStation3D)) {
             turnError = limelight.rotationCenterDegrees3D();
         }
         else {

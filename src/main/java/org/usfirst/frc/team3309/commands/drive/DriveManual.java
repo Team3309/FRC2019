@@ -50,7 +50,6 @@ public class DriveManual extends Command {
         if (isAutoTurn) {
             VisionHelper.turnOn();
             if (VisionHelper.hasTargets()) {
-                signal = VisionHelper.getDriveSignal();
                 double area = Robot.vision.getTargetArea();
                 if (Robot.panelHolder.hasPanel() && !loadingPanel) {
                     placingPanel = true;
@@ -76,6 +75,7 @@ public class DriveManual extends Command {
                         // DriverStation.reportError("Intaking panel from feeder station", false);
                     }
                 }
+                signal = VisionHelper.getDriveSignal(loadingPanel);
             }
         } else if (OI.getOperatorController().getRightStick().get()) {
             VisionHelper.turnOn();

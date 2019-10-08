@@ -11,6 +11,8 @@ import org.usfirst.frc.team3309.commands.panelholder.PanelHolderActuate;
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderManual;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
+import java.sql.Driver;
+
 public class PanelHolder extends Subsystem {
 
     private WPI_VictorSPX victor;
@@ -18,8 +20,8 @@ public class PanelHolder extends Subsystem {
 
     private DigitalInput bumperSensor;
 
-    private boolean hadPanel;
-    private boolean currentLimitReached;
+    private boolean panelPulledIn = false;
+    private boolean currentLimitReached = false;
     private Timer holdTimer = new Timer();
     private double power;
 
@@ -41,39 +43,42 @@ public class PanelHolder extends Subsystem {
 
     public void setPower(double newPower) {
 
-        if (newPower == 0) {
-            currentLimitReached = false;
-        }
+        // check if previously or now over current limit
+        currentLimitReached = currentLimitReached ||
+                Robot.panelHolder.getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT;
 
-        if (newPower == 0 || currentLimitReached) {
-            if (hasPanel()) {
-                if (!hadPanel) {
-                    hadPanel = true;
+        if (newPower < 0) {
+            // intaking
+            if (holdTimer.get() > 0.25) {
+                // after panel is pulled in, allow intake power to return to holding power
+                holdTimer.stop();
+                holdTimer.reset();
+            }
+            if (holdTimer.get() > 0) {
+                // use reduced power while pulling panel in to avoid overloading motor
+                newPower = Constants.PANEL_HOLDER_REDUCED_INTAKE_POWER;
+            } else if (hasPanel()) {
+                if (!panelPulledIn) {
+                    // pull in panel, but back-off intake power to not overload motor
                     holdTimer.reset();
                     holdTimer.start();
-                    power = -0.6;
-                } else if (holdTimer.get() > 0.25) {
-                    power = Constants.PANEL_HOLDER_HOLDING_POWER;
-                    holdTimer.stop();
-                }
-            } else {
-                hadPanel = false;
-                if (newPower > 0) {
-                    power = 0.48;
+                    panelPulledIn = true;
+                    newPower = Constants.PANEL_HOLDER_REDUCED_INTAKE_POWER;
                 } else {
-                    power = (Constants.PANEL_HOLDER_HOLDING_POWER);
+                    // use holding power after panel has been pulled in
+                    newPower = (Constants.PANEL_HOLDER_HOLDING_POWER);
+                    currentLimitReached = false;
                 }
-            }
-        } else {
-            if (Robot.panelHolder.getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT
-                    && newPower < 0.0) {
-                currentLimitReached = true;
-                DriverStation.reportError("Panel holder current limit reached", false);
             } else {
-                power = newPower;
+                // we don't have a panel yet
+                panelPulledIn = false;
             }
-            hadPanel = false;
         }
+        else if (newPower > 0 && currentLimitReached) {
+            // back off eject power if panel gets jammed while ejecting
+            newPower = Constants.PANEL_HOLDER_REDUCED_EJECT_POWER;
+        }
+        power = newPower;
         victor.set(ControlMode.PercentOutput, power);
     }
 
@@ -121,7 +126,22 @@ public class PanelHolder extends Subsystem {
     }
 
     public boolean hasPanel() {
-        return !bumperSensor.get() || getCurrent() > 2.5;
+
+        // use current detection only since bumper switch is not reliable
+        if (power >= 0) {
+            // ejecting
+            return false;
+        }
+        // if we are forcefully intaking, don't erroneously think we have a panel due to the higher than normal current
+        if (power == Constants.PANEL_HOLDER_INTAKE_POWER) {
+            return getCurrent() >= Constants.PANEL_HOLDER_MAX_CURRENT;
+        }
+        // if are pulling in the panel, assume we have it until the pull-in timer expires
+        if (power == Constants.PANEL_HOLDER_REDUCED_INTAKE_POWER) {
+            return true;
+        }
+        // we are at holding power
+        return getCurrent() >= Constants.PANEL_HOLDER_PANEL_DETECT_CURRENT;
     }
 
     public enum PanelHolderPosition {

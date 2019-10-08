@@ -121,10 +121,13 @@ public class Constants {
     public static final int PANEL_HOLDER_VICTOR_ID = 13;
     public static final int PANEL_HOLDER_TELESCOPING_SOLENOID_ID = 4;
     public static final int PANEL_HOLDER_BUMPER_SENSOR_PORT = 0;
+    public static final double PANEL_HOLDER_PANEL_DETECT_CURRENT = 2.8;
     public static final double PANEL_HOLDER_MAX_CURRENT = 25;
     public static final double PANEL_HOLDER_HOLDING_POWER = -0.20;
     public static final double PANEL_HOLDER_INTAKE_POWER = -0.75;
+    public static final double PANEL_HOLDER_REDUCED_INTAKE_POWER = -0.6;
     public static final double PANEL_HOLDER_EJECT_POWER = 0.65;
+    public static final double PANEL_HOLDER_REDUCED_EJECT_POWER = 0.48;
 
     /**
      * Climber mappings
