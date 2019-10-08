@@ -100,7 +100,7 @@ public class Elevate extends Command {
         }
         boolean withinTolerance = Math.abs(Robot.elevator.getCarriagePercentage() -
                 carriageGoalPosition.getCarriagePercentage()) <= tolerance;
-        SmartDashboard.putBoolean("Elevator within tolerance", withinTolerance);
+        Robot.elevator.setWithinTolerance(withinTolerance);
         return (withinTolerance);
     }
 

@@ -13,7 +13,7 @@ public class VisionHelper {
 
     private static Limelight limelight = Vision.panelLimelight;
 
-    private static final boolean isDashboard = false;
+    private static final boolean isTuning = false;
     private static final boolean forceVisionOn = true;
     private static boolean loadStation3D = false;
 
@@ -43,12 +43,17 @@ public class VisionHelper {
     private static Limelight.LEDMode curLed;
     private static boolean isStopCrawl;
     private static boolean visionOn = false;
+    private static boolean  visionThrottleEnabled = true;
+    private static boolean  visionTurningEnabled = true;
+    private static final String visionThrottleKey = "Vision throttle enabled";
+    private static final String visionTurningKey = "Vision turning enabled";
 
     static {
-        if (isDashboard) {
-            // tuning mode
+        if (isTuning) {
             farTurnController.outputToDashboard();
             closeTurnController.outputToDashboard();
+            SmartDashboard.putBoolean(visionThrottleKey, visionThrottleEnabled);
+            SmartDashboard.putBoolean(visionTurningKey, visionTurningEnabled);
         }
         if (forceVisionOn) {
             enableVision();
@@ -69,7 +74,7 @@ public class VisionHelper {
 
     public static DriveSignal getDriveSignal(boolean loadingMode) {
         if (limelight.getArea() < 15.0) {
-            double linearPower = getThrottleCorrection();
+            double linearPower = getThrottle();
 
             if (limelight.getArea() < 0.05) {
                 linearPower = 0.5;
@@ -81,9 +86,6 @@ public class VisionHelper {
                 maxVisionAngularPower = kCloseMaxVisionAngularPower;
             }
             double angularPower = getTurnCorrection(loadingMode);
-//            SmartDashboard.putNumber("Throttle vision power", linearPower);
-//            SmartDashboard.putNumber("Turn vision power", angularPower);
-//            SmartDashboard.putNumber("linearRegression", linearRegression.R2());
             return new DriveSignal(linearPower + angularPower,
                     linearPower - angularPower);
         }
@@ -108,7 +110,7 @@ public class VisionHelper {
         maxVisionAngularPower = kFarMaxVisionAngularPower;
         farTurnController.reset();
         closeTurnController.reset();
-        if (isDashboard) {
+        if (isTuning) {
             farTurnController.readDashboard();
             closeTurnController.readDashboard();
         }
@@ -147,26 +149,37 @@ public class VisionHelper {
 
     }
 
-    public static double getThrottleCorrection() {
-        double throttle = linearRegression.predict(limelight.getArea());
+    public static double visionThrottle;
+
+    public static double getThrottle() {
+        visionThrottle = linearRegression.predict(limelight.getArea());
 //        throttle =  Math.signum(throttle) * Util.clamp(Math.abs(throttle), 0.2, 0.4);
-        return throttle;
+        if (visionThrottleEnabled) {
+            return visionThrottle;
+        }
+        return 0;
     }
 
+    public static double visionTurnError;
+    public static double visionTurnCorrection;
+
     public static double getTurnCorrection(boolean loadingMode) {
-        double turnError;
 
         // don't use 3D vision when picking up at loading station
         // because panel blocks bottom of vision tape
         if (limelight.has3D() && (!loadingMode || loadStation3D)) {
-            turnError = limelight.rotationCenterDegrees3D();
+            visionTurnError = limelight.rotationCenterDegrees3D();
         }
         else {
-            turnError = limelight.getTx();
+            visionTurnError = limelight.getTx();
         }
-
-        return Util.clamp(turnController.update(turnError, 0.0),
+        visionTurnCorrection = Util.clamp(turnController.update(visionTurnError, 0.0),
                 -maxVisionAngularPower, maxVisionAngularPower);
+
+        if (visionTurningEnabled) {
+            return visionTurnCorrection;
+        }
+        return 0;
     }
 
     public static double getSkew() {
@@ -214,6 +227,13 @@ public class VisionHelper {
     }
 
     public static void outputToDashboard() {
+        visionThrottleEnabled = SmartDashboard.getBoolean(visionThrottleKey, visionThrottleEnabled);
+        visionTurningEnabled = SmartDashboard.getBoolean(visionTurningKey, visionTurningEnabled);
+        SmartDashboard.putNumber("Vision linear regression", linearRegression.R2());
+        SmartDashboard.putNumber("Vision throttle", visionThrottle);
+        SmartDashboard.putNumber("Vision turn error", visionTurnError);
+        SmartDashboard.putNumber("Vision turn correction", visionTurnCorrection);
+        Vision.panelLimelight.outputToDashboard();
     }
 
 }

@@ -25,6 +25,8 @@ public class PanelHolder extends Subsystem {
     private Timer holdTimer = new Timer();
     private Timer rampDownTimer = new Timer();
     private double power;
+    private int logSeq = 0;
+
 
     public PanelHolder() {
         victor = new WPI_VictorSPX(Constants.PANEL_HOLDER_VICTOR_ID);
@@ -41,8 +43,6 @@ public class PanelHolder extends Subsystem {
     public void initDefaultCommand() {
         setDefaultCommand(new PanelHolderManual());
     }
-
-    private int seq = 0;
 
     public void setPower(double newPower) {
 
@@ -75,10 +75,11 @@ public class PanelHolder extends Subsystem {
                     holdTimer.start();
                     panelPulledIn = true;
                     newPower = Constants.PANEL_HOLDER_REDUCED_INTAKE_POWER;
-                    DriverStation.reportError(++seq + ": newPower: " + newPower + ", current power: " + power, false);
+                    DriverStation.reportError(++logSeq + ": Start pulling in panel, newPower: " +
+                            newPower + ", current power: " + power, false);
                 } else {
                     // use holding power after panel has been pulled in
-                    newPower = (Constants.PANEL_HOLDER_HOLDING_POWER);
+                    newPower = Constants.PANEL_HOLDER_HOLDING_POWER;
                     currentLimitReached = false;
                 }
             } else {
@@ -105,7 +106,15 @@ public class PanelHolder extends Subsystem {
             rampDownTimer.stop();
             rampDownTimer.reset();
             rampDownTimer.start();
-            //DriverStation.reportError(++seq + ": newPower: " + newPower + ", current power: " + power, false);
+            DriverStation.reportError(++logSeq + ": Ramp down start, newPower: " +
+                    newPower + ", current power: " + power, false);
+        }
+        // check if ramp down is complete
+        else if (rampDownTimer.get() >= 0.5) {
+            rampDownTimer.stop();
+            rampDownTimer.reset();
+            DriverStation.reportError(++logSeq + ": Ramp down complete, newPower: " +
+                    newPower + ", current power: " + power, false);
         }
 
         power = newPower;
@@ -165,7 +174,7 @@ public class PanelHolder extends Subsystem {
         boolean havePanel;
 
         // check if motor is ramping down to holding power
-        if (rampDownTimer.get() > 0 && rampDownTimer.get() < 0.5) {
+        if (rampDownTimer.get() > 0) {
             // use previous value until motor speed settles and we can measure current reliably
             havePanel = hadPanel;
         }
@@ -177,21 +186,21 @@ public class PanelHolder extends Subsystem {
         }
         // if are pulling in the panel, assume we have it until the pull-in timer expires
         else if (holdTimer.get() > 0) {
-            DriverStation.reportError("Pulling in panel", false);
+            //DriverStation.reportError(++logSeq + ": Pulling in panel", false);
             havePanel = true;
         }
         // if we are forcefully intaking, don't erroneously think we have a panel due to the higher than normal current
         else if (power < Constants.PANEL_HOLDER_HOLDING_POWER) {
             havePanel = (getCurrent() >= Constants.PANEL_HOLDER_MAX_CURRENT);
             if (havePanel) {
-                DriverStation.reportError(++seq + ": Panel holder over max current", false);
+                DriverStation.reportError(++logSeq + ": Panel holder over max current", false);
             }
         }
         // we are at or below holding power
         else {
             havePanel = (getCurrent() >= Constants.PANEL_HOLDER_PANEL_DETECT_CURRENT);
             if (havePanel && !hadPanel) {
-                DriverStation.reportError(++seq + ": Detected panel, power: " + power +
+                DriverStation.reportError(++logSeq + ": Detected panel, power: " + power +
                         ", current:" + getCurrent(), false);
             }
         }

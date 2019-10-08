@@ -19,6 +19,7 @@ public class Elevator extends Subsystem {
     private DigitalInput limitSwitch;
 
     private double carriageGoal;
+    private boolean withinTolerance = false;
 
     public Elevator() {
         liftMaster = new WPI_TalonSRX(Constants.ELEVATOR_MASTER_TALON_ID);
@@ -145,7 +146,12 @@ public class Elevator extends Subsystem {
         }
     }
 
+    public void setWithinTolerance(boolean withinTolerance) {
+        this.withinTolerance = withinTolerance;
+    }
+
     public void outputToDashboard() {
+        SmartDashboard.putBoolean("Elevator within tolerance", withinTolerance);
         SmartDashboard.putBoolean("Carriage limit switch", getLimitSwitchPressed());
         SmartDashboard.putNumber("Carriage position goal", carriageGoal);
         SmartDashboard.putNumber("Carriage position goal raw", liftGoalToEncoderCounts(carriageGoal));

@@ -194,7 +194,7 @@ public class Robot extends CommandV2Robot {
             climber.outputToDashboard();
         }
         if (SmartDashboard.getBoolean(visionDashboardKey, false)) {
-            Vision.panelLimelight.outputToDashboard();
+            VisionHelper.outputToDashboard();
         }
     }
 
