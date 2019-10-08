@@ -46,24 +46,12 @@ public class PanelHolder extends Subsystem {
 
     public void setPower(double newPower) {
 
-        // check if under manual control with power less than holding power
+        // check if under manual control with power of holding power or less
         if (newPower <= 0 && newPower >= Constants.PANEL_HOLDER_HOLDING_POWER) {
-            // check if motor is currently running fast in either direction
-            if (power != Constants.PANEL_HOLDER_HOLDING_POWER) {
-                // start timing how long motor has been ramping down
-                rampDownTimer.stop();
-                rampDownTimer.reset();
-                rampDownTimer.start();
-                //DriverStation.reportError(++seq + ": newPower: " + newPower + ", current power: " + power, false);
-            }
             currentLimitReached = false;
             // default to slow intake speed to hold panel or accept one if we grab it
             newPower = Constants.PANEL_HOLDER_HOLDING_POWER;
         } else {
-            // not ramping down anymore
-            rampDownTimer.stop();
-            rampDownTimer.reset();
-
             // check if previously or now over current limit
             currentLimitReached = currentLimitReached ||
                     Robot.panelHolder.getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT;
@@ -82,6 +70,7 @@ public class PanelHolder extends Subsystem {
             } else if (hasPanel()) {
                 if (!panelPulledIn) {
                     // pull in panel, but back-off intake power to not overload motor
+                    holdTimer.stop();
                     holdTimer.reset();
                     holdTimer.start();
                     panelPulledIn = true;
@@ -100,9 +89,25 @@ public class PanelHolder extends Subsystem {
             // ejecting
             if (currentLimitReached) {
                 // back off eject power if panel gets jammed while ejecting
-                newPower = Constants.PANEL_HOLDER_REDUCED_EJECT_POWER;
+                newPower = Math.min(newPower, Constants.PANEL_HOLDER_REDUCED_EJECT_POWER);
             }
         }
+
+        // check if new power setting is fast in either direction
+        if (newPower < Constants.PANEL_HOLDER_HOLDING_POWER || newPower > 0) {
+            // not ramping down, so reset ramp down timer
+            rampDownTimer.stop();
+            rampDownTimer.reset();
+        }
+        // check if motor is currently running fast in either direction
+        else if (power < Constants.PANEL_HOLDER_HOLDING_POWER || power > 0) {
+            // changing from fast speed to holding power, so start ramp down timer
+            rampDownTimer.stop();
+            rampDownTimer.reset();
+            rampDownTimer.start();
+            //DriverStation.reportError(++seq + ": newPower: " + newPower + ", current power: " + power, false);
+        }
+
         power = newPower;
         victor.set(ControlMode.PercentOutput, power);
     }
