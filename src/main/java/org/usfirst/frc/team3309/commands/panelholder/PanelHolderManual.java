@@ -1,11 +1,14 @@
 package org.usfirst.frc.team3309.commands.panelholder;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.OI;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team4322.commandv2.Command;
+
+import java.sql.Driver;
 
 public class PanelHolderManual extends Command {
 

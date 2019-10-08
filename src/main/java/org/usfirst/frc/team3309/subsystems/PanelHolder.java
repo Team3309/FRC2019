@@ -23,6 +23,7 @@ public class PanelHolder extends Subsystem {
     private boolean panelPulledIn = false;
     private boolean currentLimitReached = false;
     private Timer holdTimer = new Timer();
+    private Timer rampDownTimer = new Timer();
     private double power;
 
     public PanelHolder() {
@@ -41,11 +42,32 @@ public class PanelHolder extends Subsystem {
         setDefaultCommand(new PanelHolderManual());
     }
 
+    private int seq = 0;
+
     public void setPower(double newPower) {
 
-        // check if previously or now over current limit
-        currentLimitReached = currentLimitReached ||
-                Robot.panelHolder.getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT;
+        // check if under manual control with power less than holding power
+        if (newPower <= 0 && newPower >= Constants.PANEL_HOLDER_HOLDING_POWER) {
+            // check if motor is currently running fast in either direction
+            if (power != Constants.PANEL_HOLDER_HOLDING_POWER) {
+                // start timing how long motor has been ramping down
+                rampDownTimer.stop();
+                rampDownTimer.reset();
+                rampDownTimer.start();
+                //DriverStation.reportError(++seq + ": newPower: " + newPower + ", current power: " + power, false);
+            }
+            currentLimitReached = false;
+            // default to slow intake speed to hold panel or accept one if we grab it
+            newPower = Constants.PANEL_HOLDER_HOLDING_POWER;
+        } else {
+            // not ramping down anymore
+            rampDownTimer.stop();
+            rampDownTimer.reset();
+
+            // check if previously or now over current limit
+            currentLimitReached = currentLimitReached ||
+                    Robot.panelHolder.getCurrent() > Constants.PANEL_HOLDER_MAX_CURRENT;
+        }
 
         if (newPower < 0) {
             // intaking
@@ -64,6 +86,7 @@ public class PanelHolder extends Subsystem {
                     holdTimer.start();
                     panelPulledIn = true;
                     newPower = Constants.PANEL_HOLDER_REDUCED_INTAKE_POWER;
+                    DriverStation.reportError(++seq + ": newPower: " + newPower + ", current power: " + power, false);
                 } else {
                     // use holding power after panel has been pulled in
                     newPower = (Constants.PANEL_HOLDER_HOLDING_POWER);
@@ -73,10 +96,12 @@ public class PanelHolder extends Subsystem {
                 // we don't have a panel yet
                 panelPulledIn = false;
             }
-        }
-        else if (newPower > 0 && currentLimitReached) {
-            // back off eject power if panel gets jammed while ejecting
-            newPower = Constants.PANEL_HOLDER_REDUCED_EJECT_POWER;
+        } else {
+            // ejecting
+            if (currentLimitReached) {
+                // back off eject power if panel gets jammed while ejecting
+                newPower = Constants.PANEL_HOLDER_REDUCED_EJECT_POWER;
+            }
         }
         power = newPower;
         victor.set(ControlMode.PercentOutput, power);
@@ -114,34 +139,59 @@ public class PanelHolder extends Subsystem {
     }
 
     public void outputToDashboard() {
-        SmartDashboard.putNumber("PH power", victor.getMotorOutputPercent());
-        SmartDashboard.putString("PH ExtendedPosition", getExtendedPosition().toString());
+        SmartDashboard.putBoolean("PH Panel detected", hasPanel());
+        SmartDashboard.putNumber("PH Power", victor.getMotorOutputPercent());
         SmartDashboard.putNumber("PH Current", getCurrent());
+        SmartDashboard.putNumber("PH Ramp down timer: ", rampDownTimer.get());
+        SmartDashboard.putString("PH ExtendedPosition", getExtendedPosition().toString());
         SmartDashboard.putBoolean("PH Extended raw", getExtendedPosition().value);
-        SmartDashboard.putBoolean("PH bumper pressed", hasPanel());
     }
 
     public void setExtendingSolenoid(ExtendedPosition position) {
         extendingSolenoid.set(position.get());
     }
 
+    private boolean hadPanel = false;
+
     public boolean hasPanel() {
 
         // use current detection only since bumper switch is not reliable
-        if (power >= 0) {
-            // ejecting
-            return false;
+
+        boolean havePanel;
+
+        // check if motor is ramping down to holding power
+        if (rampDownTimer.get() > 0 && rampDownTimer.get() < 0.5) {
+            // use previous value until motor speed settles and we can measure current reliably
+            havePanel = hadPanel;
         }
-        // if we are forcefully intaking, don't erroneously think we have a panel due to the higher than normal current
-        if (power == Constants.PANEL_HOLDER_INTAKE_POWER) {
-            return getCurrent() >= Constants.PANEL_HOLDER_MAX_CURRENT;
+        // check if ejecting
+        else if (power >= 0) {
+            // assume that panel is gone until end of eject sequence so we don't
+            // mistakenly start an intake sequence
+            havePanel = false;
         }
         // if are pulling in the panel, assume we have it until the pull-in timer expires
-        if (power == Constants.PANEL_HOLDER_REDUCED_INTAKE_POWER) {
-            return true;
+        else if (holdTimer.get() > 0) {
+            DriverStation.reportError("Pulling in panel", false);
+            havePanel = true;
         }
-        // we are at holding power
-        return getCurrent() >= Constants.PANEL_HOLDER_PANEL_DETECT_CURRENT;
+        // if we are forcefully intaking, don't erroneously think we have a panel due to the higher than normal current
+        else if (power < Constants.PANEL_HOLDER_HOLDING_POWER) {
+            havePanel = (getCurrent() >= Constants.PANEL_HOLDER_MAX_CURRENT);
+            if (havePanel) {
+                DriverStation.reportError(++seq + ": Panel holder over max current", false);
+            }
+        }
+        // we are at or below holding power
+        else {
+            havePanel = (getCurrent() >= Constants.PANEL_HOLDER_PANEL_DETECT_CURRENT);
+            if (havePanel && !hadPanel) {
+                DriverStation.reportError(++seq + ": Detected panel, power: " + power +
+                        ", current:" + getCurrent(), false);
+            }
+        }
+        hadPanel = havePanel;
+        return havePanel;
     }
 
     public enum PanelHolderPosition {

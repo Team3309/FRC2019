@@ -45,6 +45,14 @@ public class Robot extends CommandV2Robot {
 
     private Command autoCommand;
 
+    private static final String driveDashboardKey = "Display Drive Values";
+    private static final String elevatorDashboardKey = "Display Elevator Values";
+    private static final String panelHolderDashboardKey = "Display Panel Holder Values";
+    private static final String cargoIntakeDashboardKey = "Display Cargo Intake Values";
+    private static final String cargoHolderDashboardKey = "Display Cargo Holder Values";
+    private static final String climberDashboardKey = "Display Climber Values";
+    private static final String visionDashboardKey = "Display Vision Values";
+
     /*
      * This function is called when the Robot program starts. use it to initialize your subsystems,
      * and to set up anything that needs to be initialized with the robot.
@@ -75,6 +83,14 @@ public class Robot extends CommandV2Robot {
         AutoModeExecutor.displayAutos();
 
         RobotLogger.INSTANCE.setCurrentLogLevel(RobotLogger.LogLevel.ERR);
+
+        SmartDashboard.putBoolean(driveDashboardKey, false);
+        SmartDashboard.putBoolean(elevatorDashboardKey, false);
+        SmartDashboard.putBoolean(panelHolderDashboardKey, false);
+        SmartDashboard.putBoolean(cargoIntakeDashboardKey, false);
+        SmartDashboard.putBoolean(cargoHolderDashboardKey, false);
+        SmartDashboard.putBoolean(climberDashboardKey, false);
+        SmartDashboard.putBoolean(visionDashboardKey, false);
 
         // invert turning joystick's left to right
         OI.getRightJoystick().getXAxis().setRampFunction((x) -> (-x));
@@ -159,16 +175,25 @@ public class Robot extends CommandV2Robot {
     @Override
     public void robotPeriodic() {
         super.robotPeriodic();
-        boolean outputSubsystemsToDashboard = SmartDashboard.getBoolean("outputSubsystemsToDashboard",
-                false);
-        if (outputSubsystemsToDashboard) {
+        if (SmartDashboard.getBoolean(driveDashboardKey, false)) {
             drive.outputToDashboard();
+        }
+        if (SmartDashboard.getBoolean(elevatorDashboardKey, false)) {
             elevator.outputToDashboard();
+        }
+        if (SmartDashboard.getBoolean(panelHolderDashboardKey, false)) {
             panelHolder.outputToDashboard();
-            panelIntake.outputToDashboard();
+        }
+        if (SmartDashboard.getBoolean(cargoIntakeDashboardKey, false)) {
             cargoIntake.outputToDashboard();
+        }
+        if (SmartDashboard.getBoolean(cargoHolderDashboardKey, false)) {
             cargoHolder.outputToDashboard();
+        }
+        if (SmartDashboard.getBoolean(climberDashboardKey, false)) {
             climber.outputToDashboard();
+        }
+        if (SmartDashboard.getBoolean(visionDashboardKey, false)) {
             Vision.panelLimelight.outputToDashboard();
         }
     }
@@ -194,7 +219,6 @@ public class Robot extends CommandV2Robot {
         if (!guestDriverMode) {
             DriverStation.reportError("Guest driver mode activated", false);
             forceVisionOff();
-            Robot.panelHolder.setPower(0);
             guestDriverMode = true;
         }
     }
