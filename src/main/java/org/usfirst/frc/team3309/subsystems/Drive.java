@@ -53,6 +53,8 @@ public class Drive extends Subsystem {
         addChild(driveRightMaster);
         addChild(shifter);
         addChild(navx);
+
+        setPid(Constants.kDriveVelocitySlot);
     }
 
     private void configMaster(WPI_TalonSRX talon) {
@@ -61,14 +63,25 @@ public class Drive extends Subsystem {
         talon.configClosedloopRamp(Constants.DRIVE_CLOSED_LOOP_RAMP_RATE, 10);
         talon.configOpenloopRamp(Constants.DRIVE_OPEN_LOOP_RAMP_RATE, 10);
 
-        talon.config_kP(0, Constants.DRIVE_P, 10);
-        talon.config_kD(0, Constants.DRIVE_D, 10);
-        talon.config_kF(0, Constants.DRIVE_F, 10);
+        talon.config_kP(Constants.kDriveVelocitySlot, Constants.kDriveVelocityP, 10);
+        talon.config_kI(Constants.kDriveVelocitySlot, Constants.kDriveVelocityI, 10);
+        talon.config_kD(Constants.kDriveVelocitySlot, Constants.kDriveVelocityD, 10);
+        talon.config_kF(Constants.kDriveVelocitySlot, Constants.kDriveVelocityF, 10);
+
+        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionP, 10);
+        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionI, 10);
+        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionD, 10);
+        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionF, 10);
 
         talon.setNeutralMode(NeutralMode.Brake);
         talon.setInverted(true);
         talon.setSensorPhase(true);
         addChild(talon);
+    }
+
+    private void setPid(int slot) {
+        driveLeftMaster.selectProfileSlot(slot, 0);
+        driveRightMaster.selectProfileSlot(slot, 0);
     }
 
     private void configSlave(WPI_VictorSPX slave, WPI_TalonSRX master) {
@@ -95,6 +108,25 @@ public class Drive extends Subsystem {
         return rad_s / (Math.PI * 2.0) * 4096.0 / 10.0;
     }
 
+    public void turnPosition(double encoderCount) {
+        // positive argument => turn to the right
+        setPid(Constants.kDrivePositionSlot);
+        driveLeftMaster.set(ControlMode.Position, getLeftEncoderDistance() - encoderCount);
+        driveRightMaster.set(ControlMode.Position, getRightEncoderDistance() + encoderCount);
+    }
+
+    public boolean turnComplete() {
+        boolean leftComplete = driveLeftMaster.getClosedLoopError() < 100;
+        boolean rightComplete = driveRightMaster.getClosedLoopError() < 100;
+        return leftComplete && rightComplete;
+    }
+
+    public void turnVelocity(double encoderCountsPerSec) {
+        // positive argument => turn to the right
+        setPid(Constants.kDriveVelocitySlot);
+        driveLeftMaster.set(ControlMode.Velocity, -encoderCountsPerSec);
+        driveRightMaster.set(ControlMode.Velocity, encoderCountsPerSec);
+    }
 
     public void reset() {
         driveLeftMaster.clearMotionProfileTrajectories();
@@ -169,7 +201,6 @@ public class Drive extends Subsystem {
                         DemandType demandType,
                         double leftFeedforward) {
         driveLeftMaster.set(mode, left, demandType, leftFeedforward);
-
     }
 
     public void setNeutralMode(NeutralMode mode) {

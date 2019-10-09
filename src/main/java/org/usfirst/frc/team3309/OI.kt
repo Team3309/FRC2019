@@ -93,6 +93,55 @@ object OI {
                 Command.empty
             }
         })
+
+        leftJoystick.rightCluster.topLeft.whenPressed(router {
+            if (DriverStation.getInstance().isDisabled) {
+                Command.empty
+            } else {
+                DriveAuto(0,-2000.0)
+            }
+        })
+
+        leftJoystick.rightCluster.topRight.whenPressed(router {
+            if (DriverStation.getInstance().isDisabled) {
+                Command.empty
+            } else {
+                DriveAuto(0,2000.0)
+            }
+        })
+
+        leftJoystick.rightCluster.bottomLeft.whenPressed(router {
+            if (DriverStation.getInstance().isDisabled) {
+                Command.empty
+            } else {
+                DriveAuto(0,-10000.0)
+            }
+        })
+
+        leftJoystick.rightCluster.bottomRight.whenPressed(router {
+            if (DriverStation.getInstance().isDisabled) {
+                Command.empty
+            } else {
+                DriveAuto(0,10000.0)
+            }
+        })
+
+        leftJoystick.rightCluster.topCenter.whenPressed(router {
+            if (DriverStation.getInstance().isDisabled) {
+                Command.empty
+            } else {
+                DriveAuto(1, -10000.0)
+            }
+        })
+
+        leftJoystick.rightCluster.bottomCenter.whenPressed(router {
+            if (DriverStation.getInstance().isDisabled) {
+                Command.empty
+            } else {
+                DriveAuto(1, 10000.0)
+            }
+        })
+
         rightJoystickRightClusterGroup.whenReleased(router {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty

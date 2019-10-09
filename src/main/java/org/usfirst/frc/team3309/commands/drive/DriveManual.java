@@ -1,7 +1,6 @@
 package org.usfirst.frc.team3309.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import edu.wpi.first.wpilibj.DriverStation;
 import org.usfirst.frc.team3309.OI;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.VisionHelper;
@@ -37,7 +36,6 @@ public class DriveManual extends Command {
         boolean isHighGear = Robot.drive.inHighGear();
         boolean isQuickTurn = OI.getRightJoystick().getTrigger().get();
         boolean isAutoTurn = OI.getLeftJoystickLeftClusterGroup().get() && !Robot.isGuestDriver();
-        boolean driverPipelineOverride = OI.getLeftJoystickRightClusterGroup().get();
 
         DriveSignal signal = cheesyDrive.update(throttle, turn, isQuickTurn, isHighGear);
 
@@ -45,7 +43,8 @@ public class DriveManual extends Command {
             Robot.setGuestDriverMode();
         }
 
-        VisionHelper.driverOverride(driverPipelineOverride);
+        //boolean driverPipelineOverride = OI.getLeftJoystickRightClusterGroup().get();
+        //VisionHelper.driverOverride(driverPipelineOverride);
 
         if (isAutoTurn) {
             VisionHelper.turnOn();
@@ -109,6 +108,4 @@ public class DriveManual extends Command {
     protected boolean isFinished() {
         return false;
     }
-
-
 }
