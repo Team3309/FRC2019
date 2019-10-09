@@ -21,9 +21,9 @@ public class PanelHolder extends Subsystem {
     private boolean debugPanelHolder = false;
     private boolean panelPulledIn = false;
     private boolean currentLimitReached = false;
-    private Timer holdTimer = new Timer();
+    private Timer pullInTimer = new Timer();
     private Timer rampDownTimer = new Timer();
-    private boolean rampingDown = false;
+    private Timer detectionDebounceTimer = new Timer();
     private double power;
     private int logSeq = 0;
     static Semaphore setPowerMutex = new Semaphore(1);
@@ -67,20 +67,20 @@ public class PanelHolder extends Subsystem {
 
         if (newPower < 0) {
             // intaking
-            if (holdTimer.get() > 0.25) {
+            if (pullInTimer.get() > 0.25) {
                 // after panel is pulled in, allow intake power to return to holding power
-                holdTimer.stop();
-                holdTimer.reset();
+                pullInTimer.stop();
+                pullInTimer.reset();
             }
-            if (holdTimer.get() > 0) {
+            if (pullInTimer.get() > 0) {
                 // use reduced power while pulling panel in to avoid overloading motor
                 newPower = Constants.PANEL_HOLDER_REDUCED_INTAKE_POWER;
             } else if (hasPanel()) {
                 if (!panelPulledIn) {
                     // pull in panel, but back-off intake power to not overload motor
-                    holdTimer.stop();
-                    holdTimer.reset();
-                    holdTimer.start();
+                    pullInTimer.stop();
+                    pullInTimer.reset();
+                    pullInTimer.start();
                     panelPulledIn = true;
                     newPower = Constants.PANEL_HOLDER_REDUCED_INTAKE_POWER;
                     if (debugPanelHolder) {
@@ -106,7 +106,7 @@ public class PanelHolder extends Subsystem {
 
         // check if new power setting is fast in either direction
         if (newPower < Constants.PANEL_HOLDER_HOLDING_POWER || newPower > 0) {
-            if (rampingDown) {
+            if (pullInTimer.get() > 0) {
                 // ramp down cancelled by new higher power setting
                 if (debugPanelHolder) {
                     DriverStation.reportError(++logSeq + ": Ramp down cancelled, timer: " +
@@ -115,7 +115,6 @@ public class PanelHolder extends Subsystem {
                 }
                 rampDownTimer.stop();
                 rampDownTimer.reset();
-                rampingDown = false;
             }
         }
         // at holding power, so check if motor is currently running fast in either direction
@@ -129,7 +128,6 @@ public class PanelHolder extends Subsystem {
             rampDownTimer.stop();
             rampDownTimer.reset();
             rampDownTimer.start();
-            rampingDown = true;
         }
         // check if ramp down is complete
         else if (rampDownTimer.get() >= 0.5) {
@@ -140,7 +138,6 @@ public class PanelHolder extends Subsystem {
             }
             rampDownTimer.stop();
             rampDownTimer.reset();
-            rampingDown = false;
         }
 
         power = newPower;
@@ -180,15 +177,6 @@ public class PanelHolder extends Subsystem {
         return Robot.pdp.getCurrent(7);
     }
 
-    public void outputToDashboard() {
-        SmartDashboard.putBoolean("PH Panel detected", hasPanel());
-        SmartDashboard.putNumber("PH Power", victor.getMotorOutputPercent());
-        SmartDashboard.putNumber("PH Current", getCurrent());
-        SmartDashboard.putNumber("PH Ramp down timer: ", rampDownTimer.get());
-        SmartDashboard.putString("PH ExtendedPosition", getExtendedPosition().toString());
-        SmartDashboard.putBoolean("PH Extended raw", getExtendedPosition().value);
-    }
-
     public void setExtendingSolenoid(ExtendedPosition position) {
         extendingSolenoid.set(position.get());
     }
@@ -212,25 +200,42 @@ public class PanelHolder extends Subsystem {
             // mistakenly start an intake sequence
             havePanel = false;
         }
-        // if are pulling in the panel, assume we have it until the pull-in timer expires
-        else if (holdTimer.get() > 0) {
-            havePanel = true;
-        }
         // if we are forcefully intaking, don't erroneously think we have a panel due to the higher than normal current
         else if (power < Constants.PANEL_HOLDER_HOLDING_POWER) {
             havePanel = (getCurrent() >= Constants.PANEL_HOLDER_MAX_CURRENT);
-            if (debugPanelHolder && havePanel) {
-                DriverStation.reportError(++logSeq + ": Panel holder over max current", false);
-            }
         }
         // we are at or below holding power
         else {
             havePanel = (getCurrent() >= Constants.PANEL_HOLDER_PANEL_DETECT_CURRENT);
-            if (debugPanelHolder && havePanel && !hadPanel) {
+        }
+
+        // check if debounce time has elapsed
+        if (detectionDebounceTimer.get() > 0.5) {
+            detectionDebounceTimer.stop();
+            detectionDebounceTimer.reset();
+        }
+
+        // check for change in panel detection state
+        if (havePanel && !hadPanel) {
+            detectionDebounceTimer.stop();
+            detectionDebounceTimer.reset();
+            detectionDebounceTimer.start();
+            if (debugPanelHolder) {
                 DriverStation.reportError(++logSeq + ": Detected panel, power: " + power +
                         ", current:" + getCurrent(), false);
             }
         }
+        else if (!havePanel && hadPanel) {
+            // don't accept loss of panel during detection debounce window
+            if (detectionDebounceTimer.get() > 0) {
+                havePanel = hadPanel;
+            }
+            else if (debugPanelHolder) {
+                DriverStation.reportError(++logSeq + ": Lost panel, power: " + power +
+                        ", current:" + getCurrent(), false);
+            }
+        }
+
         hadPanel = havePanel;
         return havePanel;
     }
@@ -260,4 +265,13 @@ public class PanelHolder extends Subsystem {
 
     }
 
+    public void outputToDashboard() {
+        SmartDashboard.putBoolean("PH Panel detected", hasPanel());
+        SmartDashboard.putNumber("PH Power", victor.getMotorOutputPercent());
+        SmartDashboard.putNumber("PH Current", getCurrent());
+        SmartDashboard.putNumber("PH Ramp down timer: ", rampDownTimer.get());
+        SmartDashboard.putNumber("PH Detection debounce timer: ", detectionDebounceTimer.get());
+        SmartDashboard.putString("PH ExtendedPosition", getExtendedPosition().toString());
+        SmartDashboard.putBoolean("PH Extended raw", getExtendedPosition().value);
+    }
 }

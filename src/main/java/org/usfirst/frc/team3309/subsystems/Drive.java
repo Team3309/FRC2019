@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,6 +13,8 @@ import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.commands.drive.DriveManual;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 import org.usfirst.frc.team3309.Constants;
+
+import java.sql.Driver;
 
 /*
  * The Drive subsystem. This is the big one.
@@ -113,6 +116,10 @@ public class Drive extends Subsystem {
         setPid(Constants.kDrivePositionSlot);
         driveLeftMaster.set(ControlMode.Position, getLeftEncoderDistance() - encoderCount);
         driveRightMaster.set(ControlMode.Position, getRightEncoderDistance() + encoderCount);
+        DriverStation.reportError("Auto Turn Pos: leftOld: " + getLeftEncoderDistance() +
+                ", leftNew: " + (getLeftEncoderDistance() - encoderCount) +
+                ", rightOld: " + getLeftEncoderDistance() +
+                ", rightPNew: " + (getRightEncoderDistance() + encoderCount), false);
     }
 
     public boolean turnComplete() {
@@ -124,7 +131,7 @@ public class Drive extends Subsystem {
     public void turnVelocity(double encoderCountsPerSec) {
         // positive argument => turn to the right
         setPid(Constants.kDriveVelocitySlot);
-        driveLeftMaster.set(ControlMode.Velocity, -encoderCountsPerSec);
+        driveLeftMaster.set(ControlMode.Velocity, encoderCountsPerSec);
         driveRightMaster.set(ControlMode.Velocity, encoderCountsPerSec);
     }
 
