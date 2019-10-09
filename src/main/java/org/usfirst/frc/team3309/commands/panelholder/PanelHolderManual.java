@@ -22,7 +22,7 @@ public class PanelHolderManual extends Command {
         double powerOut = OI.getOperatorController().getLt().axis();
         double powerIn = OI.getOperatorController().getRt().axis();
 
-        double manualPower = Util.signedMax(powerOut, powerIn, 0.1);
+        double manualPower = Util.weirdSignedMax(powerOut, powerIn, 0.1);
 
         if (!Robot.isGuestDriver()) {
             Robot.panelHolder.setPower(manualPower);

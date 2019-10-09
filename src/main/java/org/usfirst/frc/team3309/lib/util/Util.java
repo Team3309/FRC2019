@@ -98,13 +98,10 @@ public class Util {
         return (value >= min) && (value <= max);
     }
 
-    /*
-     * @return a if larger, -b if larger, min if the largest
-     * @param a, first value to check
-     * @param b, second value to check
-     * @param min, minimum threshold
-     * */
-    public static double signedMax(double a, double b, double min) {
+    // This has nothing to do with a max function.
+    // We don't know what it is really doing.
+    // If anyone ever figures it out, please rename this method.
+    public static double weirdSignedMax(double a, double b, double min) {
         if (a > min) {
             return a;
         } else if (b > min) {

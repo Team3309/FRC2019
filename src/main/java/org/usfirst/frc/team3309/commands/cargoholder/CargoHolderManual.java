@@ -19,7 +19,7 @@ public class CargoHolderManual extends Command {
         double powerOut = OI.getOperatorController().getLt().axis();
         double powerIn = OI.getOperatorController().getRt().axis();
 
-        double power = Util.signedMax(powerOut, powerIn, Constants.CARGO_LAUNCHER_ROLLERS_MIN_POWER);
+        double power = Util.weirdSignedMax(powerOut, powerIn, Constants.CARGO_LAUNCHER_ROLLERS_MIN_POWER);
 
         // Hold onto cargo while in holder
         if (Robot.cargoHolder.hasCargo() && !(power > 0)

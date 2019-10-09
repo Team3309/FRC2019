@@ -17,7 +17,7 @@ public class CargoIntakeManual extends Command {
         double powerOut = OI.getOperatorController().getLt().axis();
         double powerIn = OI.getOperatorController().getRt().axis();
 
-        double power = Util.signedMax(powerOut, powerIn, Constants.CARGO_INTAKE_ROLLERS_MIN_POWER);
+        double power = Util.weirdSignedMax(powerOut, powerIn, Constants.CARGO_INTAKE_ROLLERS_MIN_POWER);
         // scale control input for maximum sensitivity
         power = power * Constants.CARGO_INTAKE_ROLLERS_MAX_POWER;
 

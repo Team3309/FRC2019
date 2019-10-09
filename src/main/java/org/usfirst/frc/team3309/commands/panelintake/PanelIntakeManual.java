@@ -17,7 +17,7 @@ public class PanelIntakeManual extends Command {
         double powerOut = OI.getOperatorController().getLt().axis();
         double powerIn = OI.getOperatorController().getRt().axis();
 
-        double power = Util.signedMax(powerOut, powerIn, Constants.PANEL_INTAKE_MIN_POWER);
+        double power = Util.weirdSignedMax(powerOut, powerIn, Constants.PANEL_INTAKE_MIN_POWER);
 
         Robot.panelIntake.setPower(power);
     }
