@@ -10,6 +10,7 @@ import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderActuate;
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderManual;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
+import java.util.concurrent.Semaphore;
 
 import java.sql.Driver;
 
@@ -27,7 +28,7 @@ public class PanelHolder extends Subsystem {
     private boolean rampingDown = false;
     private double power;
     private int logSeq = 0;
-
+    static Semaphore setPowerMutex = new Semaphore(1);
 
     public PanelHolder() {
         victor = new WPI_VictorSPX(Constants.PANEL_HOLDER_VICTOR_ID);
@@ -46,6 +47,14 @@ public class PanelHolder extends Subsystem {
     }
 
     public void setPower(double newPower) {
+
+        // This method is called periodically and might not complete before the next call
+        // due to debug messages. It isn't thread safe, so we need to protect it with a mutex.
+        try {
+            setPowerMutex.acquire();
+        } catch (InterruptedException e) {
+            DriverStation.reportError("Mutex acquire interrupted", false);
+        }
 
         // check if under manual control with power of holding power or less
         if (newPower <= 0 && newPower >= Constants.PANEL_HOLDER_HOLDING_POWER) {
@@ -130,6 +139,8 @@ public class PanelHolder extends Subsystem {
 
         power = newPower;
         victor.set(ControlMode.PercentOutput, power);
+
+        setPowerMutex.release();
     }
 
     /*
