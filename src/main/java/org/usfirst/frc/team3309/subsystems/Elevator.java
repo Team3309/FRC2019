@@ -16,7 +16,7 @@ public class Elevator extends Subsystem {
     private WPI_TalonSRX liftMaster;
     private WPI_VictorSPX liftSlave;
 
-    private DigitalInput limitSwitch;
+    private DigitalInput magSwitch;
 
     private double carriageGoal;
     private boolean withinTolerance = false;
@@ -31,8 +31,8 @@ public class Elevator extends Subsystem {
         liftSlave.setNeutralMode(NeutralMode.Brake);
         liftSlave.setInverted(InvertType.FollowMaster);
 
-        limitSwitch = new DigitalInput(2);
-        addChild(limitSwitch);
+        magSwitch = new DigitalInput(2);
+        addChild(magSwitch);
     }
 
     private void configTalon(WPI_TalonSRX talon) {
@@ -64,7 +64,6 @@ public class Elevator extends Subsystem {
 
     @Override
     public void periodic() {
-
         if (getLimitSwitchPressed()) {
             zeroEncoder();
             DriverStation.reportWarning("Zeroed lift", false);
@@ -111,12 +110,12 @@ public class Elevator extends Subsystem {
 //            liftMaster.config_kF(0, kF);
             liftMaster.set(ControlMode.MotionMagic, rawLiftGoal);
         } else {
-            DriverStation.reportWarning("ELEVATOR: Tried to set value while disabled", false);
+            DriverStation.reportWarning("ELEVATOR: Tried to set value while disabled or guest driver", false);
         }
     }
 
     public boolean getLimitSwitchPressed() {
-        return limitSwitch.get();
+        return magSwitch.get();
     }
 
     public double getCarriagePercentage() {
