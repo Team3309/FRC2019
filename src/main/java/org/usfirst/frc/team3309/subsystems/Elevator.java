@@ -115,7 +115,7 @@ public class Elevator extends Subsystem {
     }
 
     public boolean getLimitSwitchPressed() {
-        return magSwitch.get();
+        return !magSwitch.get(); // mag switch is at 0V when triggered
     }
 
     public double getCarriagePercentage() {
