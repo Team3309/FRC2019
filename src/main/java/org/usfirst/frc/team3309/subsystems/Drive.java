@@ -63,7 +63,7 @@ public class Drive extends Subsystem {
     private void configMaster(WPI_TalonSRX talon) {
         talon.configFactoryDefault();
         talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-        talon.configClosedloopRamp(Constants.DRIVE_CLOSED_LOOP_RAMP_RATE, 10);
+        talon.configClosedloopRamp(Constants.DRIVE_CLOSED_LOOP_RAMP_RATE);
         talon.configOpenloopRamp(Constants.DRIVE_OPEN_LOOP_RAMP_RATE, 10);
 
         talon.config_kP(Constants.kDriveVelocitySlot, Constants.kDriveVelocityP, 10);
@@ -71,10 +71,10 @@ public class Drive extends Subsystem {
         talon.config_kD(Constants.kDriveVelocitySlot, Constants.kDriveVelocityD, 10);
         talon.config_kF(Constants.kDriveVelocitySlot, Constants.kDriveVelocityF, 10);
 
-        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionP, 0);
-        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionI, 0);
-        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionD, 0);
-        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionF, 0);
+        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionP, 10);
+        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionI, 10);
+        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionD, 10);
+        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionF, 10);
 
         talon.setNeutralMode(NeutralMode.Brake);
         talon.setInverted(true);
@@ -113,19 +113,20 @@ public class Drive extends Subsystem {
 
     public void turnPosition(double encoderCount) {
         // positive argument => turn to the right
-        setPid(Constants.kDrivePositionSlot);
-        driveLeftMaster.set(ControlMode.Position, getLeftEncoderDistance() - encoderCount);
+        setPid(Constants.kDriveVelocitySlot);
+        driveLeftMaster.set(ControlMode.Position, getLeftEncoderDistance() + encoderCount);
         driveRightMaster.set(ControlMode.Position, getRightEncoderDistance() + encoderCount);
         DriverStation.reportError("Auto Turn Pos: leftOld: " + getLeftEncoderDistance() +
-                ", leftNew: " + (getLeftEncoderDistance() - encoderCount) +
-                ", rightOld: " + getLeftEncoderDistance() +
+                ", leftNew: " + (getLeftEncoderDistance() + encoderCount) +
+                ", rightOld: " + getRightEncoderDistance() +
                 ", rightPNew: " + (getRightEncoderDistance() + encoderCount), false);
     }
 
     public boolean turnComplete() {
         boolean leftComplete = driveLeftMaster.getClosedLoopError() < 100;
         boolean rightComplete = driveRightMaster.getClosedLoopError() < 100;
-        return leftComplete && rightComplete;
+        return false;
+        //return leftComplete && rightComplete;
     }
 
     public void turnVelocity(double encoderCountsPerSec) {

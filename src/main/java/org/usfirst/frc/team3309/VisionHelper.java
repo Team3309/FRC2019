@@ -29,8 +29,8 @@ public class VisionHelper {
 
     // Use smaller P when far away to avoid overshoot from potentially large initial correction.
     // Use larger P when closer to provide enough angular power for fine corrections.
-    private static PIDController farTurnController = new PIDController(farTurnP, farTurnI, farTurnD);
-    private static PIDController closeTurnController = new PIDController(closeTurnP, closeTurnI, closeTurnD);
+    private static PIDController farTurnController = new PIDController("Far turn", farTurnP, farTurnI, farTurnD);
+    private static PIDController closeTurnController = new PIDController("Close turn", closeTurnP, closeTurnI, closeTurnD);
 
     private static PolynomialRegression linearRegression;
     private static boolean driverOverrideActive = false;
@@ -76,12 +76,12 @@ public class VisionHelper {
         if (limelight.getArea() < 15.0) {
             double linearPower = getThrottle();
 
-            if (limelight.getArea() < 0.05) {
+            if (limelight.getArea() < 4.5 && linearPower > 0) {
                 linearPower = 0.5;
             } else if (isStopCrawl) {
                 linearPower = 0.0;
             }
-            if (limelight.getArea() >= 0.04) {
+            if (limelight.getArea() >= 3.0) {
                 turnController = closeTurnController;
                 maxVisionAngularPower = kCloseMaxVisionAngularPower;
             }
@@ -154,7 +154,7 @@ public class VisionHelper {
     public static double getThrottle() {
         visionThrottle = linearRegression.predict(limelight.getArea());
 //        throttle =  Math.signum(throttle) * Util.clamp(Math.abs(throttle), 0.2, 0.4);
-        if (visionThrottleEnabled) {
+        if (SmartDashboard.getBoolean(visionThrottleKey, visionThrottleEnabled)) {
             return visionThrottle;
         }
         return 0;
@@ -176,7 +176,7 @@ public class VisionHelper {
         visionTurnCorrection = Util.clamp(turnController.update(visionTurnError, 0.0),
                 -maxVisionAngularPower, maxVisionAngularPower);
 
-        if (visionTurningEnabled) {
+        if (SmartDashboard.getBoolean(visionTurningKey, visionTurningEnabled)) {
             return visionTurnCorrection;
         }
         return 0;
@@ -227,8 +227,6 @@ public class VisionHelper {
     }
 
     public static void outputToDashboard() {
-        visionThrottleEnabled = SmartDashboard.getBoolean(visionThrottleKey, visionThrottleEnabled);
-        visionTurningEnabled = SmartDashboard.getBoolean(visionTurningKey, visionTurningEnabled);
         SmartDashboard.putNumber("Vision linear regression", linearRegression.R2());
         SmartDashboard.putNumber("Vision throttle", visionThrottle);
         SmartDashboard.putNumber("Vision turn error", visionTurnError);

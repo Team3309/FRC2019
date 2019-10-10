@@ -124,7 +124,7 @@ public class Constants {
     public static final int PANEL_HOLDER_BUMPER_SENSOR_PORT = 0;
     public static final double PANEL_HOLDER_PANEL_DETECT_CURRENT = 2.6;
     public static final double PANEL_HOLDER_MAX_CURRENT = 25;
-    public static final double PANEL_HOLDER_HOLDING_POWER = -0.20;
+    public static final double PANEL_HOLDER_HOLDING_POWER = -0.2;
     public static final double PANEL_HOLDER_INTAKE_POWER = -0.75;
     public static final double PANEL_HOLDER_REDUCED_INTAKE_POWER = -0.6;
     public static final double PANEL_HOLDER_EJECT_POWER = 0.65;
@@ -155,7 +155,7 @@ public class Constants {
     public static final double kPanelLimelightInchesX = -4.5;  // lateral off-center
     public static final double kPanelLimelightPlacementInchesZ = 26.5;  // behind placement point
     public static final double kPanelLimelightRotationCenterInchesZ = 4.0;  // behind bot rotational center
-    public static final double kPanelHolderBiasInchesX = 0.85;  // negative value biases placement to the right
+    public static final double kPanelHolderBiasInchesX = 0;  // negative value biases placement to the right
 
     // PDP channels
     public static final int kPdpChannelDriveLeft1 = 0;
@@ -174,10 +174,10 @@ public class Constants {
     public static final double kDriveVelocityD = 0.0006;
     public static final double kDriveVelocityF = 0.002;
     public static final int kDrivePositionSlot = 1;
-    public static final double kDrivePositionP = 0.001;
+    public static final double kDrivePositionP = 0.019;
     public static final double kDrivePositionI = 0;
-    public static final double kDrivePositionD = 0;
-    public static final double kDrivePositionF = 0;
+    public static final double kDrivePositionD = 0.0006;
+    public static final double kDrivePositionF = 0.002;
     public static final double DRIVE_CLOSED_LOOP_RAMP_RATE = 0.0;
     public static final double DRIVE_OPEN_LOOP_RAMP_RATE = 0.15; // don't go below 0.15, due to rebound power in cheezy
 

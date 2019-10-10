@@ -95,11 +95,12 @@ object OI {
             }
         })
 
+        /*
         leftJoystick.rightCluster.topLeft.whenPressed(router {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
             } else {
-                DriveAuto(0,-2000.0)
+                DriveAuto(0,-5000.0)
             }
         })
 
@@ -107,7 +108,7 @@ object OI {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
             } else {
-                DriveAuto(0,2000.0)
+                DriveAuto(0,5000.0)
             }
         })
 
@@ -115,7 +116,7 @@ object OI {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
             } else {
-                DriveAuto(0,-10000.0)
+                DriveAuto(0,-20000.0)
             }
         })
 
@@ -123,7 +124,7 @@ object OI {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
             } else {
-                DriveAuto(0,10000.0)
+                DriveAuto(0,20000.0)
             }
         })
 
@@ -131,7 +132,7 @@ object OI {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
             } else {
-                DriveAuto(1, -10000.0)
+                DriveAuto(1, -20000.0)
             }
         })
 
@@ -139,7 +140,7 @@ object OI {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
             } else {
-                DriveAuto(1, 10000.0)
+                DriveAuto(1, 20000.0)
             }
         })
 
@@ -150,6 +151,7 @@ object OI {
                 DriveManual()
             }
         })
+        */
 
         rightJoystickRightClusterGroup.whenReleased(router {
             if (DriverStation.getInstance().isDisabled) {
