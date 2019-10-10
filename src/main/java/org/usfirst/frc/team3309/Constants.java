@@ -74,7 +74,6 @@ public class Constants {
     public static final double ELEVATOR_P = 0.05;
     public static final double ELEVATOR_I = 5.56e-6;
     public static final double ELEVATOR_D = 0;
-    public static final double ELEVATOR_F = 0;
 
     // max position used for conversions (encoder counts)
     public static final double ELEVATOR_ENCODER_COUNTS_FOR_MAX_HEIGHT = 116000;
@@ -170,14 +169,11 @@ public class Constants {
     /* DRIVEBASE TUNING CONSTANTS */
     public static final int kDriveVelocitySlot = 0;
     public static final double kDriveVelocityP = 0.019;
-    public static final double kDriveVelocityI = 0;
     public static final double kDriveVelocityD = 0.0006;
     public static final double kDriveVelocityF = 0.002;
     public static final int kDrivePositionSlot = 1;
-    public static final double kDrivePositionP = 0.019;
-    public static final double kDrivePositionI = 0;
-    public static final double kDrivePositionD = 0.0006;
-    public static final double kDrivePositionF = 0.002;
+    public static final double kDrivePositionP = 0.02;
+    public static final double kDrivePositionD = 0;
     public static final double DRIVE_CLOSED_LOOP_RAMP_RATE = 0.0;
     public static final double DRIVE_OPEN_LOOP_RAMP_RATE = 0.15; // don't go below 0.15, due to rebound power in cheezy
 

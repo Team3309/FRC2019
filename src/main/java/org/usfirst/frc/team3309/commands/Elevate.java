@@ -91,11 +91,12 @@ public class Elevate extends Command {
         // There is no need to use a percentage tolerance.
         // Positioning error is less when returning to the bottom.
 
-        double tolerance = 0.04;  // for raised positions, reduce if elevator is better tuned
+        double tolerance = 0.02;  // for raised positions, reduce if elevator is better tuned
 
         if (carriageGoalPosition.getCarriagePercentage() == 0.0) {
             // Get closer to the bottom before cutting power.
             // Could also use the limit switch, but there is some question as to its reliability.
+            // Would like to reduce this value, but need a working limit switch to recalibrate first.
             tolerance = 0.015;
         }
         boolean withinTolerance = Math.abs(Robot.elevator.getCarriagePercentage() -

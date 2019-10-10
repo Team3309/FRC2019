@@ -43,7 +43,7 @@ public class Elevator extends Subsystem {
         talon.config_kP(0, Constants.ELEVATOR_P);
         talon.config_kI(0, Constants.ELEVATOR_I);
         talon.config_kD(0, Constants.ELEVATOR_D);
-        talon.config_kF(0, Constants.ELEVATOR_F);
+        talon.config_IntegralZone(0, 5000);  // ignore I term when far away from goal position
 
         talon.configMotionCruiseVelocity(300000);
         talon.configMotionAcceleration(180000);
@@ -81,9 +81,8 @@ public class Elevator extends Subsystem {
             liftMaster.config_kP(0, Constants.ELEVATOR_P);
             liftMaster.config_kI(0, Constants.ELEVATOR_I);
             liftMaster.config_kD(0, Constants.ELEVATOR_D);
-            liftMaster.config_kF(0, Constants.ELEVATOR_F);
         } else if (slot == Slot.BigMovement) {
-            liftMaster.config_kF(1, 0.1);
+            liftMaster.config_kD(1, 0.1);
             liftMaster.config_kI(1, 5.96e-6);
             liftMaster.config_kP(1, 0.45);
         }

@@ -17,27 +17,19 @@ public class VisionHelper {
     private static final boolean forceVisionOn = true;
     private static boolean loadStation3D = false;
 
-    private static final double farTurnP = 0.023;
-    private static final double farTurnI = 0.0;
-    private static final double farTurnD = 0.0;
-    private static final double closeTurnP = 0.05;
-    private static final double closeTurnI = 0.0;
-    private static final double closeTurnD = 0.0;
-    private static final double kFarMaxVisionAngularPower = 0.2;
-    private static final double kCloseMaxVisionAngularPower = 0.35;
-    private static double maxVisionAngularPower = kFarMaxVisionAngularPower;
+    private static final double turnP = 0.023;
+    private static final double turnD = 0.0;
+    private static final double kMaxVisionAngularPower = 0.2;
 
     // Use smaller P when far away to avoid overshoot from potentially large initial correction.
     // Use larger P when closer to provide enough angular power for fine corrections.
-    private static PIDController farTurnController = new PIDController("Far turn", farTurnP, farTurnI, farTurnD);
-    private static PIDController closeTurnController = new PIDController("Close turn", closeTurnP, closeTurnI, closeTurnD);
+    private static PIDController turnController = new PIDController("Vision turn", turnP, 0, turnD);
 
     private static PolynomialRegression linearRegression;
     private static boolean driverOverrideActive = false;
 
     private static Timer timer = new Timer();
 
-    private static PIDController turnController = farTurnController;
     private static Limelight.CamMode curCamMode = Limelight.CamMode.DriverCamera;
     private static int curPipeline = -1;
     private static Limelight.LEDMode curLed;
@@ -45,13 +37,13 @@ public class VisionHelper {
     private static boolean visionOn = false;
     private static boolean  visionThrottleEnabled = true;
     private static boolean  visionTurningEnabled = true;
+    private static double distanceCorrectionFactor;  // used to scale vision corrections based on distance to target
     private static final String visionThrottleKey = "Vision throttle enabled";
     private static final String visionTurningKey = "Vision turning enabled";
 
     static {
         if (isTuning) {
-            farTurnController.outputToDashboard();
-            closeTurnController.outputToDashboard();
+            turnController.outputToDashboard();
             SmartDashboard.putBoolean(visionThrottleKey, visionThrottleEnabled);
             SmartDashboard.putBoolean(visionTurningKey, visionTurningEnabled);
         }
@@ -81,11 +73,30 @@ public class VisionHelper {
             } else if (isStopCrawl) {
                 linearPower = 0.0;
             }
-            if (limelight.getArea() >= 3.0) {
-                turnController = closeTurnController;
-                maxVisionAngularPower = kCloseMaxVisionAngularPower;
+
+            // Select correction scale factor based on distance to target.
+            // When we are closer to the target the angular error increases faster with forward motion.
+            // Therefore, we need to apply a larger angular correction.
+            // We can't apply a larger correction when far away from the target because the turn would
+            // overshot the target before the next update and cause oscillations.
+            // Tuning the stages of this is likely to be a bit tricky. :)
+            distanceCorrectionFactor = 1;
+            if (limelight.getArea() >= 4.0) {
+                distanceCorrectionFactor = 1.75;
             }
-            double angularPower = getTurnCorrection(loadingMode);
+            else if (limelight.getArea() >= 3.0) {
+                distanceCorrectionFactor = 1.5;
+            }
+            else if (limelight.getArea() >= 2.0) {
+                distanceCorrectionFactor = 1.25;
+            }
+
+            double angularPower = getTurnCorrection(loadingMode) * distanceCorrectionFactor;
+
+            angularPower = Util.clamp(angularPower,
+                    -kMaxVisionAngularPower * distanceCorrectionFactor,
+                    kMaxVisionAngularPower * distanceCorrectionFactor);
+
             return new DriveSignal(linearPower + angularPower,
                     linearPower - angularPower);
         }
@@ -106,13 +117,9 @@ public class VisionHelper {
 
     private static void enableVision() {
         visionOn = true;
-        turnController = farTurnController;
-        maxVisionAngularPower = kFarMaxVisionAngularPower;
-        farTurnController.reset();
-        closeTurnController.reset();
+        turnController.reset();
         if (isTuning) {
-            farTurnController.readDashboard();
-            closeTurnController.readDashboard();
+            turnController.readDashboard();
         }
         setPipeline(Constants.kVisionCenterPipeline);
         setLed(Limelight.LEDMode.On);
@@ -173,8 +180,7 @@ public class VisionHelper {
         else {
             visionTurnError = limelight.getTx();
         }
-        visionTurnCorrection = Util.clamp(turnController.update(visionTurnError, 0.0),
-                -maxVisionAngularPower, maxVisionAngularPower);
+        visionTurnCorrection = turnController.update(visionTurnError, 0.0);
 
         if (SmartDashboard.getBoolean(visionTurningKey, visionTurningEnabled)) {
             return visionTurnCorrection;
