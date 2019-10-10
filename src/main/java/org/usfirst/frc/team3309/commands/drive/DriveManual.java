@@ -18,9 +18,16 @@ public class DriveManual extends Command {
 
     private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
 
-    private boolean placingPanel = false;
-    private boolean loadingPanel = false;
     private Command command;
+
+    enum AutoStates {
+        nothing,
+        loadingPanel,
+        placingPanel,
+        removingFinger
+    }
+
+    AutoStates autoState = AutoStates.nothing;
 
     public DriveManual() {
         require(Robot.drive);
@@ -50,43 +57,38 @@ public class DriveManual extends Command {
             VisionHelper.turnOn();
             if (VisionHelper.hasTargets()) {
                 double area = Robot.vision.getTargetArea();
-                if (Robot.panelHolder.hasPanel() && !loadingPanel) {
-                    placingPanel = true;
-                    PanelHolder.ExtendedPosition currentPosition = Robot.panelHolder.getExtendedPosition();
 
-                    if (Math.abs(area) > 7.5 &&
-                            currentPosition == PanelHolder.ExtendedPosition.ExtendedOutwards) {
+                if (Robot.panelHolder.hasPanel() && autoState != AutoStates.loadingPanel) {
+                    if (Math.abs(area) > 7.5 && autoState == AutoStates.placingPanel) {
                         // place panel on rocket after having extended
                         RemoveFingerKt.RemoveFinger().start();
                         VisionHelper.stopCrawl();
-                    } else if (Util.within(area, 0.05, 7.0) &&
-                            currentPosition == PanelHolder.ExtendedPosition.RetractedInwards) {
+                        autoState = AutoStates.removingFinger;
+                    } else if (Util.within(area, 0.05, 7.0) && autoState == AutoStates.nothing) {
                         // extend in preparation to go on the rocket
+                        autoState = AutoStates.placingPanel;
                         PlacePanelKt.PlacePanel().start();
                     }
-                } else if (Util.within(area, 0.1, 20.0) && !placingPanel) {
-                    // extend to check for panel for autograb
-                    loadingPanel = true;
+                } else if (Util.within(area, 0.1, 20.0) && autoState == AutoStates.nothing) {
+                    // extend to check for panel for auto grab
                     command = IntakePanelFromStationKt.IntakePanelFromStation();
-                    // don't restart the command to prevent cycling the pneumatic valve
-                    if (!command.isRunning()) {
-                        command.start();
-                        // DriverStation.reportError("Intaking panel from feeder station", false);
-                    }
+                    command.start();
+                    autoState = AutoStates.loadingPanel;
                 }
-                signal = VisionHelper.getDriveSignal(loadingPanel);
+                if (autoState != AutoStates.nothing) {
+                    signal = VisionHelper.getDriveSignal(autoState == AutoStates.loadingPanel);
+                }
             }
         } else if (OI.getOperatorController().getRightStick().get()) {
             VisionHelper.turnOn();
         } else {
             VisionHelper.turnOff();
-            if (loadingPanel) {
+            if (autoState == AutoStates.loadingPanel) {
                 command.cancel();
                 RetractFingerFromFeederStationKt.RetractFingerFromFeederStation().start();
                 // DriverStation.reportError("Retraced finger from feeder station", false);
             }
-            placingPanel = false;
-            loadingPanel = false;
+            autoState = AutoStates.nothing;
         }
 
         double leftPower = signal.getLeft();

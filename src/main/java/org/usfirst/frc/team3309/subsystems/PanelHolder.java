@@ -13,12 +13,11 @@ import java.util.concurrent.Semaphore;
 
 public class PanelHolder extends Subsystem {
 
+    private boolean debugPanelHolder = false;
+
     private WPI_VictorSPX victor;
     private Solenoid extendingSolenoid;
 
-    private DigitalInput bumperSensor;
-
-    private boolean debugPanelHolder = false;
     private boolean panelPulledIn = false;
     private boolean currentLimitReached = false;
     private Timer pullInTimer = new Timer();
@@ -27,16 +26,15 @@ public class PanelHolder extends Subsystem {
     private double power;
     private int logSeq = 0;
     static Semaphore setPowerMutex = new Semaphore(1);
+    static Semaphore hasPanelMutex = new Semaphore(1);
 
     public PanelHolder() {
         victor = new WPI_VictorSPX(Constants.PANEL_HOLDER_VICTOR_ID);
         victor.configOpenloopRamp(0.3);
         victor.setNeutralMode(NeutralMode.Brake);
         extendingSolenoid = new Solenoid(Constants.PANEL_HOLDER_TELESCOPING_SOLENOID_ID);
-        bumperSensor = new DigitalInput(Constants.PANEL_HOLDER_BUMPER_SENSOR_PORT);
         addChild(victor);
         addChild(extendingSolenoid);
-        addChild(bumperSensor);
     }
 
     @Override
@@ -98,6 +96,8 @@ public class PanelHolder extends Subsystem {
             }
         } else {
             // ejecting
+            pullInTimer.stop();
+            pullInTimer.reset();
             if (currentLimitReached) {
                 // back off eject power if panel gets jammed while ejecting
                 newPower = Math.min(newPower, Constants.PANEL_HOLDER_REDUCED_EJECT_POWER);
@@ -106,7 +106,7 @@ public class PanelHolder extends Subsystem {
 
         // check if new power setting is fast in either direction
         if (newPower < Constants.PANEL_HOLDER_HOLDING_POWER || newPower > 0) {
-            if (pullInTimer.get() > 0) {
+            if (rampDownTimer.get() > 0) {
                 // ramp down cancelled by new higher power setting
                 if (debugPanelHolder) {
                     DriverStation.reportError(++logSeq + ": Ramp down cancelled, timer: " +
@@ -189,10 +189,23 @@ public class PanelHolder extends Subsystem {
 
         boolean havePanel;
 
+        // This method is called periodically and from multiple threads.
+        // It isn't thread safe, so we need to protect it with a mutex.
+        try {
+            hasPanelMutex.acquire();
+        } catch (InterruptedException e) {
+            DriverStation.reportError("Mutex acquire interrupted", false);
+        }
+
         // check if motor is ramping down to holding power
         if (rampDownTimer.get() > 0) {
             // use previous value until motor speed settles and we can measure current reliably
             havePanel = hadPanel;
+        }
+        // check if pulling in panel
+        else if (pullInTimer.get() > 0) {
+            // don't think we lost the panel if current drops slightly below max due to reduced pull-in power
+            havePanel = true;
         }
         // check if ejecting
         else if (power >= 0) {
@@ -237,6 +250,7 @@ public class PanelHolder extends Subsystem {
         }
 
         hadPanel = havePanel;
+        hasPanelMutex.release();
         return havePanel;
     }
 
@@ -267,7 +281,9 @@ public class PanelHolder extends Subsystem {
 
     public void outputToDashboard() {
         SmartDashboard.putBoolean("PH Panel detected", hasPanel());
-        SmartDashboard.putNumber("PH Power", victor.getMotorOutputPercent());
+        // don't read power from the controller because the request can timeout when over max current
+        // and prevent us from executing the code that cuts the power
+        SmartDashboard.putNumber("PH Power", power);
         SmartDashboard.putNumber("PH Current", getCurrent());
         SmartDashboard.putNumber("PH Ramp down timer: ", rampDownTimer.get());
         SmartDashboard.putNumber("PH Detection debounce timer: ", detectionDebounceTimer.get());

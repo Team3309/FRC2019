@@ -5,6 +5,7 @@ import org.usfirst.frc.team3309.Robot.panelIntake
 import org.usfirst.frc.team3309.commands.*
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate
 import org.usfirst.frc.team3309.commands.climber.ClimberManual
+import org.usfirst.frc.team3309.commands.drive.DriveManual
 import org.usfirst.frc.team3309.commands.drive.DriveSetHighGear
 import org.usfirst.frc.team3309.commands.drive.DriveSetLowGear
 import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeActuate
@@ -142,6 +143,14 @@ object OI {
             }
         })
 
+        leftJoystickRightClusterGroup.whenReleased(router {
+            if (DriverStation.getInstance().isDisabled) {
+                Command.empty
+            } else {
+                DriveManual()
+            }
+        })
+
         rightJoystickRightClusterGroup.whenReleased(router {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
@@ -158,6 +167,10 @@ object OI {
         operatorController.dPad.left.whenPressed(Elevate(Elevate.Level.CargoShipCargo))
 
         operatorPanelIntakeButton.whenPressed(IntakePanelFromStation())
+        // When the button is released, the intake command is cancelled, which can
+        // briefly allow a return to holding power due to the default command
+        // sneaking in before the retract command begins. This is now well
+        // managed by PanelHolder() even though it can generate an extra ramp down cycle.
         operatorPanelIntakeButton.whenReleased(RetractFingerFromFeederStation())
 
         operatorCargoIntakeButton.whenPressed(IntakeCargoNear())

@@ -71,10 +71,10 @@ public class Drive extends Subsystem {
         talon.config_kD(Constants.kDriveVelocitySlot, Constants.kDriveVelocityD, 10);
         talon.config_kF(Constants.kDriveVelocitySlot, Constants.kDriveVelocityF, 10);
 
-        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionP, 10);
-        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionI, 10);
-        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionD, 10);
-        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionF, 10);
+        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionP, 0);
+        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionI, 0);
+        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionD, 0);
+        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionF, 0);
 
         talon.setNeutralMode(NeutralMode.Brake);
         talon.setInverted(true);
