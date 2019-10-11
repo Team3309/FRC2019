@@ -96,6 +96,10 @@ public class Limelight {
 
     private double[] lastPos = new double [0];
 
+    private boolean had3D = false;
+
+    public boolean getHad3D() { return had3D; }
+
     // Cache all 3D values simultaneously and check for validity.
     // Only call once each time through the processing loop.
     public boolean has3D()
@@ -136,6 +140,7 @@ public class Limelight {
         }
 
         lastPos = newPos;
+        had3D = dataValid;
 
         if (dataValid)
         {
@@ -171,7 +176,7 @@ public class Limelight {
     }
 
     public double rotationCenterToTargetRad() {
-        return atan2(rotationCenterInchesX() + kPanelHolderBiasInchesX, -rotationCenterInchesZ());
+        return atan((rotationCenterInchesX() + kPanelHolderBiasInchesX) / -rotationCenterInchesZ());
     }
 
     private double panelInchesX() {
