@@ -17,7 +17,7 @@ public class VisionHelper {
     private static final boolean forceVisionOn = true;
     private static boolean loadStation3D = true;
 
-    private static final double turnP = 0.023;
+    private static final double turnP = 0.02;
     private static final double turnD = 0.0;
     private static final double kMaxVisionAngularPower = 0.2;
 
@@ -71,13 +71,13 @@ public class VisionHelper {
             // Tuning the stages of this is likely to be a bit tricky. :)
             distanceCorrectionFactor = 1;
             if (limelight.getArea() >= 4.0) {
-                distanceCorrectionFactor = 1.5;
+                distanceCorrectionFactor = 1.4;
             }
             else if (limelight.getArea() >= 3.0) {
-                distanceCorrectionFactor = 1.3;
+                distanceCorrectionFactor = 1.2;
             }
             else if (limelight.getArea() >= 2.0) {
-                distanceCorrectionFactor = 1.15;
+                distanceCorrectionFactor = 1.1;
             }
 
             double angularPower = getTurnCorrection(loadingMode) * distanceCorrectionFactor;
@@ -175,7 +175,7 @@ public class VisionHelper {
                 } else if (getTimeElasped() < 0.2) {
                     visionThrottle = Math.min(visionThrottle, 0.40);
                 } else {
-                    visionThrottle = Math.min(visionThrottle, 0.60);
+                    visionThrottle = Math.min(visionThrottle, 0.44);
                 }
             }
 
