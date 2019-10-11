@@ -33,7 +33,7 @@ public class Vision extends Subsystem {
         return panelLimelight.getArea();
     }
 
-    public boolean getHad3D() { return panelLimelight.getHad3D(); }
+    public boolean load3D() { return panelLimelight.load3D(); }
 
     public double targetDistInches3D() { return panelLimelight.targetDistInches3D(); }
 

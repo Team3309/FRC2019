@@ -180,7 +180,7 @@ public class VisionHelper {
 
         // don't use 3D vision when picking up at loading station
         // because panel blocks bottom of vision tape
-        if (limelight.has3D() && (!loadingMode || loadStation3D)) {
+        if (limelight.getHad3D() && (!loadingMode || loadStation3D)) {
             visionTurnError = toDegrees(limelight.rotationCenterToTargetRad(loadingMode));
         }
         else {

@@ -102,7 +102,7 @@ public class Limelight {
 
     // Cache all 3D values simultaneously and check for validity.
     // Only call once each time through the processing loop.
-    public boolean has3D()
+    public boolean load3D()
     {
         boolean dataValid = false;
 
@@ -153,7 +153,7 @@ public class Limelight {
         }
     }
 
-    // These methods are only valid after getting a true result from has3D()
+    // These methods are only valid after getting a true result from load3D()
     public double getLatency3D() { return latency3D.get(); }
     private double getRaw3DxInches() { return lastPos[0]; }
     private double getRaw3DzInches() { return lastPos[2]; }
@@ -195,14 +195,18 @@ public class Limelight {
     // Straight line distance to the target
     public double targetDistInches3D()
     {
-        double panelX = panelInchesX();
-        double panelZ = panelInchesZ();
-        return -sqrt(panelX * panelX + panelZ * panelZ) * Math.signum(panelZ);
+        if (had3D) {
+            double panelX = panelInchesX();
+            double panelZ = panelInchesZ();
+            return -sqrt(panelX * panelX + panelZ * panelZ) * Math.signum(panelZ);
+        }
+        return 100;   // don't eject when we have no 3D data
     }
 
     public void outputToDashboard()
     {
-        if (has3D())
+        load3D();
+        if (had3D)
         {
             SmartDashboard.putNumber(limelightName + " panelInchesZ", panelInchesZ());
             SmartDashboard.putNumber(limelightName + " targetDistInches3D", targetDistInches3D());
