@@ -5,10 +5,10 @@ import org.usfirst.frc.team3309.subsystems.Drive
 import org.usfirst.frc.team4322.commandv2.Command
 import org.usfirst.frc.team4322.commandv2.group
 
-fun DriveAuto(mode: Int, encoderCount: Double): Command {
+fun DriveAuto(mode: Int, left: Double, right: Double): Command {
     return group {
         sequential {
-            +DriveAuto(mode, encoderCount)
+            +DriveAuto(mode, left, right)
         }
     }
 }

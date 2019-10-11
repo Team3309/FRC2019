@@ -1,27 +1,36 @@
 package org.usfirst.frc.team3309.commands.drive;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team4322.commandv2.Command;
 
+
 public class DriveAuto extends Command {
 
-    private double turnCounts;
-    private int mode; // 0 = position, 1 = velocity
+    private double left;
+    private double right;
+    private ControlMode mode;
 
-    public DriveAuto(int mode, double turnCounts) {
+    public DriveAuto(ControlMode mode, double left, double right) {
         require(Robot.drive);
         setInterruptBehavior(InterruptBehavior.Terminate);
-        this.turnCounts = turnCounts;
+        this.left = left;
+        this.right = right;
         this.mode = mode;
     }
 
     @Override
     protected void initialize() {
         Robot.drive.setHighGear();
-        if (mode == 0) {
-            Robot.drive.turnPosition(turnCounts);
-        } else {
-            Robot.drive.turnVelocity(turnCounts);
+        if (mode == ControlMode.Position) {
+            Robot.drive.autoPosition(left, right);
+        } else if (mode == ControlMode.Velocity) {
+            Robot.drive.autoVelocity(left, right);
+        } else if (mode == ControlMode.MotionMagic) {
+            Robot.drive.autoMotionMagic(left, right);
+        } else if (mode == ControlMode.PercentOutput) {
+            Robot.drive.setLeftRight(mode, left, right);
         }
     }
 

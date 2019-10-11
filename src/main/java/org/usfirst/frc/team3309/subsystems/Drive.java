@@ -108,15 +108,18 @@ public class Drive extends Subsystem {
         return rad_s / (Math.PI * 2.0) * 4096.0 / 10.0;
     }
 
-    public void turnPosition(double encoderCount) {
+    public void autoPosition(double leftEncoderCount, double rightEncoderCount) {
         // positive argument => turn to the right
         setPid(Constants.kDriveVelocitySlot);
-        driveLeftMaster.set(ControlMode.Position, getLeftEncoderDistance() + encoderCount);
-        driveRightMaster.set(ControlMode.Position, getRightEncoderDistance() + encoderCount);
+        double newLeft = getLeftEncoderDistance() - leftEncoderCount;
+        double newRight = getRightEncoderDistance() + rightEncoderCount;
+
+        driveLeftMaster.set(ControlMode.Position, newLeft);
+        driveRightMaster.set(ControlMode.Position, newRight);
         DriverStation.reportError("Auto Turn Pos: leftOld: " + getLeftEncoderDistance() +
-                ", leftNew: " + (getLeftEncoderDistance() + encoderCount) +
+                ", leftNew: " + newLeft +
                 ", rightOld: " + getRightEncoderDistance() +
-                ", rightPNew: " + (getRightEncoderDistance() + encoderCount), false);
+                ", rightPNew: " + newRight, false);
     }
 
     public boolean turnComplete() {
@@ -126,11 +129,17 @@ public class Drive extends Subsystem {
         //return leftComplete && rightComplete;
     }
 
-    public void turnVelocity(double encoderCountsPerSec) {
+    public void autoVelocity(double leftEncoderCountsPerSec, double rightEncoderCountsPerSec) {
         // positive argument => turn to the right
         setPid(Constants.kDriveVelocitySlot);
-        driveLeftMaster.set(ControlMode.Velocity, encoderCountsPerSec);
-        driveRightMaster.set(ControlMode.Velocity, encoderCountsPerSec);
+        driveLeftMaster.set(ControlMode.Velocity, -leftEncoderCountsPerSec);
+        driveRightMaster.set(ControlMode.Velocity, rightEncoderCountsPerSec);
+    }
+
+    public void autoMotionMagic(double left, double right) {
+        // positive argument => turn to the right
+        setPid(Constants.kDriveVelocitySlot);
+        setLeftRight(ControlMode.MotionMagic, left, right);
     }
 
     public void reset() {

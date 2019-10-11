@@ -12,7 +12,7 @@ import org.usfirst.frc.team4322.commandv2.group
 fun RemoveFinger(): Command {
     return group {
         sequential {
-            +WaitCommand(0.25)
+            +WaitCommand(0.1)
             parallel {
                 +PanelHolderSetRollersInstantly(Constants.PANEL_HOLDER_EJECT_POWER)
                 sequential {

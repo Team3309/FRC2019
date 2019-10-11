@@ -86,7 +86,7 @@ public class Util {
      * @param tolerance, percent tolerance
      * */
     public static boolean withinTolerance(double value, double goal, double tolerance) {
-        return Math.abs((goal - value) / goal) <= Math.  (tolerance);
+        return Math.abs((goal - value) / goal) <= Math.abs(tolerance);
     }
 
     /*
