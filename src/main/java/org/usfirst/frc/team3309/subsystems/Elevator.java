@@ -43,7 +43,7 @@ public class Elevator extends Subsystem {
         talon.config_kP(0, Constants.ELEVATOR_P);
         talon.config_kI(0, Constants.ELEVATOR_I);
         talon.config_kD(0, Constants.ELEVATOR_D);
-        talon.config_IntegralZone(0, 5000);  // ignore I term when far away from goal position
+        talon.config_IntegralZone(0, 1500);  // ignore I term when far away from goal position
 
         talon.configMotionCruiseVelocity(300000);
         talon.configMotionAcceleration(180000);

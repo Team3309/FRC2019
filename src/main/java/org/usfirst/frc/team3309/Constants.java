@@ -71,9 +71,9 @@ public class Constants {
     public static final int ELEVATOR_MASTER_TALON_ID = 6;
     public static final int ELEVATOR_SLAVE_VICTOR_ID = 10;
 
-    public static final double ELEVATOR_P = 0.05;
-    public static final double ELEVATOR_I = 5.56e-6;
-    public static final double ELEVATOR_D = 0;
+    public static final double ELEVATOR_P = 0.35;
+    public static final double ELEVATOR_I = 3.54972071e-05;
+    public static final double ELEVATOR_D = 15;
 
     // max position used for conversions (encoder counts)
     public static final double ELEVATOR_ENCODER_COUNTS_FOR_MAX_HEIGHT = 116000;
@@ -123,7 +123,7 @@ public class Constants {
     public static final int PANEL_HOLDER_BUMPER_SENSOR_PORT = 0;
     public static final double PANEL_HOLDER_PANEL_DETECT_CURRENT = 2.6;
     public static final double PANEL_HOLDER_MAX_CURRENT = 25;
-    public static final double PANEL_HOLDER_HOLDING_POWER = -0.2;
+    public static final double PANEL_HOLDER_HOLDING_POWER = -0;
     public static final double PANEL_HOLDER_INTAKE_POWER = -0.75;
     public static final double PANEL_HOLDER_REDUCED_INTAKE_POWER = -0.6;
     public static final double PANEL_HOLDER_EJECT_POWER = 0.65;
