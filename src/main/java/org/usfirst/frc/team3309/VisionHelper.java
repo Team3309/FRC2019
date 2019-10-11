@@ -129,7 +129,7 @@ public class VisionHelper {
 
     public static double getThrottle() {
 
-        throttleAngularFactor = 1;
+        throttleAngularFactor = 0.5;
         if (SmartDashboard.getBoolean(visionThrottleKey, visionThrottleEnabled)) {
 
             // slow down as we approach the target
@@ -140,15 +140,15 @@ public class VisionHelper {
             }
             else if (area < 1) {
                 visionThrottle = 0.5;
-                throttleAngularFactor = 0.23;
+                throttleAngularFactor = 0.2;
             }
             else if (area < 2) {
                 visionThrottle = 0.45;
-                throttleAngularFactor = 0.5;
+                throttleAngularFactor = 0.25;
             }
             else if (area < 3) {
                 visionThrottle = 0.35;
-                throttleAngularFactor = 0.75;
+                throttleAngularFactor = 0.35;
             }
             else {
                 visionThrottle = 0.2;
@@ -181,7 +181,7 @@ public class VisionHelper {
         // don't use 3D vision when picking up at loading station
         // because panel blocks bottom of vision tape
         if (limelight.has3D() && (!loadingMode || loadStation3D)) {
-            visionTurnError = toDegrees(limelight.rotationCenterToTargetRad());
+            visionTurnError = toDegrees(limelight.rotationCenterToTargetRad(loadingMode));
         }
         else {
             visionTurnError = limelight.getTx();

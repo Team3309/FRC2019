@@ -175,9 +175,13 @@ public class Limelight {
         return limelightCenterInchesZ() + cos(limelightToTargetRad()) * zRotationOffsetInches;
     }
 
-    public double rotationCenterToTargetRad() {
+    public double rotationCenterToTargetRad(boolean loadingMode) {
+        double bias = 0;
+        if (!loadingMode) {
+            bias = kPanelHolderBiasInchesX;
+        }
         return limelightToTargetRad() -
-                atan2(rotationCenterInchesX() + kPanelHolderBiasInchesX, -rotationCenterInchesZ());
+                atan2(rotationCenterInchesX() + bias, -rotationCenterInchesZ());
     }
 
     private double panelInchesX() {
@@ -205,7 +209,7 @@ public class Limelight {
             SmartDashboard.putNumber(limelightName + " limelightToTargetDegrees",
                     toDegrees(limelightToTargetRad()));
             SmartDashboard.putNumber(limelightName + " rotationCenterToTargetDegrees",
-                    toDegrees(rotationCenterToTargetRad()));
+                    toDegrees(rotationCenterToTargetRad(true)));
             SmartDashboard.putNumber(limelightName + " limelightCenterInchesX", limelightCenterInchesX());
             SmartDashboard.putNumber(limelightName + " limelightCenterInchesZ", limelightCenterInchesZ());
             SmartDashboard.putNumber(limelightName + " rotationCenterInchesX", rotationCenterInchesX());
