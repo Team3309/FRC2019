@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 
 import static java.lang.Math.*;
+import static org.usfirst.frc.team3309.Constants.kPanelHolderBiasInchesX;
 
 public class Limelight {
 
@@ -151,30 +152,56 @@ public class Limelight {
     public double getLatency3D() { return latency3D.get(); }
     private double getRaw3DxInches() { return lastPos[0]; }
     private double getRaw3DzInches() { return lastPos[2]; }
-    private double getRaw3DyDegrees() { return lastPos[4]; }
-    private double getAdj3DxInches() { return getRaw3DxInches() +
-            xOffsetInches + Constants.kPanelHolderBiasInchesX; }
-    private double getPlacement3DzInches() { return getRaw3DzInches() + zPlacementOffsetInches; }
-    private double getRotation3DzInches() { return getRaw3DzInches() + zRotationOffsetInches; }
+    private double limelightToTargetRad() { return toRadians(lastPos[4]); }
 
-    // Straight line distance to the target
-    public double targetInches3D()
-    {
-        return sqrt(getAdj3DxInches() * getAdj3DxInches() + getPlacement3DzInches() * getPlacement3DzInches());
+    private double limelightCenterInchesX() {
+        return getRaw3DxInches() + cos(limelightToTargetRad()) * xOffsetInches;
     }
 
-    // Angle from robot rotational center to the target (negative value means the bot needs to turn to the left)
-    public double rotationCenterDegrees3D()
+    private double limelightCenterInchesZ() {
+        return getRaw3DzInches() + sin(limelightToTargetRad()) * xOffsetInches;
+    }
+
+    private double rotationCenterInchesX() {
+        return limelightCenterInchesX() - sin(limelightToTargetRad()) * zRotationOffsetInches;
+    }
+
+    private double rotationCenterInchesZ() {
+        return limelightCenterInchesZ() + cos(limelightToTargetRad()) * zRotationOffsetInches;
+    }
+
+    public double rotationCenterToTargetRad() {
+        return atan2(rotationCenterInchesX() + kPanelHolderBiasInchesX, -rotationCenterInchesZ());
+    }
+
+    private double panelInchesX() {
+        return limelightCenterInchesX() - sin(limelightToTargetRad()) * zPlacementOffsetInches;
+    }
+
+    private double panelInchesZ() {
+        return limelightCenterInchesZ() + cos(limelightToTargetRad()) * zPlacementOffsetInches;
+    }
+
+    // Straight line distance to the target
+    public double targetDistInches3D()
     {
-        return getRaw3DyDegrees() - toDegrees(atan2(getAdj3DxInches(), -getRotation3DzInches()));
+        return sqrt(panelInchesX() * panelInchesX() + panelInchesZ() * panelInchesZ());
     }
 
     public void outputToDashboard()
     {
         if (has3D())
         {
-            SmartDashboard.putNumber(limelightName + " targetInches3D", targetInches3D());
-            SmartDashboard.putNumber(limelightName +
-                    " rotationCenterDegrees3D", rotationCenterDegrees3D());        }
+            SmartDashboard.putNumber(limelightName + " panelInchesZ", panelInchesZ());
+            SmartDashboard.putNumber(limelightName + " targetDistInches3D", targetDistInches3D());
+            SmartDashboard.putNumber(limelightName + " limelightToTargetDegrees",
+                    toDegrees(limelightToTargetRad()));
+            SmartDashboard.putNumber(limelightName + " rotationCenterToTargetDegrees",
+                    toDegrees(rotationCenterToTargetRad()));
+            SmartDashboard.putNumber(limelightName + " limelightCenterInchesX", limelightCenterInchesX());
+            SmartDashboard.putNumber(limelightName + " limelightCenterInchesZ", limelightCenterInchesZ());
+            SmartDashboard.putNumber(limelightName + " rotationCenterInchesX", rotationCenterInchesX());
+            SmartDashboard.putNumber(limelightName + " rotationCenterInchesZ", rotationCenterInchesZ());
+        }
     }
 }

@@ -9,6 +9,8 @@ import org.usfirst.frc.team3309.lib.util.PolynomialRegression;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team3309.subsystems.Vision;
 
+import static java.lang.Math.toDegrees;
+
 public class VisionHelper {
 
     private static Limelight limelight = Vision.panelLimelight;
@@ -192,7 +194,7 @@ public class VisionHelper {
         // don't use 3D vision when picking up at loading station
         // because panel blocks bottom of vision tape
         if (limelight.has3D() && (!loadingMode || loadStation3D)) {
-            visionTurnError = limelight.rotationCenterDegrees3D();
+            visionTurnError = toDegrees(limelight.rotationCenterToTargetRad());
         }
         else {
             visionTurnError = limelight.getTx();
