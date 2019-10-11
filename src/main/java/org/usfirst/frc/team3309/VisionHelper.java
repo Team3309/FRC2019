@@ -15,7 +15,7 @@ public class VisionHelper {
 
     private static final boolean isTuning = false;
     private static final boolean forceVisionOn = true;
-    private static boolean loadStation3D = false;
+    private static boolean loadStation3D = true;
 
     private static final double turnP = 0.023;
     private static final double turnD = 0.0;
@@ -25,7 +25,6 @@ public class VisionHelper {
     // Use larger P when closer to provide enough angular power for fine corrections.
     private static PIDController turnController = new PIDController("Vision turn", turnP, 0, turnD);
 
-    private static PolynomialRegression linearRegression;
     private static boolean driverOverrideActive = false;
 
     private static Timer timer = new Timer();
@@ -54,23 +53,13 @@ public class VisionHelper {
             disableVision();
         }
         setCamMode(Limelight.CamMode.VisionProcessor);
-
-        // points for line to vision target (target area, motor power)
-        double[][] motorTrajectory = new double[][]{
-                {0.5, 0.4},
-                {9.71, 0.03},
-        };
-
-        linearRegression = new PolynomialRegression(motorTrajectory, 1);
     }
 
     public static DriveSignal getDriveSignal(boolean loadingMode) {
         if (limelight.getArea() < 15.0) {
             double linearPower = getThrottle();
 
-            if (limelight.getArea() < 4.5 && linearPower > 0) {
-                linearPower = 0.5;
-            } else if (isStopCrawl) {
+            if (isStopCrawl) {
                 linearPower = 0.0;
             }
 
@@ -82,20 +71,20 @@ public class VisionHelper {
             // Tuning the stages of this is likely to be a bit tricky. :)
             distanceCorrectionFactor = 1;
             if (limelight.getArea() >= 4.0) {
-                distanceCorrectionFactor = 1.75;
-            }
-            else if (limelight.getArea() >= 3.0) {
                 distanceCorrectionFactor = 1.5;
             }
+            else if (limelight.getArea() >= 3.0) {
+                distanceCorrectionFactor = 1.3;
+            }
             else if (limelight.getArea() >= 2.0) {
-                distanceCorrectionFactor = 1.25;
+                distanceCorrectionFactor = 1.15;
             }
 
             double angularPower = getTurnCorrection(loadingMode) * distanceCorrectionFactor;
 
             angularPower = Util.clamp(angularPower,
-                    -kMaxVisionAngularPower * distanceCorrectionFactor,
-                    kMaxVisionAngularPower * distanceCorrectionFactor);
+                    -kMaxVisionAngularPower,
+                    kMaxVisionAngularPower);
 
             return new DriveSignal(linearPower + angularPower,
                     linearPower - angularPower);
@@ -159,9 +148,37 @@ public class VisionHelper {
     public static double visionThrottle;
 
     public static double getThrottle() {
-        visionThrottle = linearRegression.predict(limelight.getArea());
-//        throttle =  Math.signum(throttle) * Util.clamp(Math.abs(throttle), 0.2, 0.4);
         if (SmartDashboard.getBoolean(visionThrottleKey, visionThrottleEnabled)) {
+
+            // slow down as we approach the target
+            double area = limelight.getArea();
+            if (area < 0.8) {
+                visionThrottle = 0.6;
+            }
+            else if (area < 1) {
+                visionThrottle = 0.5;
+            }
+            else if (area < 2) {
+                visionThrottle = 0.45;
+            }
+            else if (area < 3) {
+                visionThrottle = 0.35;
+            }
+            else visionThrottle = 0.2;
+
+            // ramp up slowly at start to avoid jerking the carriage when it's raised
+            if (Robot.elevator.getCarriagePercentage() > 0.1) {
+                if (getTimeElasped() < 0.07) {
+                    visionThrottle = Math.min(visionThrottle, 0.20);
+                } else if (getTimeElasped() < 0.12) {
+                    visionThrottle = Math.min(visionThrottle, 0.30);
+                } else if (getTimeElasped() < 0.2) {
+                    visionThrottle = Math.min(visionThrottle, 0.40);
+                } else {
+                    visionThrottle = Math.min(visionThrottle, 0.60);
+                }
+            }
+
             return visionThrottle;
         }
         return 0;
@@ -233,7 +250,6 @@ public class VisionHelper {
     }
 
     public static void outputToDashboard() {
-        SmartDashboard.putNumber("Vision linear regression", linearRegression.R2());
         SmartDashboard.putNumber("Vision throttle", visionThrottle);
         SmartDashboard.putNumber("Vision turn error", visionTurnError);
         SmartDashboard.putNumber("Vision turn correction", visionTurnCorrection);

@@ -123,7 +123,7 @@ public class Constants {
     public static final int PANEL_HOLDER_BUMPER_SENSOR_PORT = 0;
     public static final double PANEL_HOLDER_PANEL_DETECT_CURRENT = 2.6;
     public static final double PANEL_HOLDER_MAX_CURRENT = 25;
-    public static final double PANEL_HOLDER_HOLDING_POWER = -0;
+    public static final double PANEL_HOLDER_HOLDING_POWER = -0.2;
     public static final double PANEL_HOLDER_INTAKE_POWER = -0.75;
     public static final double PANEL_HOLDER_REDUCED_INTAKE_POWER = -0.6;
     public static final double PANEL_HOLDER_EJECT_POWER = 0.65;
