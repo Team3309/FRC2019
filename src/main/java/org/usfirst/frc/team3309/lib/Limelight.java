@@ -176,7 +176,8 @@ public class Limelight {
     }
 
     public double rotationCenterToTargetRad() {
-        return atan((rotationCenterInchesX() + kPanelHolderBiasInchesX) / -rotationCenterInchesZ());
+        return limelightToTargetRad() -
+                atan((rotationCenterInchesX() + kPanelHolderBiasInchesX) / -rotationCenterInchesZ());
     }
 
     private double panelInchesX() {
@@ -190,7 +191,9 @@ public class Limelight {
     // Straight line distance to the target
     public double targetDistInches3D()
     {
-        return sqrt(panelInchesX() * panelInchesX() + panelInchesZ() * panelInchesZ());
+        double panelX = panelInchesX();
+        double panelZ = panelInchesZ();
+        return -sqrt(panelX * panelX + panelZ * panelZ) * Math.signum(panelZ);
     }
 
     public void outputToDashboard()

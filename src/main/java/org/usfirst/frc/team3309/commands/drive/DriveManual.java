@@ -61,7 +61,7 @@ public class DriveManual extends Command {
                 if (Robot.panelHolder.hasPanel() && autoState != AutoStates.loadingPanel) {
                     if (autoState == AutoStates.placingPanel &&
                             (Math.abs(area) > 7.5 ||
-                                    (Robot.vision.getHad3D() && Math.abs(Robot.vision.targetDistInches3D()) < 3))) {
+                                    (Robot.vision.getHad3D() && Robot.vision.targetDistInches3D() < 2))) {
                         // place panel on rocket after having extended
                         RemoveFingerKt.RemoveFinger().start();
                         VisionHelper.stopCrawl();
