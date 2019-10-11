@@ -19,9 +19,8 @@ public class VisionHelper {
     private static final boolean forceVisionOn = true;
     private static boolean loadStation3D = true;
 
-    private static final double turnP = 0.02;
+    private static final double turnP = 0.04;
     private static final double turnD = 0.0;
-    private static final double kMaxVisionAngularPower = 0.2;
 
     // Use smaller P when far away to avoid overshoot from potentially large initial correction.
     // Use larger P when closer to provide enough angular power for fine corrections.
@@ -38,7 +37,6 @@ public class VisionHelper {
     private static boolean visionOn = false;
     private static boolean  visionThrottleEnabled = true;
     private static boolean  visionTurningEnabled = true;
-    private static double distanceCorrectionFactor;  // used to scale vision corrections based on distance to target
     private static final String visionThrottleKey = "Vision throttle enabled";
     private static final String visionTurningKey = "Vision turning enabled";
 
@@ -65,28 +63,7 @@ public class VisionHelper {
                 linearPower = 0.0;
             }
 
-            // Select correction scale factor based on distance to target.
-            // When we are closer to the target the angular error increases faster with forward motion.
-            // Therefore, we need to apply a larger angular correction.
-            // We can't apply a larger correction when far away from the target because the turn would
-            // overshot the target before the next update and cause oscillations.
-            // Tuning the stages of this is likely to be a bit tricky. :)
-            distanceCorrectionFactor = 1;
-            if (limelight.getArea() >= 4.0) {
-                distanceCorrectionFactor = 1.4;
-            }
-            else if (limelight.getArea() >= 3.0) {
-                distanceCorrectionFactor = 1.2;
-            }
-            else if (limelight.getArea() >= 2.0) {
-                distanceCorrectionFactor = 1.1;
-            }
-
-            double angularPower = getTurnCorrection(loadingMode) * distanceCorrectionFactor;
-
-            angularPower = Util.clamp(angularPower,
-                    -kMaxVisionAngularPower,
-                    kMaxVisionAngularPower);
+            double angularPower = getTurnCorrection(loadingMode);
 
             return new DriveSignal(linearPower + angularPower,
                     linearPower - angularPower);
@@ -148,33 +125,42 @@ public class VisionHelper {
     }
 
     public static double visionThrottle;
+    private static double throttleAngularFactor;   // turn slower at high speed
 
     public static double getThrottle() {
+
+        throttleAngularFactor = 1;
         if (SmartDashboard.getBoolean(visionThrottleKey, visionThrottleEnabled)) {
 
             // slow down as we approach the target
             double area = limelight.getArea();
             if (area < 0.8) {
                 visionThrottle = 0.6;
+                throttleAngularFactor = 0.15;
             }
             else if (area < 1) {
                 visionThrottle = 0.5;
+                throttleAngularFactor = 0.23;
             }
             else if (area < 2) {
                 visionThrottle = 0.45;
+                throttleAngularFactor = 0.5;
             }
             else if (area < 3) {
                 visionThrottle = 0.35;
+                throttleAngularFactor = 0.75;
             }
-            else visionThrottle = 0.2;
+            else {
+                visionThrottle = 0.2;
+            }
 
             // ramp up slowly at start to avoid jerking the carriage when it's raised
             if (Robot.elevator.getCarriagePercentage() > 0.1) {
-                if (getTimeElasped() < 0.07) {
+                if (getTimeElapsed() < 0.07) {
                     visionThrottle = Math.min(visionThrottle, 0.20);
-                } else if (getTimeElasped() < 0.12) {
+                } else if (getTimeElapsed() < 0.12) {
                     visionThrottle = Math.min(visionThrottle, 0.30);
-                } else if (getTimeElasped() < 0.2) {
+                } else if (getTimeElapsed() < 0.2) {
                     visionThrottle = Math.min(visionThrottle, 0.40);
                 } else {
                     visionThrottle = Math.min(visionThrottle, 0.44);
@@ -188,6 +174,7 @@ public class VisionHelper {
 
     public static double visionTurnError;
     public static double visionTurnCorrection;
+    public static double angularPower;
 
     public static double getTurnCorrection(boolean loadingMode) {
 
@@ -201,8 +188,32 @@ public class VisionHelper {
         }
         visionTurnCorrection = turnController.update(visionTurnError, 0.0);
 
+        // Select correction scale factor based on distance to target.
+        // When we are closer to the target the angular error increases faster with forward motion.
+        // Therefore, we need to apply a larger angular correction.
+        // We can't apply a larger correction when far away from the target because the turn would
+        // overshot the target before the next update and cause oscillations.
+        // Tuning the stages of this is likely to be a bit tricky. :)
+       double distanceCorrectionFactor = 1;
+        if (limelight.getArea() >= 4.0) {
+            distanceCorrectionFactor = 1.4;
+        }
+        else if (limelight.getArea() >= 3.0) {
+            distanceCorrectionFactor = 1.2;
+        }
+        else if (limelight.getArea() >= 2.0) {
+            distanceCorrectionFactor = 1.1;
+        }
+
+        angularPower = visionTurnCorrection * distanceCorrectionFactor * throttleAngularFactor;
+
+        // Limit max angular power as a fail-safe. This isn't part of the core
+        // correction algorithm.
+        double maxAngularPower = 0.5;
+        angularPower = Util.clamp(angularPower, -maxAngularPower, maxAngularPower);
+
         if (SmartDashboard.getBoolean(visionTurningKey, visionTurningEnabled)) {
-            return visionTurnCorrection;
+            return angularPower;
         }
         return 0;
     }
@@ -243,7 +254,7 @@ public class VisionHelper {
         isStopCrawl = true;
     }
 
-    public static double getTimeElasped() {
+    public static double getTimeElapsed() {
         return timer.get();
     }
 
@@ -255,6 +266,8 @@ public class VisionHelper {
         SmartDashboard.putNumber("Vision throttle", visionThrottle);
         SmartDashboard.putNumber("Vision turn error", visionTurnError);
         SmartDashboard.putNumber("Vision turn correction", visionTurnCorrection);
+        SmartDashboard.putNumber("Vision angular power", angularPower);
+        SmartDashboard.putNumber("Time since vision start", timer.get());
         Vision.panelLimelight.outputToDashboard();
     }
 

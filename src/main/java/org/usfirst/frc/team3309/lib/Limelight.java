@@ -177,7 +177,7 @@ public class Limelight {
 
     public double rotationCenterToTargetRad() {
         return limelightToTargetRad() -
-                atan((rotationCenterInchesX() + kPanelHolderBiasInchesX) / -rotationCenterInchesZ());
+                atan2(rotationCenterInchesX() + kPanelHolderBiasInchesX, -rotationCenterInchesZ());
     }
 
     private double panelInchesX() {

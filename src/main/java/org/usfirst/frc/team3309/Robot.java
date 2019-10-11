@@ -167,6 +167,14 @@ public class Robot extends CommandV2Robot {
      */
     @Override
     public void testInit() {
+        super.testInit();
+        drive.setHighGear();
+        drive.reset();
+    }
+
+    @Override
+    public void testPeriodic() {
+        super.testPeriodic();
     }
 
     /*
