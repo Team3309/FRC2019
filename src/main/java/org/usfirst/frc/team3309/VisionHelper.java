@@ -155,13 +155,15 @@ public class VisionHelper {
             }
 
             // ramp up slowly at start to avoid jerking the carriage when it's raised
-            if (Robot.elevator.getCarriagePercentage() > 0.1) {
+            if (Robot.elevator.getCarriagePercentage() > -0.1) {
                 if (getTimeElapsed() < 0.07) {
                     visionThrottle = Math.min(visionThrottle, 0.20);
-                } else if (getTimeElapsed() < 0.12) {
+                } else if (getTimeElapsed() < 0.15) {
+                    visionThrottle = Math.min(visionThrottle, 0.25);
+                } else if (getTimeElapsed() < 0.23) {
                     visionThrottle = Math.min(visionThrottle, 0.30);
-                } else if (getTimeElapsed() < 0.2) {
-                    visionThrottle = Math.min(visionThrottle, 0.40);
+                } else if (getTimeElapsed() < 0.3) {
+                    visionThrottle = Math.min(visionThrottle, 0.35);
                 } else {
                     visionThrottle = Math.min(visionThrottle, 0.44);
                 }
