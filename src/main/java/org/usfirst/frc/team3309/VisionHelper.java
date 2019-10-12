@@ -139,16 +139,17 @@ public class VisionHelper {
             // We can't apply a larger correction when far away from the target because the turn would
             // overshot the target before the next update and cause oscillations.
             // Tuning the stages of this is likely to be a bit tricky. :)
+            // But we can do it!!! - JB
             double area = limelight.getArea();
             double speed = (Robot.drive.getLeftEncoderVelocity() + Robot.drive.getRightEncoderVelocity()) / 2;
             if (area < 0.8) {
                 visionThrottle = 0.6;
                 if (speed < 3000) {
-                    throttleAngularFactor = 0.25;
+                    throttleAngularFactor = 0.2;
                 } else if (speed < 6000) {
-                    throttleAngularFactor = 0.23;
+                    throttleAngularFactor = 0.2;
                 } else if (speed < 12000) {
-                    throttleAngularFactor = 0.21;
+                    throttleAngularFactor = 0.18;
                 }
                 else {
                     throttleAngularFactor = 0.18;
@@ -197,7 +198,7 @@ public class VisionHelper {
                 visionThrottle = 0.27;
                 if (speed < 3000) {
                     throttleAngularFactor = 0.3;
-                } else if (speed < 12000) {
+                } else if (speed < 6000) {
                     throttleAngularFactor = 0.25;
                 } else if (speed < 12000) {
                     throttleAngularFactor = 0.17;
