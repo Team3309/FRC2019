@@ -22,6 +22,7 @@ public class PanelHolder extends Subsystem {
     private boolean currentLimitReached = false;
     private Timer pullInTimer = new Timer();
     private Timer rampDownTimer = new Timer();
+    private boolean isRampingDown = false;
     private Timer detectionDebounceTimer = new Timer();
     private double power;
     private int logSeq = 0;
@@ -106,7 +107,7 @@ public class PanelHolder extends Subsystem {
 
         // check if new power setting is fast in either direction
         if (newPower < Constants.PANEL_HOLDER_HOLDING_POWER || newPower > 0) {
-            if (rampDownTimer.get() > 0) {
+            if (isRampingDown) {
                 // ramp down cancelled by new higher power setting
                 if (debugPanelHolder) {
                     DriverStation.reportError(++logSeq + ": Ramp down cancelled, timer: " +
@@ -115,6 +116,7 @@ public class PanelHolder extends Subsystem {
                 }
                 rampDownTimer.stop();
                 rampDownTimer.reset();
+                isRampingDown = false;
             }
         }
         // at holding power, so check if motor is currently running fast in either direction
@@ -128,6 +130,7 @@ public class PanelHolder extends Subsystem {
             rampDownTimer.stop();
             rampDownTimer.reset();
             rampDownTimer.start();
+            isRampingDown = true;
         }
         // check if ramp down is complete
         else if (rampDownTimer.get() >= 0.5) {
@@ -138,6 +141,7 @@ public class PanelHolder extends Subsystem {
             }
             rampDownTimer.stop();
             rampDownTimer.reset();
+            isRampingDown = false;
         }
 
         power = newPower;
@@ -182,6 +186,7 @@ public class PanelHolder extends Subsystem {
     }
 
     private boolean hadPanel = false;
+    private boolean isDebouncingDetection = false;
 
     public boolean hasPanel() {
 
@@ -198,7 +203,7 @@ public class PanelHolder extends Subsystem {
         }
 
         // check if motor is ramping down to holding power
-        if (rampDownTimer.get() > 0) {
+        if (isRampingDown) {
             // use previous value until motor speed settles and we can measure current reliably
             havePanel = hadPanel;
         }
@@ -226,6 +231,7 @@ public class PanelHolder extends Subsystem {
         if (detectionDebounceTimer.get() > 0.5) {
             detectionDebounceTimer.stop();
             detectionDebounceTimer.reset();
+            isDebouncingDetection = false;
         }
 
         // check for change in panel detection state
@@ -233,6 +239,7 @@ public class PanelHolder extends Subsystem {
             detectionDebounceTimer.stop();
             detectionDebounceTimer.reset();
             detectionDebounceTimer.start();
+            isDebouncingDetection = true;
             if (debugPanelHolder) {
                 DriverStation.reportError(++logSeq + ": Detected panel, power: " + power +
                         ", current:" + getCurrent(), false);
@@ -240,7 +247,7 @@ public class PanelHolder extends Subsystem {
         }
         else if (!havePanel && hadPanel) {
             // don't accept loss of panel during detection debounce window
-            if (detectionDebounceTimer.get() > 0) {
+            if (isDebouncingDetection) {
                 havePanel = hadPanel;
             }
             else if (debugPanelHolder) {
@@ -271,10 +278,6 @@ public class PanelHolder extends Subsystem {
 
         public boolean get() {
             return value;
-        }
-
-        public static ExtendedPosition fromBoolean(boolean value) {
-            return value ? ExtendedOutwards : RetractedInwards;
         }
 
     }
