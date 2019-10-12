@@ -157,7 +157,9 @@ public class Limelight {
     public double getLatency3D() { return latency3D.get(); }
     private double getRaw3DxInches() { return lastPos[0]; }
     private double getRaw3DzInches() { return lastPos[2]; }
-    private double limelightToTargetRad() { return toRadians(lastPos[4]); }
+    private double limelightToTargetRad() {
+        return toRadians(lastPos[4] + Constants.kPanelLimelightMountingSkewDegrees);
+    }
 
     private double limelightCenterInchesX() {
         return getRaw3DxInches() + cos(limelightToTargetRad()) * xOffsetInches;
