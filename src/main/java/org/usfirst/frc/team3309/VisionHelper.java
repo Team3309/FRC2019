@@ -129,29 +129,95 @@ public class VisionHelper {
 
     public static double getThrottle() {
 
-        throttleAngularFactor = 0.5;
+        throttleAngularFactor = 0;
         if (SmartDashboard.getBoolean(visionThrottleKey, visionThrottleEnabled)) {
 
-            // slow down as we approach the target
+            // Slow down as we approach the target
+            // Select correction scale factor based on distance to target.
+            // When we are closer to the target the angular error increases faster with forward motion.
+            // Therefore, we need to apply a larger angular correction.
+            // We can't apply a larger correction when far away from the target because the turn would
+            // overshot the target before the next update and cause oscillations.
+            // Tuning the stages of this is likely to be a bit tricky. :)
             double area = limelight.getArea();
+            double speed = (Robot.drive.getLeftEncoderVelocity() + Robot.drive.getRightEncoderVelocity()) / 2;
             if (area < 0.8) {
                 visionThrottle = 0.6;
-                throttleAngularFactor = 0.15;
+                if (speed < 3000) {
+                    throttleAngularFactor = 0.25;
+                } else if (speed < 6000) {
+                    throttleAngularFactor = 0.23;
+                } else if (speed < 12000) {
+                    throttleAngularFactor = 0.21;
+                }
+                else {
+                    throttleAngularFactor = 0.18;
+                }
             }
             else if (area < 1) {
                 visionThrottle = 0.5;
-                throttleAngularFactor = 0.2;
+                if (speed < 3000) {
+                    throttleAngularFactor = 0.25;
+                } else if (speed < 6000) {
+                    throttleAngularFactor = 0.23;
+                } else if (speed < 12000) {
+                    throttleAngularFactor = 0.21;
+                }
+                else {
+                    throttleAngularFactor = 0.18;
+                }
             }
             else if (area < 2) {
                 visionThrottle = 0.45;
-                throttleAngularFactor = 0.25;
+                if (speed < 3000) {
+                    throttleAngularFactor = 0.25;
+                } else if (speed < 6000) {
+                    throttleAngularFactor = 0.23;
+                } else if (speed < 12000) {
+                    throttleAngularFactor = 0.21;
+                }
+                else {
+                    throttleAngularFactor = 0.18;
+                }
             }
             else if (area < 3) {
                 visionThrottle = 0.35;
-                throttleAngularFactor = 0.35;
+                if (speed < 3000) {
+                    throttleAngularFactor = 0.3;
+                } else if (speed < 6000) {
+                    throttleAngularFactor = 0.25;
+                } else if (speed < 12000) {
+                    throttleAngularFactor = 0.2;
+                }
+                else {
+                    throttleAngularFactor = 0.16;
+                }
+            }
+            else if (area < 4) {
+                visionThrottle = 0.27;
+                if (speed < 3000) {
+                    throttleAngularFactor = 0.3;
+                } else if (speed < 12000) {
+                    throttleAngularFactor = 0.25;
+                } else if (speed < 12000) {
+                    throttleAngularFactor = 0.17;
+                }
+                else {
+                    throttleAngularFactor = 0.14;
+                }
             }
             else {
                 visionThrottle = 0.2;
+                if (speed < 3000) {
+                    throttleAngularFactor = 0.35;
+                } else if (speed < 6000) {
+                    throttleAngularFactor = 0.25;
+                } else if (speed < 12000) {
+                    throttleAngularFactor = 0.15;
+                }
+                else {
+                    throttleAngularFactor = 0.12;
+                }
             }
 
             // ramp up slowly at start to avoid jerking the carriage when it's raised
@@ -190,24 +256,7 @@ public class VisionHelper {
         }
         visionTurnCorrection = turnController.update(visionTurnError, 0.0);
 
-        // Select correction scale factor based on distance to target.
-        // When we are closer to the target the angular error increases faster with forward motion.
-        // Therefore, we need to apply a larger angular correction.
-        // We can't apply a larger correction when far away from the target because the turn would
-        // overshot the target before the next update and cause oscillations.
-        // Tuning the stages of this is likely to be a bit tricky. :)
-       double distanceCorrectionFactor = 1;
-        if (limelight.getArea() >= 4.0) {
-            distanceCorrectionFactor = 1.4;
-        }
-        else if (limelight.getArea() >= 3.0) {
-            distanceCorrectionFactor = 1.2;
-        }
-        else if (limelight.getArea() >= 2.0) {
-            distanceCorrectionFactor = 1.1;
-        }
-
-        angularPower = visionTurnCorrection * distanceCorrectionFactor * throttleAngularFactor;
+        angularPower = visionTurnCorrection * throttleAngularFactor;
 
         // Limit max angular power as a fail-safe. This isn't part of the core
         // correction algorithm.
