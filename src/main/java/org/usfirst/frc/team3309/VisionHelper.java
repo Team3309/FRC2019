@@ -91,6 +91,7 @@ public class VisionHelper {
         }
         setPipeline(Constants.kVisionCenterPipeline);
         setLed(Limelight.LEDMode.On);
+        timer.stop();
         timer.reset();
         timer.start();
     }
@@ -142,9 +143,11 @@ public class VisionHelper {
             // But we can do it!!! - JB
             double area = limelight.getArea();
             double speed = (Robot.drive.getLeftEncoderVelocity() + Robot.drive.getRightEncoderVelocity()) / 2;
+            double largeCorrection_time = 0.030;
+
             if (area < 0.8) {
                 visionThrottle = 0.6;
-                if (speed < 3000) {
+                if (speed < 3000 || getTimeElapsed() < largeCorrection_time) {
                     throttleAngularFactor = 0.2;
                 } else if (speed < 6000) {
                     throttleAngularFactor = 0.2;
@@ -157,7 +160,7 @@ public class VisionHelper {
             }
             else if (area < 1) {
                 visionThrottle = 0.5;
-                if (speed < 3000) {
+                if (speed < 3000 || getTimeElapsed() < largeCorrection_time) {
                     throttleAngularFactor = 0.25;
                 } else if (speed < 6000) {
                     throttleAngularFactor = 0.23;
@@ -170,7 +173,7 @@ public class VisionHelper {
             }
             else if (area < 2) {
                 visionThrottle = 0.45;
-                if (speed < 3000) {
+                if (speed < 3000 || getTimeElapsed() < largeCorrection_time) {
                     throttleAngularFactor = 0.25;
                 } else if (speed < 6000) {
                     throttleAngularFactor = 0.23;
@@ -183,7 +186,7 @@ public class VisionHelper {
             }
             else if (area < 3) {
                 visionThrottle = 0.35;
-                if (speed < 3000) {
+                if (speed < 3000 || getTimeElapsed() < largeCorrection_time) {
                     throttleAngularFactor = 0.3;
                 } else if (speed < 6000) {
                     throttleAngularFactor = 0.25;
@@ -198,7 +201,7 @@ public class VisionHelper {
                 visionThrottle = 0.27;
                 if (speed < 3000) {
                     throttleAngularFactor = 0.3;
-                } else if (speed < 6000) {
+                } else if (speed < 6000 || getTimeElapsed() < largeCorrection_time) {
                     throttleAngularFactor = 0.25;
                 } else if (speed < 12000) {
                     throttleAngularFactor = 0.17;
@@ -300,6 +303,12 @@ public class VisionHelper {
             limelight.setLed(led);
             curLed = led;
         }
+    }
+
+    public static void restartApproach() {
+        timer.stop();
+        timer.reset();
+        timer.start();
     }
 
     public static void stopCrawl() {

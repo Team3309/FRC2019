@@ -69,6 +69,7 @@ public class DriveManual extends Command {
                         settleTimer.stop();
                         settleTimer.reset();
                         isSettling = false;
+                        VisionHelper.restartApproach();
                     }
                     if (autoState == AutoStates.placingPanel &&
                             (Math.abs(area) > 7.5 || Robot.vision.targetDistInches3D() < 2)) {
