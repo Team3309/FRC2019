@@ -182,8 +182,13 @@ public class Limelight {
         if (!loadingMode) {
             bias = kPanelHolderBiasInchesX;
         }
-        return limelightToTargetRad() -
-                atan2(rotationCenterInchesX() + bias, -rotationCenterInchesZ());
+        if (rotationCenterInchesZ() < 0) {
+            return limelightToTargetRad() -
+                    atan2(rotationCenterInchesX() + bias, -rotationCenterInchesZ());
+        }
+        // projected center of bot is behind the target, assume wild limelight reading and
+        // just stay on course until things get better
+        return 0;
     }
 
     private double panelInchesX() {
