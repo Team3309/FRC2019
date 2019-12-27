@@ -12,7 +12,6 @@ import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.commands.drive.DriveManual;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
-import org.usfirst.frc.team3309.Constants;
 
 import java.sql.Driver;
 
