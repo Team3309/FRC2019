@@ -188,7 +188,7 @@ public class VisionHelper {
         else {
             visionTurnError = limelight.getTx();
         }
-        visionTurnCorrection = turnController.update(visionTurnError, 0.0);
+        visionTurnCorrection = -turnController.update(visionTurnError, 0.0);
 
         // Select correction scale factor based on distance to target.
         // When we are closer to the target the angular error increases faster with forward motion.
