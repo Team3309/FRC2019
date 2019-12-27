@@ -75,7 +75,7 @@ public class Drive extends Subsystem {
 
         talon.setNeutralMode(NeutralMode.Brake);
         talon.setInverted(true);
-        talon.setSensorPhase(true);
+        talon.setSensorPhase(false);
         addChild(talon);
     }
 
