@@ -132,8 +132,8 @@ public class Drive extends Subsystem {
     public void autoVelocity(double leftEncoderCountsPerSec, double rightEncoderCountsPerSec) {
         // positive argument => turn to the right
         setPid(Constants.kDriveVelocitySlot);
-        driveLeftMaster.set(ControlMode.Velocity, -leftEncoderCountsPerSec);
-        driveRightMaster.set(ControlMode.Velocity, rightEncoderCountsPerSec);
+        driveLeftMaster.set(ControlMode.Velocity, leftEncoderCountsPerSec);
+        driveRightMaster.set(ControlMode.Velocity, -rightEncoderCountsPerSec);
     }
 
     public void autoMotionMagic(double left, double right) {
@@ -190,10 +190,6 @@ public class Drive extends Subsystem {
 
     public double getVelocityY() { return navx.getVelocityY(); }
 
-    public double getDisplacementX() { return navx.getDisplacementX(); }
-
-    public double getDisplacementY() { return navx.getDisplacementY(); }
-
     public void setHighGear() {
         shifter.set(true);
     }
@@ -207,8 +203,8 @@ public class Drive extends Subsystem {
     }
 
     public void setLeftRight(ControlMode mode, double left, double right) {
-        driveLeftMaster.set(mode, -left);
-        driveRightMaster.set(mode, right);
+        driveLeftMaster.set(mode, left);
+        driveRightMaster.set(mode, -right);
     }
 
     public void setLeftRight(ControlMode mode, DemandType demandType,
@@ -243,8 +239,6 @@ public class Drive extends Subsystem {
         SmartDashboard.putNumber("Raw angular velocity", getAngularVelocity());
         SmartDashboard.putNumber("Raw X-axis velocity", getVelocityX());
         SmartDashboard.putNumber("Raw Y-axis velocity", getVelocityY());
-        SmartDashboard.putNumber("Raw X-axis displacement", getDisplacementX());
-        SmartDashboard.putNumber("Raw Y-axis displacement", getDisplacementY());
         SmartDashboard.putNumber("Encoder left", getLeftEncoderDistance());
         SmartDashboard.putNumber("Encoder right", getRightEncoderDistance());
         SmartDashboard.putNumber("Left encoder velocity", getLeftEncoderVelocity());
