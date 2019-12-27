@@ -49,6 +49,9 @@ public class DriveManual extends Command {
 
         DriveSignal signal = cheesyDrive.update(throttle, turn, isQuickTurn, isHighGear);
 
+        DriveVisionLoad visionLoader = new DriveVisionLoad();
+        DriveVisionPlace visionPlacer = new DriveVisionPlace();
+
         if (Robot.isDemo() && OI.getRightJoystickLeftClusterGroup().get()) {
             Robot.setGuestDriverMode();
         }
@@ -63,42 +66,9 @@ public class DriveManual extends Command {
                 Robot.vision.load3D();
 
                 if (Robot.panelHolder.hasPanel() && autoState != AutoStates.loadingPanel) {
-                    // shorter delay to settle at levels 1 & 2
-                    if ((Robot.elevator.getCarriagePercentage() < 0.9 && settleTimer.get() > 0.2) ||
-                            settleTimer.get() > 0.5) {
-                        settleTimer.stop();
-                        settleTimer.reset();
-                        isSettling = false;
-                    }
-                    if (autoState == AutoStates.placingPanel &&
-                            (Math.abs(area) > 7.5 || Robot.vision.targetDistInches3D() < 2)) {
-                        // place panel on rocket after having extended
-                        RemoveFingerKt.RemoveFinger().start();
-                        VisionHelper.stopCrawl();
-                        autoState = AutoStates.removingFinger;
-                    } else if (Util.within(area, 0.05, 7.0) && autoState == AutoStates.nothing) {
-                        // extend in preparation to go on the rocket
-                        autoState = AutoStates.placingPanel;
-                        // If engaging from a stop and finger is retracted, allow panel holder to settle
-                        // from finger extension before starting to drive. Don't wait if already moving
-                        // to avoid extra jerking from stopping and restarting drive.
-                        if (Robot.panelHolder.getExtendedPosition() !=
-                                PanelHolder.ExtendedPosition.ExtendedOutwards &&
-                                Robot.drive.getLeftEncoderVelocity() < 500) {
-                            settleTimer.start();
-                            isSettling = true;
-                        } else {
-                            settleTimer.stop();
-                            settleTimer.reset();
-                            isSettling = false;
-                        }
-                        PlacePanelKt.PlacePanel().start();
-                    }
+                    visionPlacer.execute();
                 } else if (Util.within(area, 0.1, 20.0) && autoState == AutoStates.nothing) {
-                    // extend to check for panel for auto grab
-                    command = IntakePanelFromStationKt.IntakePanelFromStation();
-                    command.start();
-                    autoState = AutoStates.loadingPanel;
+                    visionLoader.execute();
                 }
                 if (autoState != AutoStates.nothing &&
                         !(autoState == AutoStates.placingPanel && isSettling)) {

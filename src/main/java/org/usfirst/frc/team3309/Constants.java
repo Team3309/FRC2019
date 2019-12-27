@@ -23,7 +23,7 @@ public class Constants {
      * This enum defines a type with 2 values, PRACTICE and COMPETITION
      * These values represent our COMPETITION robot and PRACTICE robot.
      */
-    public enum Robot {
+    public static enum Robot {
         PRACTICE,
         COMPETITION
     }
