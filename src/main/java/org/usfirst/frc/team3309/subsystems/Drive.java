@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
+import org.usfirst.frc.team3309.OI;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.commands.drive.DriveManual;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
@@ -243,6 +244,8 @@ public class Drive extends Subsystem {
         SmartDashboard.putNumber("Encoder right", getRightEncoderDistance());
         SmartDashboard.putNumber("Left encoder velocity", getLeftEncoderVelocity());
         SmartDashboard.putNumber("Right encoder velocity", getRightEncoderVelocity());
+        SmartDashboard.putNumber("Left Joystick Y", OI.getLeftJoystick().getYAxis().get());
+        SmartDashboard.putNumber("Right Joystick X", OI.getRightJoystick().getXAxis().get());
         SmartDashboard.putNumber("Drive left 1 current", Robot.pdp.getCurrent(Constants.kPdpChannelDriveLeft1));
         SmartDashboard.putNumber("Drive left 2 current", Robot.pdp.getCurrent(Constants.kPdpChannelDriveLeft2));
         SmartDashboard.putNumber("Drive left 3 current", Robot.pdp.getCurrent(Constants.kPdpChannelDriveLeft3));
