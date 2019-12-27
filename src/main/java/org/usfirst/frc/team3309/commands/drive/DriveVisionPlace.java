@@ -25,7 +25,7 @@ public class DriveVisionPlace extends Command {
             double area = Robot.vision.getTargetArea();
             Robot.vision.load3D();
 
-            if (Robot.panelHolder.hasPanel() && autoState != DriveManual.AutoStates.loadingPanel) {
+            //if (Robot.panelHolder.hasPanel() && autoState != DriveManual.AutoStates.loadingPanel) {
                 // shorter delay to settle at levels 1 & 2
                 if ((Robot.elevator.getCarriagePercentage() < 0.9 && settleTimer.get() > 0.2) ||
                         settleTimer.get() > 0.5) {
