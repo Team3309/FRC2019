@@ -186,6 +186,14 @@ public class Drive extends Subsystem {
         return navx.getRate();
     }
 
+    public double getVelocityX() { return navx.getVelocityX(); }
+
+    public double getVelocityY() { return navx.getVelocityY(); }
+
+    public double getDisplacementX() { return navx.getDisplacementX(); }
+
+    public double getDisplacementY() { return navx.getDisplacementY(); }
+
     public void setHighGear() {
         shifter.set(true);
     }
@@ -232,6 +240,11 @@ public class Drive extends Subsystem {
         SmartDashboard.putNumber("Drive left power get", driveLeftMaster.getMotorOutputPercent());
         SmartDashboard.putNumber("Drive right power get", driveRightMaster.getMotorOutputPercent());
         SmartDashboard.putNumber("Raw angle", getAngularPosition());
+        SmartDashboard.putNumber("Raw angular velocity", getAngularVelocity());
+        SmartDashboard.putNumber("Raw X-axis velocity", getVelocityX());
+        SmartDashboard.putNumber("Raw Y-axis velocity", getVelocityY());
+        SmartDashboard.putNumber("Raw X-axis displacement", getDisplacementX());
+        SmartDashboard.putNumber("Raw Y-axis displacement", getDisplacementY());
         SmartDashboard.putNumber("Encoder left", getLeftEncoderDistance());
         SmartDashboard.putNumber("Encoder right", getRightEncoderDistance());
         SmartDashboard.putNumber("Left encoder velocity", getLeftEncoderVelocity());
