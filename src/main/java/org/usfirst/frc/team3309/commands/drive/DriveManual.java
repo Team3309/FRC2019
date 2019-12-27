@@ -40,8 +40,10 @@ public class DriveManual extends Command {
     @Override
     protected void execute() {
 
+        //positive y is forward
         double throttle = OI.getLeftJoystick().getYAxis().get();
-        double turn = OI.getRightJoystick().getXAxis().get();
+        //positive x is to the left
+        double turn = -OI.getRightJoystick().getXAxis().get();
 
         boolean isHighGear = Robot.drive.inHighGear();
         boolean isQuickTurn = OI.getRightJoystick().getTrigger().get();
