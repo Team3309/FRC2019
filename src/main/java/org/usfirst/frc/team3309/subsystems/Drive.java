@@ -56,8 +56,6 @@ public class Drive extends Subsystem {
         addChild(driveRightMaster);
         addChild(shifter);
         addChild(navx);
-
-        setPid(Constants.kDriveVelocitySlot);
     }
 
     private void configMaster(WPI_TalonSRX talon) {
@@ -66,12 +64,9 @@ public class Drive extends Subsystem {
         talon.configClosedloopRamp(Constants.DRIVE_CLOSED_LOOP_RAMP_RATE);
         talon.configOpenloopRamp(Constants.DRIVE_OPEN_LOOP_RAMP_RATE, 10);
 
-        talon.config_kP(Constants.kDriveVelocitySlot, Constants.kDriveVelocityP, 10);
-        talon.config_kD(Constants.kDriveVelocitySlot, Constants.kDriveVelocityD, 10);
-        talon.config_kF(Constants.kDriveVelocitySlot, Constants.kDriveVelocityF, 10);
-
-        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionP, 0);
-        talon.config_kP(Constants.kDrivePositionSlot, Constants.kDrivePositionD, 0);
+        talon.config_kP(0, Constants.kDriveVelocityP, 10);
+        talon.config_kD(0, Constants.kDriveVelocityD, 10);
+        talon.config_kF(0, Constants.kDriveVelocityF, 10);
 
         talon.setNeutralMode(NeutralMode.Brake);
         talon.setInverted(true);
@@ -108,38 +103,9 @@ public class Drive extends Subsystem {
         return rad_s / (Math.PI * 2.0) * 4096.0 / 10.0;
     }
 
-    public void autoPosition(double leftEncoderCount, double rightEncoderCount) {
-        // positive argument => turn to the right
-        setPid(Constants.kDriveVelocitySlot);
-        double newLeft = getLeftEncoderDistance() - leftEncoderCount;
-        double newRight = getRightEncoderDistance() + rightEncoderCount;
-
-        driveLeftMaster.set(ControlMode.Position, newLeft);
-        driveRightMaster.set(ControlMode.Position, newRight);
-        DriverStation.reportError("Auto Turn Pos: leftOld: " + getLeftEncoderDistance() +
-                ", leftNew: " + newLeft +
-                ", rightOld: " + getRightEncoderDistance() +
-                ", rightPNew: " + newRight, false);
-    }
-
-    public boolean turnComplete() {
-        boolean leftComplete = driveLeftMaster.getClosedLoopError() < 100;
-        boolean rightComplete = driveRightMaster.getClosedLoopError() < 100;
-        return false;
-        //return leftComplete && rightComplete;
-    }
-
     public void autoVelocity(double leftEncoderCountsPerSec, double rightEncoderCountsPerSec) {
-        // positive argument => turn to the right
-        setPid(Constants.kDriveVelocitySlot);
         driveLeftMaster.set(ControlMode.Velocity, leftEncoderCountsPerSec);
         driveRightMaster.set(ControlMode.Velocity, -rightEncoderCountsPerSec);
-    }
-
-    public void autoMotionMagic(double left, double right) {
-        // positive argument => turn to the right
-        setPid(Constants.kDriveVelocitySlot);
-        setLeftRight(ControlMode.MotionMagic, left, right);
     }
 
     public void reset() {

@@ -23,12 +23,8 @@ public class DriveAuto extends Command {
     @Override
     protected void initialize() {
         Robot.drive.setHighGear();
-        if (mode == ControlMode.Position) {
-            Robot.drive.autoPosition(left, right);
-        } else if (mode == ControlMode.Velocity) {
+        if (mode == ControlMode.Velocity) {
             Robot.drive.autoVelocity(left, right);
-        } else if (mode == ControlMode.MotionMagic) {
-            Robot.drive.autoMotionMagic(left, right);
         } else if (mode == ControlMode.PercentOutput) {
             Robot.drive.setLeftRight(mode, left, right);
         }
@@ -36,6 +32,6 @@ public class DriveAuto extends Command {
 
     @Override
     protected boolean isFinished() {
-        return Robot.drive.turnComplete();
+        return false;
     }
 }

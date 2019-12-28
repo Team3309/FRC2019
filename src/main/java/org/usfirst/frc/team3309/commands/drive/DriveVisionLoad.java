@@ -15,14 +15,16 @@ public class DriveVisionLoad extends Command {
     }
 
     @Override
+    protected void initialize() {
+        super.initialize();
+        VisionHelper.start();
+    }
+
+    @Override
     protected void execute() {
-        //check for targets
-        VisionHelper.turnOn();
+        Robot.vision.load3D();
         if (VisionHelper.hasTargets()) {
-            Robot.vision.load3D();
-            // extend to check for panel for auto grab
-            command = IntakePanelFromStationKt.IntakePanelFromStation();
-            command.start();
+            IntakePanelFromStationKt.IntakePanelFromStation().start();
         }
     }
 

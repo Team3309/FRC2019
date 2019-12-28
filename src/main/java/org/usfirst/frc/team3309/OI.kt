@@ -106,22 +106,10 @@ object OI {
         leftJoystickLeftClusterGroup.whenPressed(router {
             if (DriverStation.getInstance().isDisabled || Robot.isGuestDriver()) {
                 Command.empty
+            } else if (Robot.panelHolder.hasPanel()) {
+                DriveVisionPlace()
             } else {
-                VisionHelper.turnOn()
-                if (VisionHelper.hasTargets()) {
-                    val area = Robot.vision.targetArea
-                    if (Util.within(area, 0.1, 20.0)) {
-                        if (Robot.panelHolder.hasPanel()) {
-                            DriveVisionPlace()
-                        } else {
-                            DriveVisionLoad()
-                        }
-                    } else {
-                        Command.empty
-                    }
-                } else {
-                    Command.empty
-                }
+                DriveVisionLoad()
             }
         })
 

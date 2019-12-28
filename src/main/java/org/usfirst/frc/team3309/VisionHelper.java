@@ -71,15 +71,9 @@ public class VisionHelper {
         return DriveSignal.NEUTRAL;
     }
 
-    public static void turnOn() {
+    public static void start() {
         if (!visionOn) {
             enableVision();
-        }
-    }
-
-    public static void turnOff() {
-        if (visionOn) {
-            disableVision();
         }
     }
 

@@ -30,6 +30,12 @@ public class DriveVisionPlace extends Command {
     DriveVisionPlace.AutoStates autoState = DriveVisionPlace.AutoStates.loadingPanel;
 
     @Override
+    protected void initialize() {
+        super.initialize();
+        VisionHelper.start();
+    }
+
+    @Override
     protected void execute() {
         double area = Robot.vision.getTargetArea();
         Robot.vision.load3D();
