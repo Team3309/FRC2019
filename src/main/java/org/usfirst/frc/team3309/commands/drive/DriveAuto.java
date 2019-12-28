@@ -52,27 +52,14 @@ public class DriveAuto extends Command {
         Robot.drive.setLeftRight(ControlMode.PercentOutput, 0.0, 0.0);
     }
 
-    private double left;
-    private double right;
-    private ControlMode mode;
-
-    // for testing and PID tuning
-    public DriveAuto(ControlMode mode, double left, double right) {
-        require(Robot.drive);
-        setInterruptBehavior(InterruptBehavior.Terminate);
-        this.left = left;
-        this.right = right;
-        this.mode = mode;
-    }
-
     @Override
     protected void initialize() {
         Robot.drive.setHighGear();
-        if (mode == ControlMode.Velocity) {
-            Robot.drive.autoVelocity(left, right);
-        } else if (mode == ControlMode.PercentOutput) {
-            Robot.drive.setLeftRight(mode, left, right);
-        }
+    }
+
+    @Override
+    protected void execute() {
+    
     }
 
     @Override
