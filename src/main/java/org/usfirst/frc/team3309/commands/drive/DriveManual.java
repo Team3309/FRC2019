@@ -15,19 +15,6 @@ public class DriveManual extends Command {
 
     private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
 
-    private Command command;
-    private Timer settleTimer = new Timer();
-    private boolean isSettling = false;
-
-    enum AutoStates {
-        nothing,
-        loadingPanel,
-        placingPanel,
-        removingFinger
-    }
-
-    AutoStates autoState = AutoStates.nothing;
-
     public DriveManual() {
         require(Robot.drive);
         setInterruptBehavior(InterruptBehavior.Suspend);
