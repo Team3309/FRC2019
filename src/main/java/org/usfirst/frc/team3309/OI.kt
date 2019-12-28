@@ -1,15 +1,16 @@
 package org.usfirst.frc.team3309
 
 import edu.wpi.first.wpilibj.DriverStation
-import org.usfirst.frc.team3309.Robot.panelIntake
 import org.usfirst.frc.team3309.commands.*
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate
 import org.usfirst.frc.team3309.commands.climber.ClimberManual
-import org.usfirst.frc.team3309.commands.drive.DriveManual
 import org.usfirst.frc.team3309.commands.drive.DriveSetHighGear
 import org.usfirst.frc.team3309.commands.drive.DriveSetLowGear
+import org.usfirst.frc.team3309.commands.drive.DriveVisionLoad
+import org.usfirst.frc.team3309.commands.drive.DriveVisionPlace
 import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeActuate
 import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeSetRollers
+import org.usfirst.frc.team3309.lib.util.Util
 import org.usfirst.frc.team3309.subsystems.CargoIntake
 import org.usfirst.frc.team3309.subsystems.PanelHolder
 import org.usfirst.frc.team3309.subsystems.PanelIntake
@@ -94,6 +95,25 @@ object OI {
                 Command.empty
             }
         })
+
+        leftJoystickLeftClusterGroup.whenPressed(router {
+            if (DriverStation.getInstance().isDisabled || Robot.isGuestDriver()) {
+                Command.empty
+            } else {
+                VisionHelper.turnOn()
+                if (VisionHelper.hasTargets()) {
+                    val area = Robot.vision.targetArea
+                    if (Util.within(area, 0.1, 20.0)) {
+                        if (Robot.panelHolder.hasPanel()) {
+                            DriveVisionPlace()
+                        } else {
+                            DriveVisionLoad()
+                        }
+                    }
+                }
+            }
+        }
+    })
 /*
         leftJoystick.rightCluster.topLeft.whenPressed(router {
             if (DriverStation.getInstance().isDisabled) {
