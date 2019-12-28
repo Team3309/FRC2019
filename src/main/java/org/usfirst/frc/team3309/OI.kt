@@ -5,10 +5,7 @@ import edu.wpi.first.wpilibj.DriverStation
 import org.usfirst.frc.team3309.commands.*
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate
 import org.usfirst.frc.team3309.commands.climber.ClimberManual
-import org.usfirst.frc.team3309.commands.drive.DriveSetHighGear
-import org.usfirst.frc.team3309.commands.drive.DriveSetLowGear
-import org.usfirst.frc.team3309.commands.drive.DriveVisionLoad
-import org.usfirst.frc.team3309.commands.drive.DriveVisionPlace
+import org.usfirst.frc.team3309.commands.drive.*
 import org.usfirst.frc.team3309.lib.util.Util
 import org.usfirst.frc.team3309.subsystems.CargoIntake
 import org.usfirst.frc.team3309.subsystems.PanelHolder
