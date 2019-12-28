@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3309
 
+import com.ctre.phoenix.motorcontrol.ControlMode
 import edu.wpi.first.wpilibj.DriverStation
 import org.usfirst.frc.team3309.commands.*
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate
@@ -8,15 +9,11 @@ import org.usfirst.frc.team3309.commands.drive.DriveSetHighGear
 import org.usfirst.frc.team3309.commands.drive.DriveSetLowGear
 import org.usfirst.frc.team3309.commands.drive.DriveVisionLoad
 import org.usfirst.frc.team3309.commands.drive.DriveVisionPlace
-import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeActuate
-import org.usfirst.frc.team3309.commands.panelintake.PanelIntakeSetRollers
 import org.usfirst.frc.team3309.lib.util.Util
 import org.usfirst.frc.team3309.subsystems.CargoIntake
 import org.usfirst.frc.team3309.subsystems.PanelHolder
-import org.usfirst.frc.team3309.subsystems.PanelIntake
 import org.usfirst.frc.team4322.commandv2.Command
 import org.usfirst.frc.team4322.commandv2.Trigger
-import org.usfirst.frc.team4322.commandv2.group
 import org.usfirst.frc.team4322.commandv2.router
 import org.usfirst.frc.team4322.input.InputThrustmaster
 import org.usfirst.frc.team4322.input.InputXbox
@@ -96,6 +93,16 @@ object OI {
             }
         })
 
+        rightJoystickRightClusterGroup.whenReleased(router {
+            if (DriverStation.getInstance().isDisabled) {
+                Command.empty
+            } else if (Robot.panelHolder.extendedPosition == PanelHolder.ExtendedPosition.ExtendedOutwards) {
+                RemoveFinger()
+            } else {
+                Command.empty
+            }
+        })
+
         leftJoystickLeftClusterGroup.whenPressed(router {
             if (DriverStation.getInstance().isDisabled || Robot.isGuestDriver()) {
                 Command.empty
@@ -109,76 +116,56 @@ object OI {
                         } else {
                             DriveVisionLoad()
                         }
+                    } else {
+                        Command.empty
                     }
+                } else {
+                    Command.empty
                 }
             }
-        }
-    })
-/*
+        })
+
+        leftJoystickLeftClusterGroup.whenReleased(router {
+            DriveAuto(ControlMode.PercentOutput, 0.0, 0.0)
+        })
+
+        // For tuning drive velocity mode PIDF controller
         leftJoystick.rightCluster.topLeft.whenPressed(router {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
             } else {
-                DriveAuto(0,-5000.0, 5000.0)
+                DriveAuto(ControlMode.Velocity,3000.0, 3000.0)
             }
         })
 
-        leftJoystick.rightCluster.topRight.whenPressed(router {
-            if (DriverStation.getInstance().isDisabled) {
-                Command.empty
-            } else {
-                DriveAuto(0,5000.0, -5000.0)
-            }
+        leftJoystick.rightCluster.topLeft.whenReleased(router {
+            DriveAuto(ControlMode.PercentOutput, 0.0, 0.0)
         })
 
-        leftJoystick.rightCluster.bottomLeft.whenPressed(router {
-            if (DriverStation.getInstance().isDisabled) {
-                Command.empty
-            } else {
-                DriveAuto(0,-20000.0, 20000.0)
-            }
-        })
-
-        leftJoystick.rightCluster.bottomRight.whenPressed(router {
-            if (DriverStation.getInstance().isDisabled) {
-                Command.empty
-            } else {
-                DriveAuto(0,20000.0, -20000.0)
-            }
-        })
-
+        // For tuning drive velocity mode PIDF controller
         leftJoystick.rightCluster.topCenter.whenPressed(router {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
             } else {
-                DriveAuto(1, -20000.0, 20000.0)
+                DriveAuto(ControlMode.Velocity, 6000.0, 6000.0)
             }
         })
 
-        leftJoystick.rightCluster.bottomCenter.whenPressed(router {
+        leftJoystick.rightCluster.topCenter.whenReleased(router {
+            DriveAuto(ControlMode.PercentOutput, 0.0, 0.0)
+        })
+
+        // For tuning drive velocity mode PIDF controller
+        leftJoystick.rightCluster.topRight.whenPressed(router {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
             } else {
-                DriveAuto(1, 20000.0, -20000.0)
+                DriveAuto(ControlMode.Velocity,12000.0, 12000.0)
             }
         })
 
-        leftJoystickRightClusterGroup.whenReleased(router {
-            if (DriverStation.getInstance().isDisabled) {
-                Command.empty
-            } else {
-                DriveManual()
-            }
-        })
-*/
-        rightJoystickRightClusterGroup.whenReleased(router {
-            if (DriverStation.getInstance().isDisabled) {
-                Command.empty
-            } else if (Robot.panelHolder.extendedPosition == PanelHolder.ExtendedPosition.ExtendedOutwards) {
-                RemoveFinger()
-            } else {
-                Command.empty
-            }
+        leftJoystick.rightCluster.topRight.whenReleased(router {
+            DriveAuto(ControlMode.PercentOutput, 0.0, 0.0)
         })
 
         operatorController.dPad.down.whenPressed(Elevate(Elevate.Level.Low))
@@ -215,15 +202,6 @@ object OI {
                 Command.empty
             }
         })
-    }
-
-    fun PanelIntakeStopRollersAndBringUp(): Command {
-        return group {
-            parallel {
-                +PanelIntakeSetRollers(0.0)
-                +PanelIntakeActuate(PanelIntake.PanelIntakePosition.Up)
-            }
-        }
     }
 
 }
