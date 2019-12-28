@@ -51,7 +51,7 @@ public class DriveVisionPlace extends Command {
         } else if (Util.within(area, 0.05, 7.0) && autoState == DriveVisionPlace.AutoStates.nothing) {
             // extend in preparation to go on the rocket
             autoState = DriveVisionPlace.AutoStates.placingPanel;
-            
+
             // If engaging from a stop and finger is retracted, allow panel holder to settle
             // from finger extension before starting to drive. Don't wait if already moving
             // to avoid extra jerking from stopping and restarting drive.
