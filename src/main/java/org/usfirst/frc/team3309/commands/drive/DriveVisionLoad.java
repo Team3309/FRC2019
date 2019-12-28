@@ -16,9 +16,6 @@ import org.usfirst.frc.team4322.commandv2.Command;
 import edu.wpi.first.wpilibj.Timer;
 
 public class DriveVisionLoad extends Command {
-
-    private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
-
     private Command command;
     private Timer settleTimer = new Timer();
     private boolean isSettling = false;

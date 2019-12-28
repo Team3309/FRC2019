@@ -11,12 +11,11 @@ import org.usfirst.frc.team3309.subsystems.PanelHolder;
 import org.usfirst.frc.team4322.commandv2.Command;
 
 public class DriveVisionPlace extends Command {
-
-    private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
-
     private Command command;
     private Timer settleTimer = new Timer();
     private boolean isSettling = false;
+    private boolean finished = false;
+
     public DriveVisionPlace() {
         require(Robot.drive);
         setInterruptBehavior(InterruptBehavior.Terminate);
@@ -28,7 +27,7 @@ public class DriveVisionPlace extends Command {
         placingPanel,
         removingFinger
     }
-    DriveManual.AutoStates autoState = DriveManual.AutoStates.loadingPanel;
+    DriveVisionPlace.AutoStates autoState = DriveVisionPlace.AutoStates.loadingPanel;
 
     @Override
     protected void execute() {
@@ -42,15 +41,17 @@ public class DriveVisionPlace extends Command {
             settleTimer.reset();
             isSettling = false;
         }
-        if (autoState == DriveManual.AutoStates.placingPanel &&
+        if (autoState == DriveVisionPlace.AutoStates.placingPanel &&
                 (Math.abs(area) > 7.5 || Robot.vision.targetDistInches3D() < 2)) {
             // place panel on rocket after having extended
             RemoveFingerKt.RemoveFinger().start();
             VisionHelper.stopCrawl();
-            autoState = DriveManual.AutoStates.removingFinger;
-        } else if (Util.within(area, 0.05, 7.0) && autoState == DriveManual.AutoStates.nothing) {
+            autoState = DriveVisionPlace.AutoStates.removingFinger;
+            finished = true;
+        } else if (Util.within(area, 0.05, 7.0) && autoState == DriveVisionPlace.AutoStates.nothing) {
             // extend in preparation to go on the rocket
-            autoState = DriveManual.AutoStates.placingPanel;
+            autoState = DriveVisionPlace.AutoStates.placingPanel;
+            
             // If engaging from a stop and finger is retracted, allow panel holder to settle
             // from finger extension before starting to drive. Don't wait if already moving
             // to avoid extra jerking from stopping and restarting drive.

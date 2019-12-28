@@ -51,43 +51,12 @@ public class DriveManual extends Command {
 
         DriveSignal signal = cheesyDrive.update(throttle, turn, isQuickTurn, isHighGear);
 
-        DriveVisionLoad visionLoader = new DriveVisionLoad();
-        DriveVisionPlace visionPlacer = new DriveVisionPlace();
-
         if (Robot.isDemo() && OI.getRightJoystickLeftClusterGroup().get()) {
             Robot.setGuestDriverMode();
         }
 
         //boolean driverPipelineOverride = OI.getLeftJoystickRightClusterGroup().get();
         //VisionHelper.driverOverride(driverPipelineOverride);
-
-        if (isAutoTurn) {
-            VisionHelper.turnOn();
-            if (VisionHelper.hasTargets()) {
-                double area = Robot.vision.getTargetArea();
-                Robot.vision.load3D();
-
-                if (Robot.panelHolder.hasPanel() && autoState != AutoStates.loadingPanel) {
-                    visionPlacer.execute();
-                } else if (Util.within(area, 0.1, 20.0) && autoState == AutoStates.nothing) {
-                    visionLoader.execute();
-                }
-                if (autoState != AutoStates.nothing &&
-                        !(autoState == AutoStates.placingPanel && isSettling)) {
-                    signal = VisionHelper.getDriveSignal(autoState == AutoStates.loadingPanel);
-                }
-            }
-        } else if (OI.getOperatorController().getRightStick().get()) {
-            VisionHelper.turnOn();
-        } else {
-            VisionHelper.turnOff();
-            if (autoState == AutoStates.loadingPanel) {
-                command.cancel();
-                RetractFingerFromFeederStationKt.RetractFingerFromFeederStation().start();
-                // DriverStation.reportError("Retraced finger from feeder station", false);
-            }
-            autoState = AutoStates.nothing;
-        }
 
         double leftPower = signal.getLeft();
         double rightPower = signal.getRight();
