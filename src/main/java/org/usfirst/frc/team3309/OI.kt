@@ -111,7 +111,7 @@ object OI {
         })
 
         leftJoystickLeftClusterGroup.whenReleased(router {
-            DriveAuto(ControlMode.PercentOutput, 0.0, 0.0)
+            DriveConstant(ControlMode.PercentOutput, 0.0, 0.0)
         })
 
         // For tuning drive velocity mode PIDF controller
@@ -119,12 +119,12 @@ object OI {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
             } else {
-                DriveAuto(ControlMode.Velocity,3000.0, 3000.0)
+                DriveConstant(ControlMode.Velocity,3000.0, 3000.0)
             }
         })
 
         leftJoystick.rightCluster.topLeft.whenReleased(router {
-            DriveAuto(ControlMode.PercentOutput, 0.0, 0.0)
+            DriveConstant(ControlMode.PercentOutput, 0.0, 0.0)
         })
 
         // For tuning drive velocity mode PIDF controller
@@ -132,12 +132,12 @@ object OI {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
             } else {
-                DriveAuto(ControlMode.Velocity, 6000.0, 6000.0)
+                DriveConstant(ControlMode.Velocity, 6000.0, 6000.0)
             }
         })
 
         leftJoystick.rightCluster.topCenter.whenReleased(router {
-            DriveAuto(ControlMode.PercentOutput, 0.0, 0.0)
+            DriveConstant(ControlMode.PercentOutput, 0.0, 0.0)
         })
 
         // For tuning drive velocity mode PIDF controller
@@ -145,12 +145,12 @@ object OI {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
             } else {
-                DriveAuto(ControlMode.Velocity,12000.0, 12000.0)
+                DriveConstant(ControlMode.Velocity,12000.0, 12000.0)
             }
         })
 
         leftJoystick.rightCluster.topRight.whenReleased(router {
-            DriveAuto(ControlMode.PercentOutput, 0.0, 0.0)
+            DriveConstant(ControlMode.PercentOutput, 0.0, 0.0)
         })
 
         operatorController.dPad.down.whenPressed(Elevate(Elevate.Level.Low))
