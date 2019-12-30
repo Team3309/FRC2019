@@ -12,7 +12,7 @@ import org.usfirst.frc.team3309.subsystems.PanelHolder;
 import org.usfirst.frc.team4322.commandv2.Command;
 
 public class DriveVisionPlace extends Command {
-    private Command command;
+    private Command removeFingerCommand;
     private Timer settleTimer = new Timer();
     private boolean isSettling = false;
 
@@ -32,6 +32,7 @@ public class DriveVisionPlace extends Command {
     protected void initialize() {
         super.initialize();
         VisionHelper.start();
+        removeFingerCommand = RemoveFingerKt.RemoveFinger();
     }
 
     @Override
@@ -51,7 +52,7 @@ public class DriveVisionPlace extends Command {
             if (autoState == AutoStates.placingPanel &&
                     (Math.abs(area) > 7.5 || Robot.vision.targetDistInches3D() < 2)) {
                 // place panel on rocket after having extended
-                RemoveFingerKt.RemoveFinger().start();
+                removeFingerCommand.start();
                 VisionHelper.stopCrawl();
                 autoState = AutoStates.removingFinger;
             } else if (Util.within(area, 0.05, 7.0) && autoState == AutoStates.nothing) {
@@ -84,6 +85,6 @@ public class DriveVisionPlace extends Command {
 
     @Override
     protected boolean isFinished() {
-        return autoState == AutoStates.placingPanel && !PlacePanelKt.PlacePanel().isRunning();
+        return autoState == AutoStates.removingFinger && !removeFingerCommand.isRunning();
     }
 }
