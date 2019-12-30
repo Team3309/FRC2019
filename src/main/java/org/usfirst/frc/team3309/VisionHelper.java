@@ -72,9 +72,7 @@ public class VisionHelper {
     }
 
     public static void start() {
-        if (!visionOn) {
             enableVision();
-        }
     }
 
     private static void enableVision() {
