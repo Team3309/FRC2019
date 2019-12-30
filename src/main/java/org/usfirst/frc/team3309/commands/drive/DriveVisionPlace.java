@@ -1,11 +1,13 @@
 package org.usfirst.frc.team3309.commands.drive;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.Timer;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.VisionHelper;
 import org.usfirst.frc.team3309.commands.PlacePanelKt;
 import org.usfirst.frc.team3309.commands.RemoveFingerKt;
 import org.usfirst.frc.team3309.lib.util.CheesyDriveHelper;
+import org.usfirst.frc.team3309.lib.util.DriveSignal;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team3309.subsystems.PanelHolder;
 import org.usfirst.frc.team4322.commandv2.Command;
@@ -73,6 +75,9 @@ public class DriveVisionPlace extends Command {
             }
             PlacePanelKt.PlacePanel().start();
         }
+
+        DriveSignal signal = VisionHelper.getDriveSignal(false);
+        Robot.drive.setLeftRight(ControlMode.PercentOutput, signal.getLeft(), signal.getRight());
     }
 
     @Override
