@@ -10,6 +10,14 @@ import edu.wpi.first.wpilibj.command.Command;
 public class DriveVisionLoad extends Command {
     private Command command;
 
+    enum AutoStates {
+        nothing,
+        loadingPanel
+    }
+
+    AutoStates autoState = AutoStates.nothing;
+    private boolean cmdStarted = false;
+
 
     public DriveVisionLoad() {
         require(Robot.drive);
@@ -26,26 +34,41 @@ public class DriveVisionLoad extends Command {
 
     @Override
     protected void execute() {
-        Robot.vision.load3D();
+        DriveSignal signal = new DriveSignal(0, 0);
 
-        if (Robot.isDemo() && OI.getRightJoystickLeftClusterGroup().get()) {
-            Robot.setGuestDriverMode();
+
+        if (VisionHelper.hasTargets()) {
+            Robot.vision.load3D();
+            double area = Robot.vision.getTargetArea();
+
+            if (Util.within(area, 0.1, 20.0) && autoState == AutoStates.nothing) {
+                command.start();
+                cmdStarted = true;
+                autoState = autoStates.loadingPanel;
+            }
+
+            if (autoState == AutoStates.loadingPanel) {
+                signal = VisionHelper.getDriveSignal(true);
+            }
         }
 
-        if (isAutoTurn) {
-            VisionHelper.turnOn();
-                if (VisionHelper.hasTargets()) {
-                    Robot.vision.load3D();
-                    command.start();
-                } else {
-                    Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
-                    DriverStation.reportError("No targets detected. Awaiting manual input.", false);
-                }
-        }
+        Robot.drive.setLeftRight(signal);
     }
+
+
 
     @Override
     protected boolean isFinished() {
-        return !command.isRunning();
+        return !command.isRunning() && cmdStarted;
+    }
+
+    @Override
+    protected void interrupted() {
+
+        if(autoState == AutoStates.loadingPanel) {
+            command.cancel();
+            RetractFingerFromFeederStationKt.RetractFingerFromFeederStation().start();
+        }
+        autoState = AutoStates.nothing;
     }
 }

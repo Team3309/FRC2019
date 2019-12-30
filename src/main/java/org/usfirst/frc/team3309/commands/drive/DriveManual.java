@@ -51,7 +51,7 @@ public class DriveManual extends Command {
             leftPower *= 0.4;
             rightPower *= 0.4;
         }
-
+        
         Robot.drive.setLeftRight(ControlMode.PercentOutput, leftPower, rightPower);
     }
 
