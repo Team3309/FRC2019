@@ -175,8 +175,7 @@ public class Drive extends Subsystem {
     }
 
     public void setLeftRight(ControlMode mode, DriveSignal signal) {
-        driveLeftMaster.set(mode, signal.getLeft());
-        driveRightMaster.set(mode, -signal.getRight());
+        setLeftRight(mode, signal.getLeft(), signal.getRight());
     }
 
     public void setLeftRight(ControlMode mode, DemandType demandType,
