@@ -82,6 +82,6 @@ public class DriveVisionPlace extends Command {
 
     @Override
     protected boolean isFinished() {
-        return false;
+        return autoState == AutoStates.placingPanel && PlacePanelKt.PlacePanel().isRunning();
     }
 }
