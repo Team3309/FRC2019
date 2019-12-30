@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import edu.wpi.first.wpilibj.DriverStation;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.VisionHelper;
 import org.usfirst.frc.team3309.commands.IntakePanelFromStationKt;
@@ -63,11 +64,18 @@ public class DriveVisionLoad extends Command {
 
     @Override
     protected boolean isFinished() {
-        return !command.isRunning() && cmdStarted;
+
+        if (!command.isRunning() && cmdStarted) {
+            autoState = AutoStates.nothing;
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     @Override
-    protected void interrupted() {
+    protected void end() {
 
         if(autoState == AutoStates.loadingPanel) {
             command.cancel();

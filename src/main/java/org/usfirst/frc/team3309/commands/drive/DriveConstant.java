@@ -28,6 +28,9 @@ public class DriveConstant extends Command {
 
     @Override
     protected boolean isFinished() {
+        if (left == 0 && right == 0) {
+            return true;
+        }
         return false;
     }
 }
