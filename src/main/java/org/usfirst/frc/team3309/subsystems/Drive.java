@@ -12,6 +12,7 @@ import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.OI;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.commands.drive.DriveManual;
+import org.usfirst.frc.team3309.lib.util.DriveSignal;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
 import java.sql.Driver;
@@ -171,6 +172,11 @@ public class Drive extends Subsystem {
     public void setLeftRight(ControlMode mode, double left, double right) {
         driveLeftMaster.set(mode, left);
         driveRightMaster.set(mode, -right);
+    }
+
+    public void setLeftRight(ControlMode mode, DriveSignal signal) {
+        driveLeftMaster.set(mode, signal.getLeft());
+        driveRightMaster.set(mode, -signal.getRight());
     }
 
     public void setLeftRight(ControlMode mode, DemandType demandType,
