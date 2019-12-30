@@ -85,6 +85,7 @@ public class VisionHelper {
         setLed(Limelight.LEDMode.On);
         timer.reset();
         timer.start();
+        isStopCrawl = false;
     }
 
     private static void disableVision(){
