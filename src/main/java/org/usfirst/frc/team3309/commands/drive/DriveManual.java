@@ -30,7 +30,6 @@ public class DriveManual extends Command {
 
         boolean isHighGear = Robot.drive.inHighGear();
         boolean isQuickTurn = OI.getRightJoystick().getTrigger().get();
-        boolean isAutoTurn = OI.getLeftJoystickLeftClusterGroup().get() && !Robot.isGuestDriver();
 
         DriveSignal signal = cheesyDrive.update(throttle, turn, isQuickTurn, isHighGear);
 
@@ -48,7 +47,7 @@ public class DriveManual extends Command {
             leftPower *= 0.28;
             rightPower *= 0.28;
         }
-        else if (Robot.isDemo() && !isAutoTurn) {
+        else if (Robot.isDemo()) {
             leftPower *= 0.4;
             rightPower *= 0.4;
         }
