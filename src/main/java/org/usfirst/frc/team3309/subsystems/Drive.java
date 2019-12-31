@@ -179,6 +179,10 @@ public class Drive extends Subsystem {
         driveRightMaster.set(mode, -right);
     }
 
+    public void setArcade(ControlMode mode, double speed, double turn) {
+        setLeftRight(mode, speed + turn, speed - turn);
+    }
+
     public void setLeftRight(ControlMode mode, DriveSignal signal) {
         setLeftRight(mode, signal.getLeft(), signal.getRight());
     }

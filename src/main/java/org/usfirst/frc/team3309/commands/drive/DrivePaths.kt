@@ -7,8 +7,8 @@ import org.usfirst.frc.team4322.commandv2.group
 fun DrivePath1(): Command {
 
     val path = arrayOf<Waypoint>(
-            Waypoint(0, 0, 0, false),
-            Waypoint(36, 0, 0, false))
+            Waypoint(0F, 0F, 0F, 0F, 0F, false),
+            Waypoint(36F, 0F, 0F, 10000F, 100F, false))
 
     return group {
         sequential {
@@ -21,8 +21,8 @@ fun DrivePath1(): Command {
 fun DrivePath2(): Command {
 
     val path = arrayOf<Waypoint>(
-            Waypoint(0, 0, 0, false),
-            Waypoint(72, 0, 0, false))
+            Waypoint(0F, 0F, 0F, 0F, 0F, false),
+            Waypoint(72F, 0F, 0F, 10000F, 100F, false))
 
     return group {
         sequential {
@@ -35,8 +35,8 @@ fun DrivePath2(): Command {
 fun DrivePath3(): Command {
 
     val path = arrayOf<Waypoint>(
-            Waypoint(0, 0, 0, false),
-            Waypoint(120, 0, 0, false))
+            Waypoint(0F, 0F, 0F, 0F, 0F, false),
+            Waypoint(120F, 0F, 0F, 10000F, 100F, false))
 
     return group {
         sequential {

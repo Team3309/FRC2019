@@ -62,20 +62,33 @@ public class DriveAuto extends Command {
             turn = 0;
             if (state == travelState.accelerating) {
                 if (inchesTraveled < inchesFromWaypoints / 10) {
-                    speed += 100;
+                    if (speed <= nextPoint.maxTravelSpeed) {
+                        speed += nextPoint.maxSpeedChange;
+                    }
                 } else {
-
+                    state = travelState.cruising;
                 }
             } else if (state == travelState.cruising){
-                //Maintain speed until time to slow down
+                if (inchesTraveled < inchesFromWaypoints / 10 * 9) {
+                    speed = nextPoint.maxTravelSpeed;
+                } else {
+                    state = travelState.decelerating;
+                }
             } else if (state == travelState.decelerating){
-                //Slow to required speed
+                if (inchesTraveled <= inchesFromWaypoints) {
+                    speed -= nextPoint.maxSpeedChange;
+                } else {
+                    speed = 0;
+                    state = travelState.stopped;
+                }
             }
         } else if (nextPoint.turnRadiusInches !=0 && nextPoint.crossfieldInches + nextPoint.downfieldInches != 0) {
             //Turn to next point
         } else if (nextPoint.turnRadiusInches !=0 && nextPoint.crossfieldInches + nextPoint.downfieldInches == 0) {
             //Turn in place
         }
+
+        Robot.drive.setArcade(ControlMode.Velocity, speed, turn);
     }
 
     @Override
