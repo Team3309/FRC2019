@@ -8,23 +8,6 @@ import org.usfirst.frc.team4322.commandv2.Command;
 
 public class DriveAuto extends Command {
 
-    public class Waypoint {
-        int downfieldInches;
-        int crossfieldInches;
-        int turnRadiusInches;
-        boolean reverse;  // robot backs into waypoint
-
-        public Waypoint(int downfieldInches,
-                        int crossfieldInches,
-                        int turnRadiusInches,
-                        boolean reverse) {
-            this.downfieldInches = downfieldInches;
-            this.crossfieldInches = crossfieldInches;
-            this.turnRadiusInches = turnRadiusInches;
-            this.reverse = reverse;
-        }
-    }
-
     private boolean done = false;
     private Waypoint[] path;
     private boolean endRollout;
@@ -40,6 +23,7 @@ public class DriveAuto extends Command {
 
     @Override
     protected void initialize() {
+        super.initialize();
         Robot.drive.setHighGear();
     }
 

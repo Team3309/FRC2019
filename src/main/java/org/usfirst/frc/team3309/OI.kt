@@ -153,6 +153,41 @@ object OI {
             DriveConstant(ControlMode.PercentOutput, 0.0, 0.0)
         })
 
+        leftJoystick.rightCluster.bottomLeft.whenPressed(router {
+            if (DriverStation.getInstance().isDisabled) {
+                Command.empty
+            } else {
+                DrivePath1()
+            }
+        })
+
+        leftJoystick.rightCluster.bottomLeft.whenReleased(router {
+            DriveConstant(ControlMode.PercentOutput, 0.0, 0.0)
+        })
+
+        leftJoystick.rightCluster.bottomCenter.whenPressed(router {
+            if (DriverStation.getInstance().isDisabled) {
+                Command.empty
+            } else {
+                DrivePath2()
+            }
+        })
+
+        leftJoystick.rightCluster.bottomCenter.whenReleased(router {
+            DriveConstant(ControlMode.PercentOutput, 0.0, 0.0)
+        })
+
+        leftJoystick.rightCluster.bottomRight.whenPressed(router {
+            if (DriverStation.getInstance().isDisabled) {
+                Command.empty
+            } else {
+                DrivePath3()
+            }
+        })
+
+        leftJoystick.rightCluster.bottomRight.whenReleased(router {
+            DriveConstant(ControlMode.PercentOutput, 0.0, 0.0)
+        })
         operatorController.dPad.down.whenPressed(Elevate(Elevate.Level.Low))
         operatorController.dPad.right.whenPressed(Elevate(Elevate.Level.Middle))
         operatorController.dPad.up.whenPressed(Elevate(Elevate.Level.High))
