@@ -2,6 +2,7 @@ package org.usfirst.frc.team3309.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import org.usfirst.frc.team3309.Robot;
+import org.usfirst.frc.team3309.lib.util.CheesyDriveHelper;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team4322.commandv2.Command;
@@ -9,6 +10,9 @@ import org.usfirst.frc.team4322.commandv2.Command;
 
 
 public class DriveAuto extends Command {
+
+    private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
+
     private enum travelState {
         stopped,
         accelerating,
@@ -16,6 +20,7 @@ public class DriveAuto extends Command {
         decelerating,
         rolling, //Moving through momentum
         turning,
+        turningInPlace,
     }
 
     private travelState state = travelState.stopped;
@@ -79,11 +84,13 @@ public class DriveAuto extends Command {
                     speed -= nextPoint.maxSpeedChange;
                 } else {
                     speed = 0;
+                    nextWaypointIndex++;
                     state = travelState.stopped;
                 }
             }
         } else if (nextPoint.turnRadiusInches !=0 && nextPoint.crossfieldInches + nextPoint.downfieldInches != 0) {
-            //Turn to next point
+            state = travelState.turning;
+            //Turn to the next point. We may be able to use the Cheesy Drive algorithm for this.
         } else if (nextPoint.turnRadiusInches !=0 && nextPoint.crossfieldInches + nextPoint.downfieldInches == 0) {
             //Turn in place
         }
