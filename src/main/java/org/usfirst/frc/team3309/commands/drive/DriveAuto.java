@@ -9,30 +9,6 @@ import org.usfirst.frc.team4322.commandv2.Command;
 
 
 public class DriveAuto extends Command {
-
-    public class Waypoint {
-        float downfieldInches;
-        float crossfieldInches;
-        float turnRadiusInches;
-        float maxTravelSpeed; //Encoder ticks per second
-        float maxSpeedChange;
-        boolean reverse;  // robot backs into waypoint
-
-        public Waypoint(float downfieldInches,
-                        float crossfieldInches,
-                        float turnRadiusInches,
-                        float maxTravelSpeed,
-                        float maxSpeedChange,
-                        boolean reverse) {
-            this.downfieldInches = downfieldInches;
-            this.crossfieldInches = crossfieldInches;
-            this.turnRadiusInches = turnRadiusInches;
-            this.maxTravelSpeed = maxTravelSpeed;
-            this.maxSpeedChange = maxSpeedChange;
-            this.reverse = reverse;
-        }
-    }
-
     private enum travelState {
         stopped,
         accelerating,
@@ -41,6 +17,7 @@ public class DriveAuto extends Command {
         rolling, //Moving through momentum
         turning,
     }
+
     private travelState state = travelState.stopped;
     private int nextWaypointIndex = 0;
 
@@ -59,6 +36,7 @@ public class DriveAuto extends Command {
 
     @Override
     protected void initialize() {
+        super.initialize();
         Robot.drive.setHighGear();
     }
 
