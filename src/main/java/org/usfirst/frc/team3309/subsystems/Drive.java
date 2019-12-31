@@ -96,6 +96,11 @@ public class Drive extends Subsystem {
         return encoderCountsToInches(encoderVelocity * 10.0 / 4096.0 * (Math.PI * Constants.WHEEL_DIAMETER_INCHES));
     }
 
+    public double inchesPerSecondToEncoderVelocity(double inchesPerSecond) {
+        return inchesToEncoderCounts(inchesPerSecond / 10.0 * 4096.0 / (Math.PI * Constants.WHEEL_DIAMETER_INCHES));
+    }
+
+
     public double inchesToEncoderCounts(double inches) {
         return inches * (Constants.DRIVE_ENCODER_COUNTS_PER_REV / (Math.PI * Constants.WHEEL_DIAMETER_INCHES));
     }

@@ -2,6 +2,8 @@ package org.usfirst.frc.team3309.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import org.usfirst.frc.team3309.Robot;
+import org.usfirst.frc.team3309.lib.util.Util;
+import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team4322.commandv2.Command;
 
 
@@ -9,21 +11,38 @@ import org.usfirst.frc.team4322.commandv2.Command;
 public class DriveAuto extends Command {
 
     public class Waypoint {
-        int downfieldInches;
-        int crossfieldInches;
-        int turnRadiusInches;
+        float downfieldInches;
+        float crossfieldInches;
+        float turnRadiusInches;
+        float maxTravelSpeed; //Encoder ticks per second
+        float maxSpeedChange;
         boolean reverse;  // robot backs into waypoint
 
-        public Waypoint(int downfieldInches,
-                        int crossfieldInches,
-                        int turnRadiusInches,
+        public Waypoint(float downfieldInches,
+                        float crossfieldInches,
+                        float turnRadiusInches,
+                        float maxTravelSpeed,
+                        float maxSpeedChange,
                         boolean reverse) {
             this.downfieldInches = downfieldInches;
             this.crossfieldInches = crossfieldInches;
             this.turnRadiusInches = turnRadiusInches;
+            this.maxTravelSpeed = maxTravelSpeed;
+            this.maxSpeedChange = maxSpeedChange;
             this.reverse = reverse;
         }
     }
+
+    private enum travelState {
+        stopped,
+        accelerating,
+        cruising, //Moving at a set speed
+        decelerating,
+        rolling, //Moving through momentum
+        turning,
+    }
+    private travelState state = travelState.stopped;
+    private int nextWaypointIndex = 0;
 
     private boolean done = false;
     private Waypoint[] path;
@@ -45,36 +64,40 @@ public class DriveAuto extends Command {
 
     @Override
     protected void execute() {
+        double heading = Robot.drive.getAngularPosition() % 360;
 
-        // Need to adapt this sequential code to work with execute() being
-        // continuously called by saving the state from the previous execute()
-        // and continuing on the path. This code is just a concept of the work required.
+        Waypoint priorPoint = path[nextWaypointIndex - 1];
+        Waypoint nextPoint = path[nextWaypointIndex];
 
-        // This loop won't work because we need to end the method and wait to be called again
-        for (int pathIdx = 1; pathIdx < path.length; pathIdx++) {
-            Waypoint priorPoint = path[pathIdx - 1];
-            Waypoint destPoint = path[pathIdx];
-            Waypoint nextPoint = null;
-            if (pathIdx + 1 < path.length) {
-                nextPoint = path[pathIdx + 1];
+        double headingToNextPoint = Math.toDegrees(Math.tan((priorPoint.downfieldInches - nextPoint.downfieldInches)/
+                (priorPoint.crossfieldInches - nextPoint.crossfieldInches)));
+
+        double inchesFromWaypoints = Util.distanceFormula(priorPoint.downfieldInches, priorPoint.crossfieldInches,
+                nextPoint.downfieldInches, nextPoint.crossfieldInches);
+
+        double inchesTraveled = Robot.drive.encoderCountsToInches(Robot.drive.getEncoderDistance());
+
+        double speed = 0;
+        double turn = 0;
+
+        if (nextPoint.turnRadiusInches == 0) {
+            turn = 0;
+            if (state == travelState.accelerating) {
+                if (inchesTraveled < inchesFromWaypoints / 10) {
+                    speed += 100;
+                } else {
+
+                }
+            } else if (state == travelState.cruising){
+                //Maintain speed until time to slow down
+            } else if (state == travelState.decelerating){
+                //Slow to required speed
             }
-            // drive from priorPoint to destPoint and
-            // start turning towards nextPoint if it exists
-
-            double leftEncoderVelocity = 0;
-            double rightEncoderVelocity = 0;
-            boolean segmentDone = false;
-
-            // This loop won't work because we need to end the method and wait to be called again
-            while (!segmentDone) {
-
-                // *** add magic code here to calculate drive values ***
-                Robot.drive.setLeftRight(ControlMode.Velocity, leftEncoderVelocity, rightEncoderVelocity);
-            }
+        } else if (nextPoint.turnRadiusInches !=0 && nextPoint.crossfieldInches + nextPoint.downfieldInches != 0) {
+            //Turn to next point
+        } else if (nextPoint.turnRadiusInches !=0 && nextPoint.crossfieldInches + nextPoint.downfieldInches == 0) {
+            //Turn in place
         }
-        // stop moving
-        Robot.drive.setLeftRight(ControlMode.PercentOutput, 0.0, 0.0);
-        done = true;
     }
 
     @Override

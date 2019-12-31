@@ -115,6 +115,9 @@ public class Util {
         return Math.max(0, Math.min(max1, max2) - Math.max(min1, min2));
     }
 
+    public static double distanceFormula(double x1, double y1, double x2, double y2) {
+        return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+    }
 }
 
 
