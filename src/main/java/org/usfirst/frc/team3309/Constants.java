@@ -145,8 +145,9 @@ public class Constants {
      * ROBOT PHYSICAL CONSTANTS
      */
     public static final double DRIVE_ENCODER_COUNTS_PER_REV = 4096 * 9.6;
-    public static final double WHEEL_DIAMETER_INCHES = 6.0; // 6.0
+    public static final double WHEEL_DIAMETER_INCHES = 6.0;
     public static final double WHEEL_RADIUS_INCHES = WHEEL_DIAMETER_INCHES / 2.0;
+    public static final double INCHES_PER_REV = (WHEEL_DIAMETER_INCHES*Math.PI);
     public static final double kDriveWheelTrackWidthInches = 24.9;
     public static final double kTrackScrubFactor = 1.0;  // Tune me!
 

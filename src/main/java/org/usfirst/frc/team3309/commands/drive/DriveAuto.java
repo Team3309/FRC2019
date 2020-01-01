@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.util.CheesyDriveHelper;
 import org.usfirst.frc.team3309.lib.util.Util;
@@ -20,7 +21,7 @@ public class DriveAuto extends Command {
         decelerating,
         rolling, //Moving through momentum
         turning,
-        turningInPlace,
+        turningInPlace //spin turn
     }
 
     private travelState state = travelState.stopped;
@@ -47,6 +48,7 @@ public class DriveAuto extends Command {
 
     @Override
     protected void execute() {
+
         double heading = Robot.drive.getAngularPosition() % 360;
 
         Waypoint priorPoint = path[nextWaypointIndex - 1];
@@ -93,6 +95,9 @@ public class DriveAuto extends Command {
             //Turn to the next point. We may be able to use the Cheesy Drive algorithm for this.
         } else if (nextPoint.turnRadiusInches !=0 && nextPoint.crossfieldInches + nextPoint.downfieldInches == 0) {
             //Turn in place
+            state = travelState.turningInPlace;
+            double countsOfArc = headingToNextPoint * 600;
+            Robot.drive.setLeftRight(ControlMode.Position, countsOfArc, -countsOfArc);
         }
 
         Robot.drive.setArcade(ControlMode.Velocity, speed, turn);
