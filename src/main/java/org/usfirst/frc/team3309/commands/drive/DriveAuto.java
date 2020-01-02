@@ -2,11 +2,9 @@ package org.usfirst.frc.team3309.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.util.CheesyDriveHelper;
 import org.usfirst.frc.team3309.lib.util.Util;
-import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team4322.commandv2.Command;
 
 
@@ -44,6 +42,7 @@ public class DriveAuto extends Command {
     protected void initialize() {
         super.initialize();
         Robot.drive.setHighGear();
+        Robot.drive.reset();
         Robot.drive.setNeutralMode(NeutralMode.Brake);
     }
 
@@ -97,6 +96,7 @@ public class DriveAuto extends Command {
                     speed = 0;
                     nextWaypointIndex++;
                     state = travelState.stopped;
+                    Robot.drive.zeroEncoders();
                 }
             }
         } else if (nextPoint.turnRadiusInches !=0 && nextPoint.crossfieldInches + nextPoint.downfieldInches != 0) {

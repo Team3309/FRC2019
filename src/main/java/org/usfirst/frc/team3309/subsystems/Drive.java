@@ -122,6 +122,11 @@ public class Drive extends Subsystem {
         zeroNavx();
     }
 
+    public void zeroEncoders() {
+        driveLeftMaster.setSelectedSensorPosition(0, 0, 0);
+        driveRightMaster.setSelectedSensorPosition(0, 0, 0);
+    }
+
     public void zeroNavx() {
         navx.zeroYaw();
     }
