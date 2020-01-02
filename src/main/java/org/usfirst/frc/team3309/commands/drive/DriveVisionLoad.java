@@ -7,7 +7,7 @@ import org.usfirst.frc.team3309.commands.IntakePanelFromStationKt;
 import org.usfirst.frc.team3309.commands.RetractFingerFromFeederStationKt;
 import org.usfirst.frc.team4322.commandv2.Command;
 import org.usfirst.frc.team3309.lib.util.DriveSignal;
-import org.usfirst.frc.team3309.lib.util.Util;
+import org.usfirst.frc.team3309.lib.util.Util3309;
 
 public class DriveVisionLoad extends Command {
     private Command command;
@@ -54,7 +54,7 @@ public class DriveVisionLoad extends Command {
             /* Thresholds for starting IntakePanelFromFeederStation. Also checks that the command
             is starting from nothing (not starting from another state) and ensures that the command
             was started and that the robot is indeed loading a panel. */
-            if (Util.within(area, 0.1, 20.0) && autoState == AutoStates.nothing) {
+            if (Util3309.within(area, 0.1, 20.0) && autoState == AutoStates.nothing) {
                 command.start();
                 cmdStarted = true;
                 autoState = AutoStates.loadingPanel;

@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.OI;
 import org.usfirst.frc.team3309.Robot;
-import org.usfirst.frc.team3309.lib.util.Util;
+import org.usfirst.frc.team3309.lib.util.Util3309;
 import org.usfirst.frc.team4322.commandv2.Command;
 
 public class CargoHolderManual extends Command {
@@ -19,7 +19,7 @@ public class CargoHolderManual extends Command {
         double powerOut = OI.getOperatorController().getLt().axis();
         double powerIn = OI.getOperatorController().getRt().axis();
 
-        double power = Util.weirdSignedMax(powerOut, powerIn, Constants.CARGO_LAUNCHER_ROLLERS_MIN_POWER);
+        double power = Util3309.weirdSignedMax(powerOut, powerIn, Constants.CARGO_LAUNCHER_ROLLERS_MIN_POWER);
 
         // Hold onto cargo while in holder
         if (Robot.cargoHolder.hasCargo() && !(power > 0)

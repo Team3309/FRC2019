@@ -6,7 +6,6 @@ import org.usfirst.frc.team3309.commands.*
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate
 import org.usfirst.frc.team3309.commands.climber.ClimberManual
 import org.usfirst.frc.team3309.commands.drive.*
-import org.usfirst.frc.team3309.lib.util.Util
 import org.usfirst.frc.team3309.subsystems.CargoIntake
 import org.usfirst.frc.team3309.subsystems.PanelHolder
 import org.usfirst.frc.team4322.commandv2.Command

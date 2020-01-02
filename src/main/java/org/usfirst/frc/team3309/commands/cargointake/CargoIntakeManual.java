@@ -3,7 +3,7 @@ package org.usfirst.frc.team3309.commands.cargointake;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.OI;
 import org.usfirst.frc.team3309.Robot;
-import org.usfirst.frc.team3309.lib.util.Util;
+import org.usfirst.frc.team3309.lib.util.Util3309;
 import org.usfirst.frc.team4322.commandv2.Command;
 
 public class CargoIntakeManual extends Command {
@@ -17,7 +17,7 @@ public class CargoIntakeManual extends Command {
         double powerOut = OI.getOperatorController().getLt().axis();
         double powerIn = OI.getOperatorController().getRt().axis();
 
-        double power = Util.weirdSignedMax(powerOut, powerIn, Constants.CARGO_INTAKE_ROLLERS_MIN_POWER);
+        double power = Util3309.weirdSignedMax(powerOut, powerIn, Constants.CARGO_INTAKE_ROLLERS_MIN_POWER);
         // scale control input for maximum sensitivity
         power = power * Constants.CARGO_INTAKE_ROLLERS_MAX_POWER;
 

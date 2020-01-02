@@ -5,6 +5,8 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Arrays;
 
+import static org.usfirst.frc.team3309.Constants.Robot.*;
+
 
 /*
  * This class holds all the key values that control how the robot functions.
@@ -23,7 +25,7 @@ public class Constants {
      * This enum defines a type with 2 values, PRACTICE and COMPETITION
      * These values represent our COMPETITION robot and PRACTICE robot.
      */
-    public static enum Robot {
+    public enum Robot {
         PRACTICE,
         COMPETITION
     }
@@ -39,9 +41,9 @@ public class Constants {
         try {
             byte[] rioMac = NetworkInterface.getByName("eth0").getHardwareAddress();
             if (Arrays.equals(rioMac, PRACTICEBOT_MAC_ADDR)) {
-                currentRobot = Robot.PRACTICE;
+                currentRobot = PRACTICE;
             } else if (Arrays.equals(rioMac, COMPBOT_MAC_ADDR)) {
-                currentRobot = Robot.COMPETITION;
+                currentRobot = COMPETITION;
             } else {
                 currentRobot = null;
                 System.err.println("Oh no! Unknown robot! Did somebody install a new rio?");

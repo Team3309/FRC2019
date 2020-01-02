@@ -3,7 +3,7 @@ package org.usfirst.frc.team3309.commands.panelintake;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.OI;
 import org.usfirst.frc.team3309.Robot;
-import org.usfirst.frc.team3309.lib.util.Util;
+import org.usfirst.frc.team3309.lib.util.Util3309;
 import org.usfirst.frc.team4322.commandv2.Command;
 
 public class PanelIntakeManual extends Command {
@@ -17,7 +17,7 @@ public class PanelIntakeManual extends Command {
         double powerOut = OI.getOperatorController().getLt().axis();
         double powerIn = OI.getOperatorController().getRt().axis();
 
-        double power = Util.weirdSignedMax(powerOut, powerIn, Constants.PANEL_INTAKE_MIN_POWER);
+        double power = Util3309.weirdSignedMax(powerOut, powerIn, Constants.PANEL_INTAKE_MIN_POWER);
 
         Robot.panelIntake.setPower(power);
     }

@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
-import org.usfirst.frc.team3309.lib.util.Util;
+import org.usfirst.frc.team3309.lib.util.Util3309;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
 public class Elevator extends Subsystem {
@@ -73,7 +73,7 @@ public class Elevator extends Subsystem {
     }
 
     private boolean moveComplete() {
-        return Util.withinTolerance(getCarriagePercentage(), carriageGoal, 0.05);
+        return Util3309.withinTolerance(getCarriagePercentage(), carriageGoal, 0.05);
     }
 
     public void changeSlot(Slot slot) {
@@ -99,7 +99,7 @@ public class Elevator extends Subsystem {
 
     public void setPosition(double carriagePercentage) {
         double prevCarriageGoal = carriageGoal;
-        carriageGoal = Util.clamp(carriagePercentage, 0, 1);
+        carriageGoal = Util3309.clamp(carriagePercentage, 0, 1);
 
         double rawLiftGoal = liftGoalToEncoderCounts(carriageGoal);
 

@@ -7,7 +7,7 @@ import org.usfirst.frc.team3309.VisionHelper;
 import org.usfirst.frc.team3309.commands.PlacePanelKt;
 import org.usfirst.frc.team3309.commands.RemoveFingerKt;
 import org.usfirst.frc.team3309.lib.util.DriveSignal;
-import org.usfirst.frc.team3309.lib.util.Util;
+import org.usfirst.frc.team3309.lib.util.Util3309;
 import org.usfirst.frc.team3309.subsystems.PanelHolder;
 import org.usfirst.frc.team4322.commandv2.Command;
 
@@ -55,7 +55,7 @@ public class DriveVisionPlace extends Command {
                 removeFingerCommand.start();
                 VisionHelper.stopCrawl();
                 autoState = AutoStates.removingFinger;
-            } else if (Util.within(area, 0.05, 7.0) && autoState == AutoStates.nothing) {
+            } else if (Util3309.within(area, 0.05, 7.0) && autoState == AutoStates.nothing) {
                 // extend in preparation to go on the rocket
                 autoState = AutoStates.placingPanel;
 
