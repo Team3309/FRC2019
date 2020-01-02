@@ -15,13 +15,13 @@ public class DriveAuto extends Command {
     private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
 
     private enum travelState {
-            stopped,
-            accelerating,
-            cruising, //Moving at a set speed
-            decelerating,
-            rolling, //Moving with momentum
-            turning,
-            turningInPlace //spin turn
+        stopped,
+        accelerating,
+        cruising, //Moving at a set speed
+        decelerating,
+        rolling, //Moving with momentum
+        turning,
+        turningInPlace //spin turn
     }
 
     private enum spinTurnState {
