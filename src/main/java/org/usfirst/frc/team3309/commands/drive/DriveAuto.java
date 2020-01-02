@@ -6,7 +6,8 @@ import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.util.CheesyDriveHelper;
 import org.usfirst.frc.team3309.lib.util.Util;
 import org.usfirst.frc.team4322.commandv2.Command;
-
+import edu.wpi.first.wpilibj.Timer;
+import org.usfirst.frc.team4322.configuration.RobotConfigFileReader;
 
 public class DriveAuto extends Command {
 
@@ -116,24 +117,35 @@ public class DriveAuto extends Command {
         } else if (nextPoint.turnRadiusInches == 0 && nextPoint.crossfieldInches + nextPoint.downfieldInches == 0) {
             //Turn in place
             state = travelState.turningInPlace;
-            double k1, k2, k3, k4;
 
-            //robot MUST be finished by the time it reaches turnSpace
-            double turnSpace = headingToNextPoint;
-            double time = 0;
-            k1 = 0; //accelerate to k2
-            k2 = 0; //how fast we want the bot to turn.
-            k3 = 0; //deceleration from k2
-            k4 = 0; //final adjustments
+            double accelConstant = 0; //by how many deg/sec the velocity will increase per second
+            double cruiseConstant = 0; //constant angular velocity
+            double decelConstant = 0; //by how many deg/sec velocity will decrease per second
+            double tweakConstant = 0; //by how many deg/sec the robot will adjust its heading
+            Timer STControlTimer = new Timer(); //control timer for the ramping function
+            double accelStop = 0; //whenever we need the robot to stop accelerating angular velocity
+            double cruiseStop = accelStop + 0; //whenever we need the robot to stop cruising
+            double decelStop = cruiseStop + 0; //whenever we need the robot to stop decelerating angular velocity
+            double currentVelocity = Robot.drive.getEncoderVelocity();
 
-            if (Robot.drive.getAngularVelocity() == 0 && Robot.drive.getVelocityY() == 0
-                    && Robot.drive.getVelocityX() == 0) {
-                Robot.drive.setLeftRight(ControlMode.Velocity, k1, -k1);
-            } else if (Robot.drive.getAngularVelocity() == k2) {
-                Robot.drive.setLeftRight(ControlMode.Velocity, k2, -k2);
-            } else if (time == 0) {
-                Robot.drive.setLeftRight(ControlMode.Velocity, k3, -k3);
+            STControlTimer.start();
+            while (STControlTimer.getFPGATimestamp() > 0 && STControlTimer.getFPGATimestamp() < accelStop) {
+                Robot.drive.setLeftRight(ControlMode.Velocity, currentVelocity + accelConstant,
+                        -currentVelocity - accelConstant);
             }
+            while (STControlTimer.getFPGATimestamp() > accelStop && STControlTimer.getFPGATimestamp() < cruiseStop) {
+                Robot.drive.setLeftRight(ControlMode.Velocity, cruiseConstant, -cruiseConstant);
+            }
+            while(STControlTimer.getFPGATimestamp() > cruiseStop && STControlTimer.getFPGATimestamp() < decelStop) {
+                Robot.drive.setLeftRight(ControlMode.Velocity, currentVelocity - decelConstant,
+                        decelConstant - currentVelocity);
+            }
+
+            if(Robot.drive.getAngularPosition() == headingToNextPoint) {
+                Robot.drive.setLeftRight(ControlMode.Velocity, 0, 0);
+                STControlTimer.stop();
+            }
+
             //Pseudocode
             //
             // drive.accel(k1, m);
@@ -146,9 +158,6 @@ public class DriveAuto extends Command {
             //
             // angularPosition.zero();
             // angularVelocity.zero();
-
-
-            Robot.drive.setLeftRight(ControlMode.Velocity, k2, -k2);
         }
 
         Robot.drive.setArcade(ControlMode.Velocity, speed, turn);
