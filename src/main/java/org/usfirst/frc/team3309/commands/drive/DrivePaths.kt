@@ -8,7 +8,7 @@ fun DrivePath1(): Command {
 
     val path = arrayOf<Waypoint>(
             Waypoint(),
-            Waypoint(36F, 0F, 0F, 10000F, 100F, false))
+            Waypoint(36.0, 0.0, 0.0, 36.0, 5.0, false))
 
     return group {
         sequential {
@@ -22,7 +22,7 @@ fun DrivePath2(): Command {
 
     val path = arrayOf<Waypoint>(
             Waypoint(),
-            Waypoint(72F, 0F, 0F, 10000F, 100F, false))
+            Waypoint(72.0, 0.0, 0.0, 36.0, 5.0, false))
 
     return group {
         sequential {
@@ -36,7 +36,7 @@ fun DrivePath3(): Command {
 
     val path = arrayOf<Waypoint>(
             Waypoint(),
-            Waypoint(120F, 0F, 0F, 10000F, 100F, false))
+            Waypoint(120.0, 0.0, 0.0, 36.0, 5.0, false))
 
     return group {
         sequential {

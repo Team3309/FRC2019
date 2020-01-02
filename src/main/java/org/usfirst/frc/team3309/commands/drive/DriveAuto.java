@@ -74,8 +74,8 @@ public class DriveAuto extends Command {
             turn = 0;
             if (state == travelState.accelerating) {
                 if (inchesTraveled < inchesFromWaypoints / 10) {
-                    if (speed <= nextPoint.maxTravelSpeed) {
-                        speed += nextPoint.maxSpeedChange;
+                    if (speed <= nextPoint.maxTravelSpeedEncoderCounts) {
+                        speed += nextPoint.maxSpeedChangeEncoderCounts;
                     }
                 } else {
                     //Change state once 10% to the destination
@@ -83,14 +83,14 @@ public class DriveAuto extends Command {
                 }
             } else if (state == travelState.cruising){
                 if (inchesTraveled < (inchesFromWaypoints / 10) * 9) {
-                    speed = nextPoint.maxTravelSpeed;
+                    speed = nextPoint.maxTravelSpeedEncoderCounts;
                 } else {
                     //Change state once 90% to the destination
                     state = travelState.decelerating;
                 }
             } else if (state == travelState.decelerating){
                 if (inchesTraveled <= inchesFromWaypoints) {
-                    speed -= nextPoint.maxSpeedChange;
+                    speed -= nextPoint.maxSpeedChangeEncoderCounts;
                 } else {
                     //Stop and go to next waypoint
                     speed = 0;
