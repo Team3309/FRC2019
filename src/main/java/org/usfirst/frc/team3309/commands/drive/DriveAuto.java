@@ -54,7 +54,7 @@ public class DriveAuto extends Command {
         Waypoint priorPoint = path[nextWaypointIndex - 1];
         Waypoint nextPoint = path[nextWaypointIndex];
 
-        double headingToNextPoint = Math.toDegrees(Math.tan((priorPoint.downfieldInches - nextPoint.downfieldInches)/
+        double headingToNextPoint = Math.toDegrees(Math.atan((priorPoint.downfieldInches - nextPoint.downfieldInches)/
                 (priorPoint.crossfieldInches - nextPoint.crossfieldInches)));
 
         double inchesFromWaypoints = Util.distanceFormula(priorPoint.downfieldInches, priorPoint.crossfieldInches,
@@ -94,18 +94,15 @@ public class DriveAuto extends Command {
             state = travelState.turning;
 
             //Turn to the next point. We may be able to use the Cheesy Drive algorithm for this.
-            //Turn on a circle
-            // 1) Find where said circle touches the straight lines set out in the auto.
-            // 2) Start turning on said circle, using the overall curvature of as the drive "turn" variable.
-            // 3) Stop turning when the robot reaches the succeeding line segment.
-            // 4) Continue on the straight-line path.
 
-            for (Waypoint element : path) {
-                Waypoint turnStart = new Waypoint(element.downfieldInches-element.turnRadiusInches,
-                        element.crossfieldInches, 0, element.maxTravelSpeed, element.maxSpeedChange,
-                        element.reverse);
-                Waypoint turnEnd;
-            }
+
+            //Turn on a circle (pseudocode).
+            // 1) Find where circle touches straight-line paths of the auto.
+            // 2) Start the turn at every other point. Untangling complex auto paths can happen later.
+            //    a) Based on the angular and linear velocity of the robot, calculate how many
+            //    degrees/sec the robot must turn to reach headingToNextPoint in time.
+            //    b) Have the robot turn by that number of deg/sec
+            // 3) End the turn at every non-start point.
 
         } else if (nextPoint.turnRadiusInches == 0 && nextPoint.crossfieldInches + nextPoint.downfieldInches == 0) {
             //Turn in place
