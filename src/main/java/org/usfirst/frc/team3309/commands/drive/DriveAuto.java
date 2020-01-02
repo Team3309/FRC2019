@@ -120,8 +120,39 @@ public class DriveAuto extends Command {
         } else if (nextPoint.turnRadiusInches == 0 && nextPoint.crossfieldInches + nextPoint.downfieldInches == 0) {
             //Turn in place
             state = travelState.turningInPlace;
-            double countsOfArc = headingToNextPoint * 600;
-            Robot.drive.setLeftRight(ControlMode.Position, countsOfArc, -countsOfArc);
+            double k1, k2, k3, k4;
+
+            //robot MUST be finished by the time it reaches turnSpace
+            double turnSpace = headingToNextPoint;
+            double time = 0;
+            k1 = 0; //accelerate to k2
+            k2 = 0; //how fast we want the bot to turn.
+            k3 = 0; //deceleration from k2
+            k4 = 0; //final adjustments
+
+            if (Robot.drive.getAngularVelocity() == 0 && Robot.drive.getVelocityY() == 0
+                    && Robot.drive.getVelocityX() == 0) {
+                Robot.drive.setLeftRight(ControlMode.Velocity, k1, -k1);
+            } else if (Robot.drive.getAngularVelocity() == k2) {
+                Robot.drive.setLeftRight(ControlMode.Velocity, k2, -k2);
+            } else if (time == 0) {
+                Robot.drive.setLeftRight(ControlMode.Velocity, k3, -k3);
+            }
+            //Pseudocode
+            //
+            // drive.accel(k1, m);
+            //   until (k2) Robot.drive.setLeftRight(ControlMode.Velocity, k1 + m, -k1 - m);
+            // drive.cruise(k2);
+            //   Robot.drive.setLeftRight(ControlMode.Velocity, k2, -k2);
+            // drive.decel(k3, n);
+            //   until (k3) Robot.drive.setLeftRight(ControlMode.Velocity, k3 - n, n - k3);
+            // drive.adjustAt(k4);
+            //
+            // angularPosition.zero();
+            // angularVelocity.zero();
+
+
+            Robot.drive.setLeftRight(ControlMode.Velocity, k2, -k2);
         }
 
         Robot.drive.setArcade(ControlMode.Velocity, speed, turn);
