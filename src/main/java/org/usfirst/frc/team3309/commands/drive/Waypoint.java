@@ -21,17 +21,7 @@ public class Waypoint {
     double creepSpeedEncoderCounts;
 
     public Waypoint() {
-        downfieldInches = 0;
-        crossfieldInches = 0;
-        turnRadiusInches = 0;
-        maxTravelSpeed = 0;
-        reverse = false;
-
-        maxTravelSpeedEncoderCounts = 0;
-        accelerationDistanceEncoderCounts = 0;
-        cruiseDistanceEncoderCounts = 0;
-        decelerationDistanceEncoderCounts = 0;
-        creepSpeedEncoderCounts = 0;
+        initialize();
     }
 
     public Waypoint(double downfieldInches,
@@ -43,11 +33,7 @@ public class Waypoint {
         this.turnRadiusInches = turnRadiusInches;
         this.reverse = reverse;
 
-        maxTravelSpeedEncoderCounts = Robot.drive.inchesPerSecondToEncoderVelocity(maxTravelSpeed);
-        accelerationDistanceEncoderCounts = Robot.drive.inchesToEncoderCounts(accelerationDistance);
-        cruiseDistanceEncoderCounts = Robot.drive.inchesToEncoderCounts(cruiseDistance);
-        decelerationDistanceEncoderCounts = Robot.drive.inchesToEncoderCounts(decelerationDistance);
-        creepSpeedEncoderCounts = Robot.drive.inchesPerSecondToEncoderVelocity(creepSpeed);
+        initialize();
     }
 
     public Waypoint(double downfieldInches,
@@ -63,6 +49,10 @@ public class Waypoint {
         this.creepSpeed = creepSpeed;
         this.reverse = reverse;
 
+        initialize();
+    }
+
+    private void initialize () {
         maxTravelSpeedEncoderCounts = Robot.drive.inchesPerSecondToEncoderVelocity(maxTravelSpeed);
         accelerationDistanceEncoderCounts = Robot.drive.inchesToEncoderCounts(accelerationDistance);
         cruiseDistanceEncoderCounts = Robot.drive.inchesToEncoderCounts(cruiseDistance);
