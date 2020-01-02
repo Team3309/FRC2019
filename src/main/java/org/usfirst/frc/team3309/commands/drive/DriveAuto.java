@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.util.CheesyDriveHelper;
@@ -19,7 +20,7 @@ public class DriveAuto extends Command {
         accelerating,
         cruising, //Moving at a set speed
         decelerating,
-        rolling, //Moving through momentum
+        rolling, //Moving with momentum
         turning,
         turningInPlace //spin turn
     }
@@ -76,7 +77,7 @@ public class DriveAuto extends Command {
                     state = travelState.cruising;
                 }
             } else if (state == travelState.cruising){
-                if (inchesTraveled < inchesFromWaypoints / 10 * 9) {
+                if (inchesTraveled < (inchesFromWaypoints / 10) * 9) {
                     speed = nextPoint.maxTravelSpeed;
                 } else {
                     state = travelState.decelerating;
@@ -92,11 +93,18 @@ public class DriveAuto extends Command {
             }
         } else if (nextPoint.turnRadiusInches !=0 && nextPoint.crossfieldInches + nextPoint.downfieldInches != 0) {
             state = travelState.turning;
+
             //Turn to the next point. We may be able to use the Cheesy Drive algorithm for this.
+            //Turn on a circle
+            // 1) Find where said circle touches the straight lines set out in the auto.
+            // 2) Start turning on said circle, using the overall curvature of as the drive "turn" variable.
+            // 3) Stop turning when the robot reaches the succeeding line segment.
+            // 4) Continue on the straight-line path.
         } else if (nextPoint.turnRadiusInches !=0 && nextPoint.crossfieldInches + nextPoint.downfieldInches == 0) {
             //Turn in place
             state = travelState.turningInPlace;
             double countsOfArc = headingToNextPoint * 600;
+            Robot.drive.setNeutralMode(NeutralMode.Brake);
             Robot.drive.setLeftRight(ControlMode.Position, countsOfArc, -countsOfArc);
         }
 
