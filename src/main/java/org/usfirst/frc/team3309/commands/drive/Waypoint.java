@@ -11,10 +11,12 @@ public class Waypoint {
 
     double creepSpeed = 5; //Inches per second
     double accelerationDistance = 24; //Inches
+    double cruiseDistance = 12; //Inches
     double decelerationDistance = 24; //Also in inches
 
     double maxTravelSpeedEncoderCounts;
     double accelerationDistanceEncoderCounts;
+    double cruiseDistanceEncoderCounts;
     double decelerationDistanceEncoderCounts;
     double creepSpeedEncoderCounts;
 
@@ -27,6 +29,7 @@ public class Waypoint {
 
         maxTravelSpeedEncoderCounts = 0;
         accelerationDistanceEncoderCounts = 0;
+        cruiseDistanceEncoderCounts = 0;
         decelerationDistanceEncoderCounts = 0;
         creepSpeedEncoderCounts = 0;
     }
@@ -42,6 +45,7 @@ public class Waypoint {
 
         maxTravelSpeedEncoderCounts = Robot.drive.inchesPerSecondToEncoderVelocity(maxTravelSpeed);
         accelerationDistanceEncoderCounts = Robot.drive.inchesToEncoderCounts(accelerationDistance);
+        cruiseDistanceEncoderCounts = Robot.drive.inchesToEncoderCounts(cruiseDistance);
         decelerationDistanceEncoderCounts = Robot.drive.inchesToEncoderCounts(decelerationDistance);
         creepSpeedEncoderCounts = Robot.drive.inchesPerSecondToEncoderVelocity(creepSpeed);
     }
@@ -61,6 +65,7 @@ public class Waypoint {
 
         maxTravelSpeedEncoderCounts = Robot.drive.inchesPerSecondToEncoderVelocity(maxTravelSpeed);
         accelerationDistanceEncoderCounts = Robot.drive.inchesToEncoderCounts(accelerationDistance);
+        cruiseDistanceEncoderCounts = Robot.drive.inchesToEncoderCounts(cruiseDistance);
         decelerationDistanceEncoderCounts = Robot.drive.inchesToEncoderCounts(decelerationDistance);
         creepSpeedEncoderCounts = Robot.drive.inchesPerSecondToEncoderVelocity(creepSpeed);
     }

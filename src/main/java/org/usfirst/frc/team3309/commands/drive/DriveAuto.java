@@ -129,7 +129,7 @@ public class DriveAuto extends Command {
             double accelConstant = 0; //by how many deg/sec the velocity will increase per second
             double cruiseConstant = 0; //constant angular velocity
             double decelConstant = 0; //by how many deg/sec velocity will decrease per second
-            double tweakConstant = 0; //by how many deg/sec the robot will adjust its heading
+            double creepConstant = 0; //by how many deg/sec the robot will adjust its heading
             Timer STControlTimer = new Timer(); //control timer for the ramping function
             double accelStop = 0; //whenever we need the robot to stop accelerating angular velocity
             double cruiseStop = accelStop + 0; //whenever we need the robot to stop cruising
@@ -137,13 +137,16 @@ public class DriveAuto extends Command {
             double currentVelocity = Robot.drive.getEncoderVelocity();
 
             STControlTimer.start();
+
             while (STControlTimer.getFPGATimestamp() > 0 && STControlTimer.getFPGATimestamp() < accelStop) {
                 Robot.drive.setLeftRight(ControlMode.Velocity, currentVelocity + accelConstant,
                         -currentVelocity - accelConstant);
             }
+
             while (STControlTimer.getFPGATimestamp() > accelStop && STControlTimer.getFPGATimestamp() < cruiseStop) {
                 Robot.drive.setLeftRight(ControlMode.Velocity, cruiseConstant, -cruiseConstant);
             }
+
             while(STControlTimer.getFPGATimestamp() > cruiseStop && STControlTimer.getFPGATimestamp() < decelStop) {
                 Robot.drive.setLeftRight(ControlMode.Velocity, currentVelocity - decelConstant,
                         decelConstant - currentVelocity);
