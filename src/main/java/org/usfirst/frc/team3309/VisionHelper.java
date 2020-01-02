@@ -5,8 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.lib.Limelight;
 import org.usfirst.frc.team3309.lib.PIDController;
 import org.usfirst.frc.team3309.lib.util.DriveSignal;
-import org.usfirst.frc.team3309.lib.util.PolynomialRegression;
-import org.usfirst.frc.team3309.lib.util.Util;
+import org.usfirst.frc.team3309.lib.util.Util3309;
 import org.usfirst.frc.team3309.subsystems.Vision;
 
 import static java.lang.Math.toDegrees;
@@ -205,7 +204,7 @@ public class VisionHelper {
         // Limit max angular power as a fail-safe. This isn't part of the core
         // correction algorithm.
         double maxAngularPower = 0.5;
-        angularPower = Util.clamp(angularPower, -maxAngularPower, maxAngularPower);
+        angularPower = Util3309.clamp(angularPower, -maxAngularPower, maxAngularPower);
 
         if (SmartDashboard.getBoolean(visionTurningKey, visionTurningEnabled)) {
             return angularPower;
@@ -254,7 +253,7 @@ public class VisionHelper {
     }
 
     public static boolean hasTargets() {
-        return limelight.hasTarget() && Util.within(getSkew(), -10.0, 10.0);
+        return limelight.hasTarget() && Util3309.within(getSkew(), -10.0, 10.0);
     }
 
     public static void outputToDashboard() {

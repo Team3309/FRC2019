@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Timer;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.OI;
 import org.usfirst.frc.team3309.Robot;
-import org.usfirst.frc.team3309.lib.util.Util;
+import org.usfirst.frc.team3309.lib.util.Util3309;
 import org.usfirst.frc.team4322.commandv2.Command;
 
 import java.sql.Driver;
@@ -22,7 +22,7 @@ public class PanelHolderManual extends Command {
         double powerOut = OI.getOperatorController().getLt().axis();
         double powerIn = OI.getOperatorController().getRt().axis();
 
-        double manualPower = Util.weirdSignedMax(powerOut, powerIn, 0.1);
+        double manualPower = Util3309.weirdSignedMax(powerOut, powerIn, 0.1);
 
         if (!Robot.isGuestDriver()) {
             Robot.panelHolder.setPower(manualPower);

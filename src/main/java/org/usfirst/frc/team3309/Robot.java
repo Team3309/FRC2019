@@ -13,7 +13,7 @@ import org.usfirst.frc.team3309.commands.Elevate;
 import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
 import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeManual;
 import org.usfirst.frc.team3309.commands.panelholder.PanelHolderManual;
-import org.usfirst.frc.team3309.lib.util.Util;
+import org.usfirst.frc.team3309.lib.util.Util3309;
 import org.usfirst.frc.team3309.subsystems.*;
 import org.usfirst.frc.team4322.commandv2.Command;
 import org.usfirst.frc.team4322.commandv2.CommandV2Robot;
@@ -208,7 +208,7 @@ public class Robot extends CommandV2Robot {
 
     public static boolean hasCargoInIntakeZone() {
         return cargoHolder.hasCargo()
-                && Util.within(elevator.getCarriagePercentage(),
+                && Util3309.within(elevator.getCarriagePercentage(),
                 Constants.CARGO_INTAKE_ZONE_MIN,
                 Constants.CARGO_INTAKE_ZONE_MAX);
     }

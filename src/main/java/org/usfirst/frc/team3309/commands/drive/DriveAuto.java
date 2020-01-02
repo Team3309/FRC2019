@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.util.CheesyDriveHelper;
-import org.usfirst.frc.team3309.lib.util.Util;
+import org.usfirst.frc.team3309.lib.util.Util3309;
 import org.usfirst.frc.team4322.commandv2.Command;
 
 
@@ -57,7 +57,7 @@ public class DriveAuto extends Command {
         double headingToNextPoint = Math.toDegrees(Math.atan((priorPoint.downfieldInches - nextPoint.downfieldInches)/
                 (priorPoint.crossfieldInches - nextPoint.crossfieldInches)));
 
-        double inchesFromWaypoints = Util.distanceFormula(priorPoint.downfieldInches, priorPoint.crossfieldInches,
+        double inchesFromWaypoints = Util3309.distanceFormula(priorPoint.downfieldInches, priorPoint.crossfieldInches,
                 nextPoint.downfieldInches, nextPoint.crossfieldInches);
 
         double inchesTraveled = Robot.drive.encoderCountsToInches(Robot.drive.getEncoderDistance());
