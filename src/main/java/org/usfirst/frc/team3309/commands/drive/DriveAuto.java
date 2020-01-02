@@ -87,14 +87,18 @@ public class DriveAuto extends Command {
                 }
             } else if (state == travelState.cruising){
                 if (inchesTraveled < inchesFromWaypoints - nextPoint.decelerationDistance) {
-                    speed = inchesTraveled / (inchesFromWaypoints - nextPoint.decelerationDistance);
+                    speed = nextPoint.maxTravelSpeed;
                 } else {
                     //Change state once 90% to the destination
                     state = travelState.decelerating;
                 }
             } else if (state == travelState.decelerating){
                 if (inchesTraveled <= inchesFromWaypoints) {
-                    speed = inchesTraveled;
+                    if (inchesTraveled / (inchesFromWaypoints - nextPoint.decelerationDistance) > nextPoint.creepSpeed) {
+                        speed = inchesTraveled / (inchesFromWaypoints - nextPoint.decelerationDistance);
+                    } else {
+                        speed = nextPoint.creepSpeed;
+                    }
                 } else {
                     //Stop and go to next waypoint
                     speed = 0;
