@@ -14,13 +14,21 @@ public class DriveAuto extends Command {
     private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
 
     private enum travelState {
-        stopped,
+            stopped,
+            accelerating,
+            cruising, //Moving at a set speed
+            decelerating,
+            rolling, //Moving with momentum
+            turning,
+            turningInPlace //spin turn
+    }
+
+    private enum spinTurnState {
         accelerating,
-        cruising, //Moving at a set speed
+        cruising,
         decelerating,
-        rolling, //Moving with momentum
-        turning,
-        turningInPlace //spin turn
+        tweaking,
+        stopped
     }
 
     private double speed = 0;
@@ -137,35 +145,42 @@ public class DriveAuto extends Command {
             //Turn in place
             state = travelState.turningInPlace;
 
+            spinTurnState turn = spinTurnState.stopped;
             double accelConstant = 0; //by how many deg/sec the velocity will increase per second
             double cruiseConstant = 0; //constant angular velocity
             double decelConstant = 0; //by how many deg/sec velocity will decrease per second
             double creepConstant = 0; //by how many deg/sec the robot will adjust its heading
-            Timer STControlTimer = new Timer(); //control timer for the ramping function
             double accelStop = 0; //whenever we need the robot to stop accelerating angular velocity
             double cruiseStop = accelStop + 0; //whenever we need the robot to stop cruising
             double decelStop = cruiseStop + 0; //whenever we need the robot to stop decelerating angular velocity
+            double tweakStop = decelStop + 0;
             double currentVelocity = Robot.drive.getEncoderVelocity();
+            Timer STControlTimer = new Timer();
 
-            STControlTimer.start();
+            if (STControlTimer.get() > 0 && STControlTimer.get() < accelStop) {
+                turn = spinTurnState.accelerating;
+            } else if (STControlTimer.get() > accelStop && STControlTimer.get() < cruiseStop) {
+                turn = spinTurnState.cruising;
+            } else if (STControlTimer.get() > cruiseStop && STControlTimer.get() < decelStop) {
+                turn = spinTurnState.decelerating;
+            } else if (STControlTimer.get() > decelStop && STControlTimer.get() < tweakStop) {
+                turn = spinTurnState.tweaking;
+            } else {
+                turn = spinTurnState.stopped;
+            }
 
-            while (STControlTimer.getFPGATimestamp() > 0 && STControlTimer.getFPGATimestamp() < accelStop) {
+            if (turn == spinTurnState.accelerating) {
                 Robot.drive.setLeftRight(ControlMode.Velocity, currentVelocity + accelConstant,
                         -currentVelocity - accelConstant);
-            }
-
-            while (STControlTimer.getFPGATimestamp() > accelStop && STControlTimer.getFPGATimestamp() < cruiseStop) {
+            } else if (turn == spinTurnState.cruising) {
                 Robot.drive.setLeftRight(ControlMode.Velocity, cruiseConstant, -cruiseConstant);
-            }
-
-            while(STControlTimer.getFPGATimestamp() > cruiseStop && STControlTimer.getFPGATimestamp() < decelStop) {
+            } else if (turn == spinTurnState.decelerating) {
                 Robot.drive.setLeftRight(ControlMode.Velocity, currentVelocity - decelConstant,
                         decelConstant - currentVelocity);
-            }
-
-            if(Robot.drive.getAngularPosition() == headingToNextPoint) {
+            } else if (turn == spinTurnState.tweaking) {
+                Robot.drive.setLeftRight(ControlMode.Velocity, nextPoint.creepSpeed, -nextPoint.creepSpeed);
+            } else {
                 Robot.drive.setLeftRight(ControlMode.Velocity, 0, 0);
-                STControlTimer.stop();
             }
 
             //Pseudocode
