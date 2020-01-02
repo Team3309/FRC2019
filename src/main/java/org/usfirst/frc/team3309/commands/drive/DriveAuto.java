@@ -153,11 +153,7 @@ public class DriveAuto extends Command {
             double accelConstant = 0; //by how many deg/sec the velocity will increase per second
             double cruiseConstant = 0; //constant angular velocity
             double decelConstant = 0; //by how many deg/sec velocity will decrease per second
-            double creepConstant = 0; //by how many deg/sec the robot will adjust its heading
-            double accelStop = 0; //whenever we need the robot to stop accelerating angular velocity
-            double cruiseStop = accelStop + 0; //whenever we need the robot to stop cruising
-            double decelStop = cruiseStop + 0; //whenever we need the robot to stop decelerating angular velocity
-            double tweakStop = decelStop + 0;
+            double tweakThreshold = 0.001;
             double currentVelocity = Robot.drive.getEncoderVelocity();
             Timer STControlTimer = new Timer();
             double controlTimerStorage = STControlTimer.get();
@@ -186,9 +182,11 @@ public class DriveAuto extends Command {
             } else if (turnState == spinTurnState.decelerating) {
                 left = currentVelocity - decelConstant;
             } else if (spinTurn == spinTurnState.tweaking) {
-                if (Robot.drive.getAngularPosition() > headingToNextPoint) {
+                if (Robot.drive.getAngularPosition() > headingToNextPoint &&
+                        Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) > tweakThreshold) {
                     left = -nextPoint.creepSpeed;
-                } else if (Robot.drive.getAngularPosition() < headingToNextPoint) {
+                } else if (Robot.drive.getAngularPosition() < headingToNextPoint &&
+                        Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) > tweakThreshold) {
                     left = nextPoint.creepSpeed;
                 }
             } else {
