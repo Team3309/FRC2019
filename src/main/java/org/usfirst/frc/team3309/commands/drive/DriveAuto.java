@@ -34,8 +34,10 @@ public class DriveAuto extends Command {
 
     private double speed = 0;
     private double turn = 0;
+    private double left = 0;
 
     private travelState state = travelState.stopped;
+    private spinTurnState turnState = spinTurnState.stopped;
     private int nextWaypointIndex = 0;
 
     private boolean done = false;
@@ -147,7 +149,7 @@ public class DriveAuto extends Command {
             //Turn in place
             state = travelState.turningInPlace;
 
-            spinTurnState turn = spinTurnState.stopped;
+            spinTurnState spinTurn = spinTurnState.stopped;
             double accelConstant = 0; //by how many deg/sec the velocity will increase per second
             double cruiseConstant = 0; //constant angular velocity
             double decelConstant = 0; //by how many deg/sec velocity will decrease per second
@@ -158,29 +160,37 @@ public class DriveAuto extends Command {
             double tweakStop = decelStop + 0;
             double currentVelocity = Robot.drive.getEncoderVelocity();
             Timer STControlTimer = new Timer();
+            double controlTimerStorage = STControlTimer.get();
 
-            if (STControlTimer.get() > 0 && STControlTimer.get() < accelStop) {
-                turn = spinTurnState.accelerating;
-            } else if (STControlTimer.get() > accelStop && STControlTimer.get() < cruiseStop) {
-                turn = spinTurnState.cruising;
-            } else if (STControlTimer.get() > cruiseStop && STControlTimer.get() < decelStop) {
-                turn = spinTurnState.decelerating;
-            } else if (STControlTimer.get() > decelStop && STControlTimer.get() < tweakStop) {
-                turn = spinTurnState.tweaking;
+            if (controlTimerStorage > 0 && turnState == spinTurnState.stopped) {
+                turnState = spinTurnState.accelerating;
+            } else if (turnState == spinTurnState.accelerating &&
+                    (controlTimerStorage + 0.001) * accelConstant > nextPoint.maxTravelSpeed) {
+                turnState = spinTurnState.cruising;
+            } else if (turnState == spinTurnState.cruising &&
+                    (controlTimerStorage + 0.001) * cruiseConstant  > nextPoint.creepSpeed) {
+                turnState = spinTurnState.decelerating;
+            } else if (turnState == spinTurnState.decelerating &&
+                    (controlTimerStorage+ 0.001) * decelConstant < nextPoint.creepSpeed) {
+                turnState = spinTurnState.tweaking;
             } else {
-                turn = spinTurnState.stopped;
+                turnState = spinTurnState.stopped;
+                STControlTimer.stop();
+                STControlTimer.reset();
             }
 
-            if (turn == spinTurnState.accelerating) {
-                Robot.drive.setLeftRight(ControlMode.Velocity, currentVelocity + accelConstant,
-                        -currentVelocity - accelConstant);
-            } else if (turn == spinTurnState.cruising) {
-                Robot.drive.setLeftRight(ControlMode.Velocity, cruiseConstant, -cruiseConstant);
-            } else if (turn == spinTurnState.decelerating) {
-                Robot.drive.setLeftRight(ControlMode.Velocity, currentVelocity - decelConstant,
-                        decelConstant - currentVelocity);
-            } else if (turn == spinTurnState.tweaking) {
-                Robot.drive.setLeftRight(ControlMode.Velocity, nextPoint.creepSpeed, -nextPoint.creepSpeed);
+            if (turnState == spinTurnState.accelerating) {
+                left = currentVelocity + (accelConstant * controlTimerStorage);
+            } else if (turnState == spinTurnState.cruising) {
+                left = cruiseConstant;
+            } else if (turnState == spinTurnState.decelerating) {
+                left = currentVelocity - decelConstant;
+            } else if (spinTurn == spinTurnState.tweaking) {
+                if (Robot.drive.getAngularPosition() > headingToNextPoint) {
+                    left = -nextPoint.creepSpeed;
+                } else if (Robot.drive.getAngularPosition() < headingToNextPoint) {
+                    left = nextPoint.creepSpeed;
+                }
             } else {
                 Robot.drive.setLeftRight(ControlMode.Velocity, 0, 0);
             }
@@ -197,6 +207,7 @@ public class DriveAuto extends Command {
             //
             // angularPosition.zero();
             // angularVelocity.zero();
+            Robot.drive.setLeftRight(ControlMode.Velocity, left, -left);
         }
 
         Robot.drive.setArcade(ControlMode.Velocity, speed, turn);
