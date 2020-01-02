@@ -44,6 +44,7 @@ public class DriveAuto extends Command {
     protected void initialize() {
         super.initialize();
         Robot.drive.setHighGear();
+        Robot.drive.setNeutralMode(NeutralMode.Brake);
     }
 
     @Override
@@ -66,6 +67,11 @@ public class DriveAuto extends Command {
         double turn = 0;
 
         if (nextPoint.turnRadiusInches == 0) {
+            /* Drive Straight
+             * Accelerate until the robot is 10% to its destination. Then remain at a constant
+             * speed until 90% to destination. Finally, decelerate at the same rate of acceleration
+             * until destination has been reached
+             */
             turn = 0;
             if (state == travelState.accelerating) {
                 if (inchesTraveled < inchesFromWaypoints / 10) {
@@ -73,18 +79,21 @@ public class DriveAuto extends Command {
                         speed += nextPoint.maxSpeedChange;
                     }
                 } else {
+                    //Change state once 10% to the destination
                     state = travelState.cruising;
                 }
             } else if (state == travelState.cruising){
                 if (inchesTraveled < (inchesFromWaypoints / 10) * 9) {
                     speed = nextPoint.maxTravelSpeed;
                 } else {
+                    //Change state once 90% to the destination
                     state = travelState.decelerating;
                 }
             } else if (state == travelState.decelerating){
                 if (inchesTraveled <= inchesFromWaypoints) {
                     speed -= nextPoint.maxSpeedChange;
                 } else {
+                    //Stop and go to next waypoint
                     speed = 0;
                     nextWaypointIndex++;
                     state = travelState.stopped;
@@ -108,7 +117,6 @@ public class DriveAuto extends Command {
             //Turn in place
             state = travelState.turningInPlace;
             double countsOfArc = headingToNextPoint * 600;
-            Robot.drive.setNeutralMode(NeutralMode.Brake);
             Robot.drive.setLeftRight(ControlMode.Position, countsOfArc, -countsOfArc);
         }
 

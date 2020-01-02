@@ -8,6 +8,8 @@ public class Waypoint {
     float maxSpeedChange; //Maximum difference in speed from second to second
     boolean reverse;  // robot backs into waypoint
 
+    public Waypoint() {}
+
     public Waypoint(float downfieldInches,
                     float crossfieldInches,
                     float turnRadiusInches,
