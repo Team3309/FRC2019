@@ -1,11 +1,11 @@
 package org.usfirst.frc.team3309.commands.drive;
 
 public class Waypoint {
-    float downfieldInches;
-    float crossfieldInches;
-    float turnRadiusInches;
+    float downfieldInches; //how far the waypoint is from the driver station
+    float crossfieldInches; //lateral position of the waypoint
+    float turnRadiusInches; //centered on the vertices of the straight-line path, not the guide circles
     float maxTravelSpeed; //Encoder ticks per second
-    float maxSpeedChange;
+    float maxSpeedChange; //Maximum difference in speed from second to second
     boolean reverse;  // robot backs into waypoint
 
     public Waypoint(float downfieldInches,

@@ -10,7 +10,6 @@ import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team4322.commandv2.Command;
 
 
-
 public class DriveAuto extends Command {
 
     private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
@@ -100,7 +99,15 @@ public class DriveAuto extends Command {
             // 2) Start turning on said circle, using the overall curvature of as the drive "turn" variable.
             // 3) Stop turning when the robot reaches the succeeding line segment.
             // 4) Continue on the straight-line path.
-        } else if (nextPoint.turnRadiusInches !=0 && nextPoint.crossfieldInches + nextPoint.downfieldInches == 0) {
+
+            for (Waypoint element : path) {
+                Waypoint turnStart = new Waypoint(element.downfieldInches-element.turnRadiusInches,
+                        element.crossfieldInches, 0, element.maxTravelSpeed, element.maxSpeedChange,
+                        element.reverse);
+                Waypoint turnEnd;
+            }
+
+        } else if (nextPoint.turnRadiusInches == 0 && nextPoint.crossfieldInches + nextPoint.downfieldInches == 0) {
             //Turn in place
             state = travelState.turningInPlace;
             double countsOfArc = headingToNextPoint * 600;
