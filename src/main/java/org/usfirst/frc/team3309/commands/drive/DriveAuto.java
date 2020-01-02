@@ -23,6 +23,9 @@ public class DriveAuto extends Command {
         turningInPlace //spin turn
     }
 
+    private double speed = 0;
+    private double turn = 0;
+
     private travelState state = travelState.stopped;
     private int nextWaypointIndex = 0;
 
@@ -63,9 +66,6 @@ public class DriveAuto extends Command {
 
         double inchesTraveled = Robot.drive.encoderCountsToInches(Robot.drive.getEncoderDistance());
 
-        double speed = 0;
-        double turn = 0;
-
         if (nextPoint.turnRadiusInches == 0) {
             /* Drive Straight
              * Accelerate until the robot is 10% to its destination. Then remain at a constant
@@ -74,24 +74,32 @@ public class DriveAuto extends Command {
              */
             turn = 0;
             if (state == travelState.accelerating) {
-                if (inchesTraveled < inchesFromWaypoints / 10) {
+                if (inchesTraveled < nextPoint.accelerationDistance) {
                     if (speed <= nextPoint.maxTravelSpeedEncoderCounts) {
-                        speed += nextPoint.maxSpeedChangeEncoderCounts;
+                        if (inchesTraveled / nextPoint.accelerationDistance >= nextPoint.creepSpeed) {
+                            speed = inchesTraveled / nextPoint.accelerationDistance;
+                        } else {
+                            speed = nextPoint.creepSpeed;
+                        }
                     }
                 } else {
                     //Change state once 10% to the destination
                     state = travelState.cruising;
                 }
             } else if (state == travelState.cruising){
-                if (inchesTraveled < (inchesFromWaypoints / 10) * 9) {
-                    speed = nextPoint.maxTravelSpeedEncoderCounts;
+                if (inchesTraveled < inchesFromWaypoints - nextPoint.decelerationDistance) {
+                    speed = nextPoint.maxTravelSpeed;
                 } else {
                     //Change state once 90% to the destination
                     state = travelState.decelerating;
                 }
             } else if (state == travelState.decelerating){
                 if (inchesTraveled <= inchesFromWaypoints) {
-                    speed -= nextPoint.maxSpeedChangeEncoderCounts;
+                    if (inchesTraveled / (inchesFromWaypoints - nextPoint.decelerationDistance) > nextPoint.creepSpeed) {
+                        speed = inchesTraveled / (inchesFromWaypoints - nextPoint.decelerationDistance);
+                    } else {
+                        speed = nextPoint.creepSpeed;
+                    }
                 } else {
                     //Stop and go to next waypoint
                     speed = 0;
