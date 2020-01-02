@@ -177,13 +177,17 @@ public class Robot extends CommandV2Robot {
         super.testPeriodic();
     }
 
+    public static boolean getDriveDebug() {
+        return SmartDashboard.getBoolean(driveDashboardKey, false);
+    }
+
     /*
      * This function always runs, regardless of mode.
      */
     @Override
     public void robotPeriodic() {
         super.robotPeriodic();
-        if (SmartDashboard.getBoolean(driveDashboardKey, false)) {
+        if (getDriveDebug()) {
             drive.outputToDashboard();
         }
         if (SmartDashboard.getBoolean(elevatorDashboardKey, false)) {

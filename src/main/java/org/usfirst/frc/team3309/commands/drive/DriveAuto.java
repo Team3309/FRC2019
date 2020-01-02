@@ -2,6 +2,7 @@ package org.usfirst.frc.team3309.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.util.CheesyDriveHelper;
 import org.usfirst.frc.team3309.lib.util.Util3309;
@@ -61,6 +62,7 @@ public class DriveAuto extends Command {
     @Override
     protected void execute() {
 
+        boolean debugMode = Robot.getDriveDebug();
         double heading = Robot.drive.getAngularPosition() % 360;
 
         Waypoint priorPoint = path[nextWaypointIndex - 1];
@@ -198,6 +200,14 @@ public class DriveAuto extends Command {
         }
 
         Robot.drive.setArcade(ControlMode.Velocity, speed, turn);
+
+        // Example output of variables for debugging purposes - adapt as needed
+        if (debugMode) {
+            double leftVelocity = 0;
+            double RightVelocity = 0;
+            SmartDashboard.putNumber("Goal left encoder velocity", leftVelocity);
+            SmartDashboard.putNumber("Goal right encoder velocity", RightVelocity);
+        }
     }
 
     @Override

@@ -20,8 +20,6 @@ import org.usfirst.frc.team4322.commandv2.Subsystem;
 public class Drive extends Subsystem {
 
     private WPI_TalonSRX driveLeftMaster, driveRightMaster;
-    private WPI_VictorSPX driveLeftSlave1, driveRightSlave1;
-    private WPI_VictorSPX driveLeftSlave2, driveRightSlave2;
 
     private Solenoid shifter;
 
@@ -30,11 +28,11 @@ public class Drive extends Subsystem {
     public Drive() {
 
         driveLeftMaster = new WPI_TalonSRX(Constants.DRIVE_LEFT_MASTER_TALON_ID);
-        driveLeftSlave1 = new WPI_VictorSPX(Constants.DRIVE_LEFT_SLAVE_VICTOR_1_ID);
-        driveLeftSlave2 = new WPI_VictorSPX(Constants.DRIVE_LEFT_SLAVE_VICTOR_2_ID);
+        WPI_VictorSPX driveLeftSlave1 = new WPI_VictorSPX(Constants.DRIVE_LEFT_SLAVE_VICTOR_1_ID);
+        WPI_VictorSPX driveLeftSlave2 = new WPI_VictorSPX(Constants.DRIVE_LEFT_SLAVE_VICTOR_2_ID);
         driveRightMaster = new WPI_TalonSRX(Constants.DRIVE_RIGHT_MASTER_TALON_ID);
-        driveRightSlave1 = new WPI_VictorSPX(Constants.DRIVE_RIGHT_SLAVE_VICTOR_1_ID);
-        driveRightSlave2 = new WPI_VictorSPX(Constants.DRIVE_RIGHT_SLAVE_VICTOR_2_ID);
+        WPI_VictorSPX driveRightSlave1 = new WPI_VictorSPX(Constants.DRIVE_RIGHT_SLAVE_VICTOR_1_ID);
+        WPI_VictorSPX driveRightSlave2 = new WPI_VictorSPX(Constants.DRIVE_RIGHT_SLAVE_VICTOR_2_ID);
         shifter = new Solenoid(Constants.DRIVE_SHIFTER_PCM_PORT);
         navx = new AHRS(SPI.Port.kMXP);
 
@@ -195,10 +193,10 @@ public class Drive extends Subsystem {
         setRight(mode, right, demandType, rightFeedforward);
     }
 
-    public void setLeft(ControlMode mode,
-                        double left,
-                        DemandType demandType,
-                        double leftFeedforward) {
+    private void setLeft(ControlMode mode,
+                         double left,
+                         DemandType demandType,
+                         double leftFeedforward) {
         driveLeftMaster.set(mode, left, demandType, leftFeedforward);
     }
 
@@ -207,9 +205,9 @@ public class Drive extends Subsystem {
         driveRightMaster.setNeutralMode(mode);
     }
 
-    public void setRight(ControlMode mode,
-                         double right, DemandType demandType,
-                         double rightFeedforward) {
+    private void setRight(ControlMode mode,
+                          double right, DemandType demandType,
+                          double rightFeedforward) {
         driveRightMaster.set(mode, -right, demandType, -rightFeedforward);
     }
 
