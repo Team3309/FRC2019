@@ -103,11 +103,7 @@ public class DriveAuto extends Command {
         } else if ((DASSM == superState.drivingStraight || DASSM == superState.mobileTurning)
                 && nextPoint.turnRadiusInches == 0) {
             DASSM = superState.spinTurning;
-        } else if(DASSM == superState.spinTurning) {
-            DASSM = superState.stopped;
-            Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
-        }
-        else {
+        } else {
             Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
             DASSM = superState.stopped;
         }
