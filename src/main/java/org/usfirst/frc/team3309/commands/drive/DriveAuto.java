@@ -37,10 +37,12 @@ public class DriveAuto extends Command {
     }
 
     private double speed = 0;
-    private double turn = 0;
     private double left = 0;
     private double lastVelocity;
     Timer ControlTimer = new Timer();
+
+    double encoderZeroValue;
+    double zeroedEncoderValue;
 
     private travelState state = travelState.stopped;
     private spinTurnState turnState = spinTurnState.notStarted;
@@ -81,10 +83,12 @@ public class DriveAuto extends Command {
         double headingToNextPoint = Math.toDegrees(Math.atan((priorPoint.downfieldInches - nextPoint.downfieldInches)/
                 (priorPoint.crossfieldInches - nextPoint.crossfieldInches)));
 
-        double inchesFromWaypoints = Util3309.distanceFormula(priorPoint.downfieldInches, priorPoint.crossfieldInches,
+        double inchesBetweenWaypoints = Util3309.distanceFormula(priorPoint.downfieldInches, priorPoint.crossfieldInches,
                 nextPoint.downfieldInches, nextPoint.crossfieldInches);
 
-        double inchesTraveled = Robot.drive.encoderCountsToInches(Robot.drive.getEncoderDistance());
+        double encoderTicks = Robot.drive.getEncoderDistance();
+        zeroedEncoderValue = encoderTicks - encoderZeroValue;
+        double inchesTraveled = Robot.drive.encoderCountsToInches(zeroedEncoderValue);
 
         if (nextPoint.turnRadiusInches == 0) {
             /*
@@ -122,23 +126,33 @@ public class DriveAuto extends Command {
              *     else
              *         stop the robot and increment nextWaypointIndex
              */
-            turn = 0;
+
+            if (state == travelState.stopped) {
+                ControlTimer.reset();
+                state = travelState.accelerating;
+                encoderZeroValue = encoderTicks;
+            }
             if (state == travelState.accelerating) {
                 if (speed < nextPoint.maxLinearSpeedEncoderCountsPerSec) {
-                    speed += nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
+                    speed = nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
+                    if (speed > nextPoint.maxLinearSpeedEncoderCountsPerSec) {
+                        speed = nextPoint.maxLinearSpeedEncoderCountsPerSec;
+                    }
                 } else {
                     state = travelState.cruising;
                 }
-            } else if (state == travelState.cruising){
-                if (inchesFromWaypoints - inchesTraveled < speed * nextPoint.decelerationConstant) {
+            }
+            if (state == travelState.cruising){
+                if (inchesBetweenWaypoints - inchesTraveled < speed * nextPoint.decelerationConstant) {
                     speed = nextPoint.maxLinearSpeed;
                 } else {
                     state = travelState.decelerating;
                     ControlTimer.reset();
                 }
-            } else if (state == travelState.decelerating){
-                if (inchesTraveled < inchesFromWaypoints) {
-                    speed -= nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
+            }
+            if (state == travelState.decelerating){
+                if (inchesTraveled < inchesBetweenWaypoints) {
+                    speed = nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
                     if (speed < nextPoint.linearCreepSpeedEncoderCountsPerSec) {
                         speed = nextPoint.linearCreepSpeed;
                     }
@@ -147,11 +161,17 @@ public class DriveAuto extends Command {
                     speed = 0;
                     //nextWaypointIndex++;
                     state = travelState.turningInPlace;
-                    Robot.drive.zeroEncoders();
+                    Robot.drive.zeroEncoders(); //TODO: remove
                     ControlTimer.reset();
                 }
             }
-            Robot.drive.setArcade(ControlMode.Velocity, speed, turn);
+
+            if (speed != 0 ) {
+                Robot.drive.setArcade(ControlMode.Velocity, speed, 0);
+            } else {
+                //If speed is zero, then use PercentOutput so we don't apply brakes
+                Robot.drive.setArcade(ControlMode.PercentOutput, 0,0);
+            }
 
         } else if (nextPoint.turnRadiusInches !=0 && nextPoint.crossfieldInches + nextPoint.downfieldInches != 0) {
             state = travelState.turning;
