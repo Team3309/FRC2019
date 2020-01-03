@@ -155,16 +155,17 @@ public class DriveAuto extends Command {
             //Turn to the next point. We may be able to use the Cheesy Drive algorithm for this.
 
 
-            //Turn on a circle (pseudocode).
-            // 1) Find where circle touches straight-line paths of the auto.
-            // 2) Start the turn at every other point. Untangling complex auto paths can happen later.
-            //    a) Based on the angular and linear velocity of the robot, calculate how many
-            //    degrees/sec the robot must turn to reach headingToNextPoint in time.
-            //    b) Have the robot turn by that number of deg/sec
-            // 3) End the turn at every non-start point.
+            //Turn on a circle:
 
         } else if (nextPoint.turnRadiusInches == 0 && nextPoint.crossfieldInches + nextPoint.downfieldInches == 0) {
-            //Turn in place
+            //Turn in place:
+            //  Accelerate turning till we reach our turn cruising speed.
+            //  Turn at cruising speed till we approach
+            //  Decelerate turning speed till we reach tweaking speed.
+            //  Tweak heading until it is within a healthy margin of error.
+            //  Allow the robot to drive again.
+            //  Reset all sensors for next operation.
+
             state = travelState.turningInPlace;
 
             double tweakThreshold = 0.001;
@@ -172,21 +173,33 @@ public class DriveAuto extends Command {
             ControlTimer.start();
             double timerValue = ControlTimer.get();
 
+            //checks that this is the start of auto; timer should be started and robot should not have
+            //been previously started
             if (timerValue > 0 && turnState == spinTurnState.notStarted) {
                 turnState = spinTurnState.accelerating;
-            } else if (turnState == spinTurnState.accelerating &&
+            }
+            //checks whether we should start cruising; we should have finished our acceleration phase
+            //and we should be approaching our cruise velocity
+            else if (turnState == spinTurnState.accelerating &&
                     timerValue * nextPoint.angularAccelerationDegreesPerSec2 > nextPoint.maxAngularSpeed) {
                 turnState = spinTurnState.cruising;
-            } else if (turnState == spinTurnState.cruising &&
+            }
+            //checks whether we should start decelerating; we should have completed cruising phase
+            else if (turnState == spinTurnState.cruising &&
                     timerValue * nextPoint.maxAngularSpeed  > nextPoint.maxAngularSpeed) {
                 turnState = spinTurnState.decelerating;
+                //separate timer to help us decelerate down from a fixed velocity
                 lastVelocity = Robot.drive.getEncoderVelocity();
                 ControlTimer.reset();
                 timerValue = 0;
-            } else if (turnState == spinTurnState.decelerating &&
+            }
+            //checks that we have completed deceleration phase and are approaching our tweaking speed
+            else if (turnState == spinTurnState.decelerating &&
                     timerValue * nextPoint.angularDecelerationDegreesPerSec2 < nextPoint.angularCreepSpeed) {
                 turnState = spinTurnState.tweaking;
-            } else {
+            }
+            //defaults to straight driving, making sure that the timer is primed for next spin turn
+            else {
                 turnState = spinTurnState.straightDrive;
                 ControlTimer.stop();
                 ControlTimer.reset();
@@ -200,13 +213,18 @@ public class DriveAuto extends Command {
             } else if (turnState == spinTurnState.decelerating) {
                 left = lastVelocity - (nextPoint.angularDecelerationDegreesPerSec2 * timerValue);
             } else if (turnState == spinTurnState.tweaking) {
+                //turn left if we overshot
                 if (Robot.drive.getAngularPosition() > headingToNextPoint &&
                         Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) > tweakThreshold) {
                     left = -nextPoint.angularCreepSpeed;
-                } else if (Robot.drive.getAngularPosition() < headingToNextPoint &&
+                }
+                //turn right if we undershot
+                else if (Robot.drive.getAngularPosition() < headingToNextPoint &&
                         Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) > tweakThreshold) {
                     left = nextPoint.angularCreepSpeed;
-                } else if (Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) < tweakThreshold) {
+                }
+                //stop correcting
+                else if (Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) < tweakThreshold) {
                     Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
                     ControlTimer.stop();
                     ControlTimer.reset();
@@ -217,19 +235,9 @@ public class DriveAuto extends Command {
                 Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
             }
 
-            //Pseudocode
-            //
-            // drive.accel(k1, m);
-            //   until (k2) Robot.drive.setLeftRight(ControlMode.Velocity, k1 + m, -k1 - m);
-            // drive.cruise(k2);
-            //   Robot.drive.setLeftRight(ControlMode.Velocity, k2, -k2);
-            // drive.decel(k3, n);
-            //   until (k3) Robot.drive.setLeftRight(ControlMode.Velocity, k3 - n, n - k3);
-            // drive.adjustAt(k4);
-            //
-            // angularPosition.zero();
-            // angularVelocity.zero();
             Robot.drive.setLeftRight(ControlMode.Velocity, left, -left);
+            Robot.drive.zeroNavx();
+        
         }
 
         Robot.drive.setArcade(ControlMode.Velocity, speed, turn);
