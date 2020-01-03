@@ -179,7 +179,7 @@ public class DriveAuto extends Command {
                     timerValue * cruiseConstant  > nextPoint.angularCreepSpeedEncoderCountsPerSec) {
                 turnState = spinTurnState.decelerating;
             } else if (turnState == spinTurnState.decelerating &&
-                    timerValue * decelConstant < nextPoint.angularCreepSpeedEncoderCountsPerSec) {
+                    timerValue * decelConstant < nextPoint.angularCreepSpeed) {
                 turnState = spinTurnState.tweaking;
             } else {
                 turnState = spinTurnState.straightDrive;
@@ -189,20 +189,20 @@ public class DriveAuto extends Command {
             }
 
             if (turnState == spinTurnState.accelerating) {
-                left = accelConstant * timerValue;
+                left = nextPoint.angularAccelerationDegreesPerSec2 * timerValue;
             } else if (turnState == spinTurnState.cruising) {
-                left = cruiseConstant;
+                left = nextPoint.maxAngularSpeed;
             } else if (turnState == spinTurnState.decelerating) {
                 ControlTimer.reset();
                 double decelInitVelocity = Robot.drive.getEncoderVelocity();
-                left = decelInitVelocity - (decelConstant * timerValue);
+                left = decelInitVelocity - (nextPoint.angularAccelerationDegreesPerSec2 * timerValue);
             } else if (turnState == spinTurnState.tweaking) {
                 if (Robot.drive.getAngularPosition() > headingToNextPoint &&
                         Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) > tweakThreshold) {
-                    left = -nextPoint.angularCreepSpeedEncoderCountsPerSec;
+                    left = -nextPoint.angularCreepSpeed;
                 } else if (Robot.drive.getAngularPosition() < headingToNextPoint &&
                         Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) > tweakThreshold) {
-                    left = nextPoint.angularCreepSpeedEncoderCountsPerSec;
+                    left = nextPoint.angularCreepSpeed;
                 } else if (Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) < tweakThreshold) {
                     Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
                     ControlTimer.stop();
