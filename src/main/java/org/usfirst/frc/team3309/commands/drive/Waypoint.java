@@ -11,14 +11,12 @@ public class Waypoint {
     double creepSpeed = 5; //Inches per second
 
     //TODO: Tune these
-    double maxLinearSpeed = 0; //Inches per second
-    double maxAngularSpeed = 0;
-    double linearAccelerationInchesPerSec2 = 0; //Inches per second^2
-    double linearDecelerationInchesPerSec2 = 0; //Also in inches per second^2
-    double angularAccelerationDegreesPerSec2 = 0;
-    double angularDecelerationDegreesPerSec2 = 0;
-
-    double cruiseDistance = 12; //Inches
+    double maxLinearSpeed = 180; //Inches per second
+    double maxAngularSpeed = 180; //Degrees per second
+    double linearAccelerationInchesPerSec2 = 10; //Inches per second^2
+    double linearDecelerationInchesPerSec2 = 10; //Also in inches per second^2
+    double angularAccelerationDegreesPerSec2 = 45;
+    double angularDecelerationDegreesPerSec2 = 45;
 
     double maxTravelSpeedEncoderCounts = 0;
     double linearAccelerationEncoderCountsPerSec2 = 0;
@@ -53,6 +51,7 @@ public class Waypoint {
         this.crossfieldInches = crossfieldInches;
         this.turnRadiusInches = turnRadiusInches;
         this.maxLinearSpeed = maxLinearSpeed;
+        this.maxAngularSpeed =maxAngularSpeed;
         this.creepSpeed = creepSpeed;
         this.reverse = reverse;
 
@@ -63,7 +62,6 @@ public class Waypoint {
         maxTravelSpeedEncoderCounts = Robot.drive.inchesPerSecondToEncoderVelocity(maxLinearSpeed);
         linearAccelerationEncoderCountsPerSec2 = Robot.drive.inchesPerSecondToEncoderVelocity(linearAccelerationInchesPerSec2);
         linearDecelerationEncoderCountsPerSec2 = Robot.drive.inchesPerSecondToEncoderVelocity(linearDecelerationInchesPerSec2);
-        cruiseDistanceEncoderCounts = Robot.drive.inchesToEncoderCounts(cruiseDistance);
         creepSpeedEncoderCounts = Robot.drive.inchesPerSecondToEncoderVelocity(creepSpeed);
     }
 }
