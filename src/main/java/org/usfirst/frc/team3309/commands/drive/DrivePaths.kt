@@ -13,7 +13,7 @@ fun DrivePath1(): Command {
     return group {
         sequential {
             +DriveAuto(path, false)
-            //+DriveVisionPlace()
+            +DriveVisionPlace()
         }
     }
 }
@@ -27,7 +27,7 @@ fun DrivePath2(): Command {
     return group {
         sequential {
             +DriveAuto(path, false)
-            //+DriveVisionLoad()
+            +DriveVisionLoad()
         }
     }
 }
@@ -41,7 +41,7 @@ fun DrivePath3(): Command {
     return group {
         sequential {
             +DriveAuto(path, false)
-            //+DriveVisionPlace()
+            +DriveVisionPlace()
         }
     }
 }

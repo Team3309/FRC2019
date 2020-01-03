@@ -44,7 +44,7 @@ public class DriveAuto extends Command {
     private spinTurnState turnState = spinTurnState.notStarted;
     private int nextWaypointIndex = 0;
 
-    private boolean done = true;
+    private boolean done = false;
     private Waypoint[] path;
     private boolean endRollout;
 
@@ -131,11 +131,16 @@ public class DriveAuto extends Command {
             else if (turnState == spinTurnState.decelerating &&
                     timerValue * nextPoint.angularDecelerationDegreesPerSec2 < nextPoint.angularCreepSpeed) {
                 turnState = spinTurnState.tweaking;
+            }
+
+            if (turnState == spinTurnState.tweaking) {
 
                 //check if correction is needed
                 if (Math.abs(Util3309.headingError(headingToNextPoint)) < kTweakThreshold) {
+                    //spin Turn complete
                     Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
                     superStateMachine = superState.drivingStraight;
+                    turnState = spinTurnState.notStarted;
                 }
                 //turn right if we undershot
                 else if (Util3309.headingError(headingToNextPoint) > 0) {
@@ -146,17 +151,14 @@ public class DriveAuto extends Command {
                     left = -nextPoint.angularCreepSpeed;
                 }
 
-                //default: sets up control timer and state machines for next call
-                superStateMachine = superState.drivingStraight;
-            } else if (superStateMachine == superState.drivingStraight) {
-                turnState = spinTurnState.notStarted;
-            } else {
-                DriverStation.reportError("Unknown Spin Turn State.", false);
+
             }
 
-            Robot.drive.setLeftRight(ControlMode.Velocity, left, -left);
+            if (superStateMachine == superState.spinTurning) {
+                Robot.drive.setLeftRight(ControlMode.Velocity, left, -left);
+            }
 
-        } else if (superStateMachine == superState.drivingStraight) {
+    } else if (superStateMachine == superState.drivingStraight) {
             /*
              * Drive Straight
              *
@@ -166,6 +168,7 @@ public class DriveAuto extends Command {
              * been reached.
              *
              *          │    ______________
+             *
              *          │   /              \
              * Velocity │  /                \
              *          │ /                  \___
