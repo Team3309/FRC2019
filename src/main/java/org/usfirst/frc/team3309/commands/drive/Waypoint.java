@@ -17,7 +17,7 @@ public class Waypoint {
     double linearDecelerationInchesPerSec2 = 10; //Also in inches per second^2
     double angularAccelerationDegreesPerSec2 = 45;
     double angularDecelerationDegreesPerSec2 = 45;
-    double decelerationConstant = .001;
+    double decelerationConstant = .01;
 
     double maxLinearSpeedEncoderCountsPerSec;
     double linearAccelerationEncoderCountsPerSec2;

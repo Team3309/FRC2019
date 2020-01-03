@@ -90,7 +90,7 @@ public class DriveAuto extends Command {
              *
              * Accelerate until the robot has traveled the acceleration distance. Then
              * remain at a constant speed until robot enters the deceleration zone. Finally,
-             * decelerate until destination has been reached
+             * decelerate to the slowest allowed speed until destination has been reached.
              *
              *          │    ______________
              *          │   /              \
@@ -122,7 +122,7 @@ public class DriveAuto extends Command {
             turn = 0;
             if (state == travelState.accelerating) {
                 if (speed < nextPoint.maxLinearSpeedEncoderCountsPerSec) {
-                    speed = nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
+                    speed += nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
                 } else {
                     state = travelState.cruising;
                 }
@@ -134,8 +134,11 @@ public class DriveAuto extends Command {
                     ControlTimer.reset();
                 }
             } else if (state == travelState.decelerating){
-                if (true) {
-
+                if (inchesTraveled < inchesFromWaypoints) {
+                    speed -= nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
+                    if (speed < nextPoint.linearCreepSpeedEncoderCountsPerSec) {
+                        speed = nextPoint.linearCreepSpeed;
+                    }
                 } else {
                     //Stop robot and start moving to next waypoint
                     speed = 0;
