@@ -1,10 +1,8 @@
 package org.usfirst.frc.team3309.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Robot;
-import org.usfirst.frc.team3309.lib.util.CheesyDriveHelper;
 import org.usfirst.frc.team3309.lib.util.Util3309;
 import org.usfirst.frc.team4322.commandv2.Command;
 import edu.wpi.first.wpilibj.Timer;
@@ -73,8 +71,6 @@ public class DriveAuto extends Command {
         super.initialize();
         ControlTimer.reset();
         Robot.drive.setHighGear();
-        Robot.drive.reset();
-        Robot.drive.setNeutralMode(NeutralMode.Brake);
     }
 
     @Override
@@ -309,7 +305,6 @@ public class DriveAuto extends Command {
             SmartDashboard.putNumber("Goal left encoder velocity", leftVelocity);
             SmartDashboard.putNumber("Goal right encoder velocity", RightVelocity);
         }
-        Robot.drive.zeroNavx();
     }
 
     @Override
