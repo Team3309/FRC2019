@@ -1,5 +1,7 @@
 package org.usfirst.frc.team3309.lib.util;
 
+import org.usfirst.frc.team3309.Robot;
+
 import java.util.List;
 
 /**
@@ -116,8 +118,26 @@ public class Util3309 {
     }
 
     public static double distanceFormula(double x1, double y1, double x2, double y2) {
-        return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+        return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+    }
+
+    //take argument of desiredHeading (btwn -180 and 180) downfield = 0
+    //read NavX, return value of how far off current heading is from desired heading (btwn -180 and 180)
+
+    public static double headingError() {
+        double heading = ((180 + Robot.drive.getAngularPosition()) % 360) - 180;
+
+        if (Robot.drive.getAngularPosition() > 180) {
+            heading = Robot.drive.getAngularPosition() - 360;
+        } else if (Robot.drive.getAngularPosition() < -180) {
+            heading = Robot.drive.getAngularPosition() + 360;
+        }
+
+        double headingError = 0;
+        return headingError;
+
     }
 }
+
 
 
