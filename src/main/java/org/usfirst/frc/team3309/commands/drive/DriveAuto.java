@@ -73,6 +73,8 @@ public class DriveAuto extends Command {
 
     @Override
     protected void execute() {
+        if (done)
+            return;
 
         boolean debugMode = Robot.getDriveDebug();
         double heading;
@@ -277,10 +279,8 @@ public class DriveAuto extends Command {
                         //Stop robot and start moving to next waypoint
                         speed = 0;
                     }
-                    //nextWaypointIndex++;
+                    nextWaypointIndex++;
                     superStateMachine = superState.spinTurning;
-                    Robot.drive.zeroEncoders(); //TODO: remove
-                    ControlTimer.reset();
                 }
             }
 
@@ -289,6 +289,7 @@ public class DriveAuto extends Command {
             } else {
                 //If speed is zero, then use PercentOutput so we don't apply brakes
                 Robot.drive.setArcade(ControlMode.PercentOutput, 0,0);
+                done = true;
             }
 
         } else if (superStateMachine == superState.mobileTurning) {
