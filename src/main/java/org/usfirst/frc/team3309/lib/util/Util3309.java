@@ -128,14 +128,12 @@ public class Util3309 {
 
         double heading = ((180 + Robot.drive.getAngularPosition()) % 360) - 180;
         double headingError = desiredHeading - heading;
-        if 
-        /*if (Robot.drive.getAngularPosition() > 180) {
-            heading = Robot.drive.getAngularPosition() - 360;
-        } else if (Robot.drive.getAngularPosition() < -180) {
-            heading = Robot.drive.getAngularPosition() + 360;
+        if (headingError < -180) {
+            headingError += 360;
         }
-        */
-
+        else if (headingError > 180) {
+            headingError -= 360;
+        }
         return headingError;
 
     }
