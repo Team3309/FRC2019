@@ -103,10 +103,8 @@ public class DriveAuto extends Command {
             //  Allow the robot to drive again.
             //  Reset all sensors for next operation.
 
-
             heading = Robot.drive.getAngularPosition() % 360;
-            double tweakThreshold = 0.001;
-            ControlTimer.start();
+            final double kTweakThreshold = 0.001;
             double timerValue = ControlTimer.get();
 
             //checks that this is the start of auto; timer should be started and robot should not have
@@ -151,18 +149,18 @@ public class DriveAuto extends Command {
             } else if (turnState == spinTurnState.tweaking) {
 
                 //check if correction is needed
-                if (Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) < tweakThreshold) {
+                if (Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) < kTweakThreshold) {
                     Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
                     superStateMachine = superState.drivingStraight;
                 }
                 //turn right if we undershot
                 else if (heading < headingToNextPoint &&
-                        Math.abs(heading-headingToNextPoint) > tweakThreshold) {
+                        Math.abs(heading-headingToNextPoint) > kTweakThreshold) {
                     left = nextPoint.angularCreepSpeed;
                 }
                 //turn left if we overshot
                 else if (heading > headingToNextPoint &&
-                        Math.abs(heading-headingToNextPoint) > tweakThreshold) {
+                        Math.abs(heading-headingToNextPoint) > kTweakThreshold) {
                     left = -nextPoint.angularCreepSpeed;
                 }
 
