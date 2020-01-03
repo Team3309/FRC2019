@@ -72,8 +72,8 @@ public class DriveAuto extends Command {
         boolean debugMode = Robot.getDriveDebug();
         double heading = Robot.drive.getAngularPosition() % 360;
 
-        Waypoint priorPoint = path[nextWaypointIndex - 1];
-        Waypoint nextPoint = path[nextWaypointIndex];
+        Waypoint priorPoint = path[nextWaypointIndex];
+        Waypoint nextPoint = path[nextWaypointIndex + 1];
         lastVelocity = Robot.drive.getAngularVelocity();
 
         double headingToNextPoint = Math.toDegrees(Math.atan((priorPoint.downfieldInches - nextPoint.downfieldInches)/
