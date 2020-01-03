@@ -36,7 +36,6 @@ public class DriveAuto extends Command {
 
     private double speed = 0;
     private double turnCorrection;
-    private double left = 0;
     private double lastVelocity;
     Timer ControlTimer = new Timer();
 
@@ -106,7 +105,7 @@ public class DriveAuto extends Command {
             heading = Robot.drive.getAngularPosition() % 360;
             final double kTweakThreshold = 0.001;
             double timerValue = ControlTimer.get();
-
+            double left = 0;
             //checks that this is the start of auto; timer should be started and robot should not have
             //been previously started
             if (turnState == spinTurnState.notStarted) {
