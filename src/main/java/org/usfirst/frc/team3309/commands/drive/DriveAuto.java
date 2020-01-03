@@ -10,28 +10,30 @@ import org.usfirst.frc.team4322.commandv2.Command;
 import edu.wpi.first.wpilibj.Timer;
 import org.usfirst.frc.team4322.configuration.RobotConfigFileReader;
 
+import javax.naming.ldap.Control;
+
 public class DriveAuto extends Command {
 
     private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
 
     private enum travelState {
         stopped,
-        accelerating,
+        accelerating, //accelerating to cruise speed
         cruising, //Moving at a set speed
-        decelerating,
+        decelerating, //decelerating to approach desired point
         rolling, //Moving with momentum
-        turning,
+        turning, //Turning on the move
         turningInPlace //spin turn
     }
 
     private enum spinTurnState {
         notStarted,
-        accelerating,
-        cruising,
-        decelerating,
-        tweaking,
+        accelerating, //accelerating to angular cruise speed
+        cruising, //angular cruising speed
+        decelerating, //decelerating to approach tweak speed
+        tweaking, //speed at which final heading is corrected
         stopped,
-        straightDrive
+        straightDrive //enables straight-line drive code to run
     }
 
     private double speed = 0;
@@ -158,6 +160,7 @@ public class DriveAuto extends Command {
             //Turn on a circle:
 
         } else if (nextPoint.turnRadiusInches == 0 && nextPoint.crossfieldInches + nextPoint.downfieldInches == 0) {
+
             //Turn in place:
             //  Accelerate turning till we reach our turn cruising speed.
             //  Turn at cruising speed till we approach
@@ -226,18 +229,24 @@ public class DriveAuto extends Command {
                 //stop correcting
                 else if (Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) < tweakThreshold) {
                     Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
-                    ControlTimer.stop();
-                    ControlTimer.reset();
                     state = travelState.stopped;
-                    turnState = spinTurnState.notStarted;
+                    turnState = spinTurnState.straightDrive;
                 }
+            } else if (turnState == spinTurnState.straightDrive) {
+                ControlTimer.stop();
+                ControlTimer.reset();
+                timerValue = 0;
+                lastVelocity = 0;
+                nextPoint.turnRadiusInches = 0;
+                turnState = spinTurnState.notStarted;
             } else {
                 Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
+                turnState = spinTurnState.stopped;
             }
 
             Robot.drive.setLeftRight(ControlMode.Velocity, left, -left);
             Robot.drive.zeroNavx();
-        
+
         }
 
         Robot.drive.setArcade(ControlMode.Velocity, speed, turn);
