@@ -21,8 +21,8 @@ public class Waypoint {
     double maxLinearSpeedEncoderCountsPerSec = 0;
     double linearAccelerationEncoderCountsPerSec2 = 0;
     double linearDecelerationEncoderCountsPerSec2 = 0;
-    double cruiseDistanceEncoderCounts = 0;
-    double creepSpeedEncoderCounts = 0;
+    double linearCreepSpeedEncoderCountsPerSec = 0;
+    double angularCreepSpeedEncoderCountsPerSec = 0
 
     public Waypoint() {
         initialize();
@@ -52,7 +52,7 @@ public class Waypoint {
         this.crossfieldInches = crossfieldInches;
         this.turnRadiusInches = turnRadiusInches;
         this.maxLinearSpeed = maxLinearSpeed;
-        this.maxAngularSpeed =maxAngularSpeed;
+        this.maxAngularSpeed = maxAngularSpeed;
         this.linearCreepSpeed = linearCreepSpeed;
         this.angularCreepSpeed = angularCreepSpeed;
         this.reverse = reverse;
@@ -64,6 +64,7 @@ public class Waypoint {
         maxLinearSpeedEncoderCountsPerSec = Robot.drive.inchesPerSecondToEncoderVelocity(maxLinearSpeed);
         linearAccelerationEncoderCountsPerSec2 = Robot.drive.inchesPerSecondToEncoderVelocity(linearAccelerationInchesPerSec2);
         linearDecelerationEncoderCountsPerSec2 = Robot.drive.inchesPerSecondToEncoderVelocity(linearDecelerationInchesPerSec2);
-        creepSpeedEncoderCounts = Robot.drive.inchesPerSecondToEncoderVelocity(linearCreepSpeed);
+        linearCreepSpeedEncoderCountsPerSec = Robot.drive.inchesPerSecondToEncoderVelocity(linearCreepSpeed);
+        angularCreepSpeedEncoderCountsPerSec = Robot.drive.inchesPerSecondToEncoderVelocity(angularCreepSpeed);
     }
 }
