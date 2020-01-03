@@ -109,44 +109,31 @@ public class DriveAuto extends Command {
 
             //checks that this is the start of auto; timer should be started and robot should not have
             //been previously started
-            if (timerValue > 0 && turnState == spinTurnState.notStarted) {
+            if (turnState == spinTurnState.notStarted) {
                 turnState = spinTurnState.accelerating;
+                left = nextPoint.angularAccelerationDegreesPerSec2 * timerValue;
             }
             //checks whether we should start cruising; we should have finished our acceleration phase
             //and we should be approaching our cruise velocity
             else if (turnState == spinTurnState.accelerating &&
                     timerValue * nextPoint.angularAccelerationDegreesPerSec2 > nextPoint.maxAngularSpeed) {
                 turnState = spinTurnState.cruising;
+                left = nextPoint.maxAngularSpeed;
             }
             //checks whether we should start decelerating; we should have completed cruising phase
             else if (turnState == spinTurnState.cruising &&
-                    timerValue * nextPoint.maxAngularSpeed  > nextPoint.maxAngularSpeed) {
+                    timerValue * nextPoint.maxAngularSpeed + heading > headingToNextPoint) {
                 turnState = spinTurnState.decelerating;
                 //separate timer to help us decelerate down from a fixed velocity
                 lastVelocity = Robot.drive.getEncoderVelocity();
                 ControlTimer.reset();
                 timerValue = 0;
+                left = lastVelocity - (nextPoint.angularDecelerationDegreesPerSec2 * timerValue);
             }
             //checks that we have completed deceleration phase and are approaching our tweaking speed
             else if (turnState == spinTurnState.decelerating &&
                     timerValue * nextPoint.angularDecelerationDegreesPerSec2 < nextPoint.angularCreepSpeed) {
                 turnState = spinTurnState.tweaking;
-            }
-            //defaults to straight driving, making sure that the timer is primed for next spin turn
-            else {
-                superStateMachine = superState.spinTurning;
-                ControlTimer.stop();
-                ControlTimer.reset();
-                Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
-            }
-
-            if (turnState == spinTurnState.accelerating) {
-                left = nextPoint.angularAccelerationDegreesPerSec2 * timerValue;
-            } else if (turnState == spinTurnState.cruising) {
-                left = nextPoint.maxAngularSpeed;
-            } else if (turnState == spinTurnState.decelerating) {
-                left = lastVelocity - (nextPoint.angularDecelerationDegreesPerSec2 * timerValue);
-            } else if (turnState == spinTurnState.tweaking) {
 
                 //check if correction is needed
                 if (Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) < kTweakThreshold) {
@@ -166,7 +153,6 @@ public class DriveAuto extends Command {
 
                 //default: sets up control timer and state machines for next call
                 superStateMachine = superState.drivingStraight;
-
             } else if (superStateMachine == superState.drivingStraight) {
                 turnState = spinTurnState.notStarted;
             } else {
