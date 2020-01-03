@@ -25,8 +25,6 @@ public class DriveAuto extends Command {
         cruising, //Moving at a set speed
         decelerating, //decelerating to approach desired point
         rolling, //Moving with momentum
-        turning, //Turning on the move
-        turningInPlace //spin turn
     }
 
     private enum spinTurnState {
@@ -36,7 +34,6 @@ public class DriveAuto extends Command {
         decelerating, //decelerating to approach tweak speed
         tweaking, //speed at which final heading is corrected
         stopped,
-        straightDrive //enables straight-line drive code to run
     }
 
     private double speed = 0;
@@ -44,7 +41,7 @@ public class DriveAuto extends Command {
     private double lastVelocity;
     Timer ControlTimer = new Timer();
 
-    private superState DASSM = superState.stopped;
+    private superState superStateMachine = superState.stopped;
     double encoderZeroValue;
     double zeroedEncoderValue;
 
@@ -70,6 +67,7 @@ public class DriveAuto extends Command {
     protected void initialize() {
         super.initialize();
         ControlTimer.reset();
+        ControlTimer.start();
         Robot.drive.setHighGear();
     }
 
@@ -80,8 +78,6 @@ public class DriveAuto extends Command {
         double heading;
         Waypoint priorPoint = path[nextWaypointIndex];
         Waypoint nextPoint = path[nextWaypointIndex + 1];
-        lastVelocity = Robot.drive.getAngularVelocity();
-
         double headingToNextPoint = Math.toDegrees(Math.atan2((priorPoint.downfieldInches - nextPoint.downfieldInches),
                 (priorPoint.crossfieldInches - nextPoint.crossfieldInches)));
 
@@ -92,19 +88,19 @@ public class DriveAuto extends Command {
         zeroedEncoderValue = encoderTicks - encoderZeroValue;
         double inchesTraveled = Robot.drive.encoderCountsToInches(zeroedEncoderValue);
 
-        if (DASSM == superState.stopped && inchesBetweenWaypoints != 0) {
-            DASSM = superState.drivingStraight;
-        } else if (DASSM == superState.drivingStraight && nextPoint.turnRadiusInches != 0) {
-            DASSM = superState.mobileTurning;
-        } else if ((DASSM == superState.drivingStraight || DASSM == superState.mobileTurning)
+        if (superStateMachine == superState.stopped) {
+            superStateMachine = superState.drivingStraight;
+        } else if (superStateMachine == superState.drivingStraight && nextPoint.turnRadiusInches != 0) {
+            superStateMachine = superState.mobileTurning;
+        } else if ((superStateMachine == superState.drivingStraight || superStateMachine == superState.mobileTurning)
                 && nextPoint.turnRadiusInches == 0) {
-            DASSM = superState.spinTurning;
+            superStateMachine = superState.spinTurning;
         } else {
             Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
-            DASSM = superState.stopped;
+            superStateMachine = superState.stopped;
         }
 
-        if (DASSM == superState.spinTurning) {
+        if (superStateMachine == superState.spinTurning) {
             //Top level state machine for turning in place, driving straight, turning on the move (merge state enums):
             //Use. heading:
             //Change lastVelocity naming --> angular velocity (encoder velocity != angular velocity); remove
@@ -120,10 +116,9 @@ public class DriveAuto extends Command {
             //  Allow the robot to drive again.
             //  Reset all sensors for next operation.
 
-            state = travelState.turningInPlace;
+
             heading = Robot.drive.getAngularPosition() % 360;
             double tweakThreshold = 0.001;
-            lastVelocity = Robot.drive.getAngularVelocity();
             ControlTimer.start();
             double timerValue = ControlTimer.get();
 
@@ -154,7 +149,7 @@ public class DriveAuto extends Command {
             }
             //defaults to straight driving, making sure that the timer is primed for next spin turn
             else {
-                turnState = spinTurnState.straightDrive;
+                superStateMachine = superState.spinTurning;
                 ControlTimer.stop();
                 ControlTimer.reset();
                 Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
@@ -168,12 +163,11 @@ public class DriveAuto extends Command {
                 left = lastVelocity - (nextPoint.angularDecelerationDegreesPerSec2 * timerValue);
             } else if (turnState == spinTurnState.tweaking) {
 
-                //check if correction is
+                //check if correction is needed
                 if (Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) < tweakThreshold) {
                     Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
                     state = travelState.stopped;
-                    turnState = spinTurnState.straightDrive;
-                    DASSM = superState.drivingStraight;
+                    superStateMachine = superState.drivingStraight;
                 }
                 //turn right if we undershot
                 else if (heading < headingToNextPoint &&
@@ -188,12 +182,11 @@ public class DriveAuto extends Command {
 
                 //default: sets up control timer and state machines for next call
                 state = travelState.stopped;
-                turnState = spinTurnState.straightDrive;
-                DASSM = superState.drivingStraight;
+                superStateMachine = superState.drivingStraight;
                 ControlTimer.stop();
                 ControlTimer.reset();
 
-            } else if (turnState == spinTurnState.straightDrive) {
+            } else if (superStateMachine == superState.drivingStraight) {
                 ControlTimer.stop();
                 ControlTimer.reset();
                 timerValue = 0;
@@ -207,7 +200,7 @@ public class DriveAuto extends Command {
 
             Robot.drive.setLeftRight(ControlMode.Velocity, left, -left);
 
-        } else if (DASSM == superState.drivingStraight) {
+        } else if (superStateMachine == superState.drivingStraight) {
             /*
              * Drive Straight
              *
@@ -279,7 +272,7 @@ public class DriveAuto extends Command {
                         speed = 0;
                     }
                     //nextWaypointIndex++;
-                    state = travelState.turningInPlace;
+                    superStateMachine = superState.spinTurning;
                     Robot.drive.zeroEncoders(); //TODO: remove
                     ControlTimer.reset();
                 }
@@ -292,12 +285,11 @@ public class DriveAuto extends Command {
                 Robot.drive.setArcade(ControlMode.PercentOutput, 0,0);
             }
 
-        } else if (DASSM == superState.mobileTurning) {
-            state = travelState.turning;
+        } else if (superStateMachine == superState.mobileTurning) {
 
             //Turn on a circle:
 
-        } else if (DASSM == superState.stopped) {
+        } else if (superStateMachine == superState.stopped) {
             Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
         }
 
