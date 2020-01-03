@@ -72,6 +72,9 @@ public class DriveAuto extends Command {
 
     @Override
     protected void execute() {
+        if (done)
+            return;
+
         boolean debugMode = Robot.getDriveDebug();
         double heading;
         //FIX THIS SH
@@ -263,12 +266,11 @@ public class DriveAuto extends Command {
                     }
                 } else {
                     if (nextWaypointIndex == path.length - 1 && !endRollout) {
-                        //Stop robot and start moving to next waypoint
+                        //Stop the robot
                         speed = 0;
                     }
-                    //nextWaypointIndex++;
+                    nextWaypointIndex++;
                     superStateMachine = superState.spinTurning;
-                    ControlTimer.reset();
                 }
             }
 
@@ -287,6 +289,9 @@ public class DriveAuto extends Command {
             Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
         }
 
+        if (nextWaypointIndex == path.length) {
+            done = true;
+        }
 
         // Example output of variables for debugging purposes - adapt as needed
         if (debugMode) {
