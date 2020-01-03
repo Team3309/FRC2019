@@ -200,7 +200,7 @@ public class DriveAuto extends Command {
             double encoderTicksTraveled = encoderTicks - encoderZeroValue;
             double inchesTraveled = Robot.drive.encoderCountsToInches(encoderTicksTraveled);
 
-            double turnCorrection = Util3309.headingError() * kTurnCorrectionConstant;
+            double turnCorrection = Util3309.headingError(headingToNextPoint) * kTurnCorrectionConstant;
 
             double speed = 0;
             if (state == travelState.stopped) {
