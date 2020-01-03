@@ -8,9 +8,9 @@ public class Waypoint {
     double turnRadiusInches = 0; //centered on the vertices of the straight-line path, not the guide circles
     boolean reverse = false;  // robot backs into waypoint
 
-    double creepSpeed = 5; //Inches per second
-
     //TODO: Tune these
+    double linearCreepSpeed = 5; //Inches per second
+    double angularCreepSpeed = 20;
     double maxLinearSpeed = 180; //Inches per second
     double maxAngularSpeed = 180; //Degrees per second
     double linearAccelerationInchesPerSec2 = 10; //Inches per second^2
@@ -18,7 +18,7 @@ public class Waypoint {
     double angularAccelerationDegreesPerSec2 = 45;
     double angularDecelerationDegreesPerSec2 = 45;
 
-    double maxTravelSpeedEncoderCounts = 0;
+    double maxLinearSpeedEncoderCountsPerSec = 0;
     double linearAccelerationEncoderCountsPerSec2 = 0;
     double linearDecelerationEncoderCountsPerSec2 = 0;
     double cruiseDistanceEncoderCounts = 0;
@@ -45,23 +45,25 @@ public class Waypoint {
                     double turnRadiusInches,
                     double maxLinearSpeed,
                     double maxAngularSpeed,
-                    double creepSpeed,
+                    double linearCreepSpeed,
+                    double angularCreepSpeed,
                     boolean reverse) {
         this.downfieldInches = downfieldInches;
         this.crossfieldInches = crossfieldInches;
         this.turnRadiusInches = turnRadiusInches;
         this.maxLinearSpeed = maxLinearSpeed;
         this.maxAngularSpeed =maxAngularSpeed;
-        this.creepSpeed = creepSpeed;
+        this.linearCreepSpeed = linearCreepSpeed;
+        this.angularCreepSpeed = angularCreepSpeed;
         this.reverse = reverse;
 
         initialize();
     }
 
     private void initialize () {
-        maxTravelSpeedEncoderCounts = Robot.drive.inchesPerSecondToEncoderVelocity(maxLinearSpeed);
+        maxLinearSpeedEncoderCountsPerSec = Robot.drive.inchesPerSecondToEncoderVelocity(maxLinearSpeed);
         linearAccelerationEncoderCountsPerSec2 = Robot.drive.inchesPerSecondToEncoderVelocity(linearAccelerationInchesPerSec2);
         linearDecelerationEncoderCountsPerSec2 = Robot.drive.inchesPerSecondToEncoderVelocity(linearDecelerationInchesPerSec2);
-        creepSpeedEncoderCounts = Robot.drive.inchesPerSecondToEncoderVelocity(creepSpeed);
+        creepSpeedEncoderCounts = Robot.drive.inchesPerSecondToEncoderVelocity(linearCreepSpeed);
     }
 }
