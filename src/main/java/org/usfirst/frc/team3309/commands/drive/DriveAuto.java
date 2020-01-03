@@ -23,8 +23,7 @@ public class DriveAuto extends Command {
         stopped,
         accelerating, //accelerating to cruise speed
         cruising, //Moving at a set speed
-        decelerating, //decelerating to approach desired point
-        rolling, //Moving with momentum
+        decelerating //decelerating to approach desired point
     }
 
     private enum spinTurnState {
@@ -37,6 +36,7 @@ public class DriveAuto extends Command {
     }
 
     private double speed = 0;
+    private double turnCorrection;
     private double left = 0;
     private double lastVelocity;
     Timer ControlTimer = new Timer();
@@ -93,6 +93,7 @@ public class DriveAuto extends Command {
         } else if (superStateMachine == superState.drivingStraight && nextPoint.turnRadiusInches != 0) {
             superStateMachine = superState.mobileTurning;
         } else if ((superStateMachine == superState.drivingStraight || superStateMachine == superState.mobileTurning)
+
                 && nextPoint.turnRadiusInches == 0) {
             superStateMachine = superState.spinTurning;
         } else {
@@ -220,22 +221,27 @@ public class DriveAuto extends Command {
              * Prepare to enter the logic jungle. You have been warned
              * JK, it actually uses some pretty simple state machine logic:
              *
+             * if we are stopped, then
+             *     calibrate
+             *     set state to accelerating
              * if state is accelerating, then
              *     if we still need to accelerate, then
              *         accelerate
              *     else
              *         set state to cruising
-             * else if state is cruising, then
+             * if state is cruising, then
              *     if we still need to cruise, then
              *         cruise
              *     else
              *         set state to decelerating
-             * else if state is decelerating, then
+             * if state is decelerating, then
              *     if we still need to decelerate, then
              *         decelerate
              *     else
              *         stop the robot and increment nextWaypointIndex
              */
+            heading = Robot.drive.getAngularPosition() % 360;
+            turnCorrection = (heading - headingToNextPoint) * nextPoint.turnCorrectionConstant;
 
             if (state == travelState.stopped) {
                 ControlTimer.reset();
@@ -279,7 +285,7 @@ public class DriveAuto extends Command {
             }
 
             if (speed != 0 ) {
-                Robot.drive.setArcade(ControlMode.Velocity, speed, 0);
+                Robot.drive.setArcade(ControlMode.Velocity, speed, turnCorrection);
             } else {
                 //If speed is zero, then use PercentOutput so we don't apply brakes
                 Robot.drive.setArcade(ControlMode.PercentOutput, 0,0);
