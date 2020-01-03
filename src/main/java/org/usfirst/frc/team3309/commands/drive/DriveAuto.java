@@ -87,10 +87,6 @@ public class DriveAuto extends Command {
         double inchesBetweenWaypoints = Util3309.distanceFormula(priorPoint.downfieldInches, priorPoint.crossfieldInches,
                 nextPoint.downfieldInches, nextPoint.crossfieldInches);
 
-        double encoderTicks = Robot.drive.getEncoderDistance();
-        zeroedEncoderValue = encoderTicks - encoderZeroValue;
-        double inchesTraveled = Robot.drive.encoderCountsToInches(zeroedEncoderValue);
-
         if (superStateMachine == superState.spinTurning) {
             //Top level state machine for turning in place, driving straight, turning on the move (merge state enums):
             //Use. heading:
@@ -220,9 +216,9 @@ public class DriveAuto extends Command {
              *     else
              *         stop the robot and increment nextWaypointIndex
              */
-            encoderTicks = Robot.drive.getEncoderDistance();
+            double encoderTicks = Robot.drive.getEncoderDistance();
             zeroedEncoderValue = encoderTicks - encoderZeroValue;
-            inchesTraveled = Robot.drive.encoderCountsToInches(zeroedEncoderValue);
+            double inchesTraveled = Robot.drive.encoderCountsToInches(zeroedEncoderValue);
 
             heading = Robot.drive.getAngularPosition() % 360;
             turnCorrection = (heading - headingToNextPoint) * turnCorrectionConstant;
