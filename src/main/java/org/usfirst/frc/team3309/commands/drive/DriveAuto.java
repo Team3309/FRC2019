@@ -8,8 +8,6 @@ import org.usfirst.frc.team3309.lib.util.Util3309;
 import org.usfirst.frc.team4322.commandv2.Command;
 import edu.wpi.first.wpilibj.Timer;
 
-import javax.naming.ldap.Control;
-
 public class DriveAuto extends Command {
 
     private enum superState {
@@ -37,7 +35,7 @@ public class DriveAuto extends Command {
     private double lastVelocity;
     Timer ControlTimer = new Timer();
 
-    private superState superStateMachine;
+    private superState superStateMachine = superState.spinTurning;
     double encoderZeroValue;
 
     final double kturnCorrectionConstant = .05;
@@ -73,12 +71,17 @@ public class DriveAuto extends Command {
             return;
 
         boolean debugMode = Robot.getDriveDebug();
-        double heading;
+
+        double heading = 0;
 
         Waypoint priorPoint = path[nextWaypointIndex];
         Waypoint nextPoint = path[nextWaypointIndex + 1];
-        double headingToNextPoint = Math.toDegrees(Math.atan2((priorPoint.downfieldInches - nextPoint.downfieldInches),
-                (priorPoint.crossfieldInches - nextPoint.crossfieldInches)));
+        double headingToNextPoint = 0;
+        if (Math.toDegrees(Math.atan2(priorPoint.downfieldInches - nextPoint.downfieldInches,
+                priorPoint.crossfieldInches - nextPoint.crossfieldInches)) > 180) {
+            headingToNextPoint = Math.toDegrees(Math.atan2(priorPoint.downfieldInches - nextPoint.downfieldInches,
+                    priorPoint.crossfieldInches - nextPoint.crossfieldInches));
+        }
 
         double inchesBetweenWaypoints = Util3309.distanceFormula(priorPoint.downfieldInches, priorPoint.crossfieldInches,
                 nextPoint.downfieldInches, nextPoint.crossfieldInches);
@@ -99,7 +102,6 @@ public class DriveAuto extends Command {
             //  Allow the robot to drive again.
             //  Reset all sensors for next operation.
 
-            heading = Robot.drive.getAngularPosition() % 360;
             final double kTweakThreshold = 0.001;
             double timerValue = ControlTimer.get();
             double left = 0;
@@ -132,18 +134,16 @@ public class DriveAuto extends Command {
                 turnState = spinTurnState.tweaking;
 
                 //check if correction is needed
-                if (Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) < kTweakThreshold) {
+                if (Math.abs(heading-headingToNextPoint) < kTweakThreshold) {
                     Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
                     superStateMachine = superState.drivingStraight;
                 }
                 //turn right if we undershot
-                else if (heading < headingToNextPoint &&
-                        Math.abs(heading-headingToNextPoint) > kTweakThreshold) {
+                else if (heading < headingToNextPoint) {
                     left = nextPoint.angularCreepSpeed;
                 }
                 //turn left if we overshot
-                else if (heading > headingToNextPoint &&
-                        Math.abs(heading-headingToNextPoint) > kTweakThreshold) {
+                else {
                     left = -nextPoint.angularCreepSpeed;
                 }
 
