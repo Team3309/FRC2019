@@ -76,11 +76,10 @@ public class DriveAuto extends Command {
 
         Waypoint priorPoint = path[nextWaypointIndex];
         Waypoint nextPoint = path[nextWaypointIndex + 1];
-        double headingToNextPoint = 0;
-        if (Math.toDegrees(Math.atan2(priorPoint.downfieldInches - nextPoint.downfieldInches,
-                priorPoint.crossfieldInches - nextPoint.crossfieldInches)) > 180) {
-            headingToNextPoint = Math.toDegrees(Math.atan2(priorPoint.downfieldInches - nextPoint.downfieldInches,
-                    priorPoint.crossfieldInches - nextPoint.crossfieldInches));
+        double headingToNextPoint = Math.toDegrees(Math.atan2(priorPoint.downfieldInches - nextPoint.downfieldInches,
+                priorPoint.crossfieldInches - nextPoint.crossfieldInches));
+        if (headingToNextPoint > 180) {
+            headingToNextPoint += 360;
         }
 
         double inchesBetweenWaypoints = Util3309.distanceFormula(priorPoint.downfieldInches, priorPoint.crossfieldInches,
