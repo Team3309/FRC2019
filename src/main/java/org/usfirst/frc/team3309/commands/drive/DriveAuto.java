@@ -175,8 +175,10 @@ public class DriveAuto extends Command {
                         speed = nextPoint.linearCreepSpeed;
                     }
                 } else {
-                    //Stop robot and start moving to next waypoint
-                    speed = 0;
+                    if (nextWaypointIndex == path.length - 1 && !endRollout) {
+                        //Stop robot and start moving to next waypoint
+                        speed = 0;
+                    }
                     //nextWaypointIndex++;
                     state = travelState.turningInPlace;
                     Robot.drive.zeroEncoders(); //TODO: remove
