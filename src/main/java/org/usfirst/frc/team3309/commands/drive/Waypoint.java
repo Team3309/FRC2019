@@ -18,11 +18,14 @@ public class Waypoint {
     double angularAccelerationDegreesPerSec2 = 45;
     double angularDecelerationDegreesPerSec2 = 45;
 
-    double maxLinearSpeedEncoderCountsPerSec = 0;
-    double linearAccelerationEncoderCountsPerSec2 = 0;
-    double linearDecelerationEncoderCountsPerSec2 = 0;
-    double linearCreepSpeedEncoderCountsPerSec = 0;
-    double angularCreepSpeedEncoderCountsPerSec = 0
+    double maxLinearSpeedEncoderCountsPerSec;
+    double linearAccelerationEncoderCountsPerSec2;
+    double linearDecelerationEncoderCountsPerSec2;
+    double linearCreepSpeedEncoderCountsPerSec;
+    double maxAngularSpeedEncoderCountsPerSec;
+    double angularAccelerationEncoderCountsPerSec2;
+    double angularDecelerationEncoderCountsPerSec2;
+    double angularCreepSpeedEncoderCountsPerSec;
 
     public Waypoint() {
         initialize();
@@ -65,6 +68,9 @@ public class Waypoint {
         linearAccelerationEncoderCountsPerSec2 = Robot.drive.inchesPerSecondToEncoderVelocity(linearAccelerationInchesPerSec2);
         linearDecelerationEncoderCountsPerSec2 = Robot.drive.inchesPerSecondToEncoderVelocity(linearDecelerationInchesPerSec2);
         linearCreepSpeedEncoderCountsPerSec = Robot.drive.inchesPerSecondToEncoderVelocity(linearCreepSpeed);
-        angularCreepSpeedEncoderCountsPerSec = Robot.drive.inchesPerSecondToEncoderVelocity(angularCreepSpeed);
+        maxAngularSpeedEncoderCountsPerSec = Robot.drive.degreesPerSecondToEncoderVelocity(maxAngularSpeed);
+        angularAccelerationEncoderCountsPerSec2 = Robot.drive.degreesPerSecondToEncoderVelocity(angularAccelerationDegreesPerSec2);
+        angularDecelerationEncoderCountsPerSec2 = Robot.drive.degreesPerSecondToEncoderVelocity(angularDecelerationDegreesPerSec2);
+        angularCreepSpeedEncoderCountsPerSec = Robot.drive.degreesPerSecondToEncoderVelocity(angularCreepSpeed);
     }
 }

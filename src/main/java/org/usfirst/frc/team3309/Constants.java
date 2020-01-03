@@ -150,6 +150,7 @@ public class Constants {
     public static final double WHEEL_DIAMETER_INCHES = 6.0;
     public static final double WHEEL_RADIUS_INCHES = WHEEL_DIAMETER_INCHES / 2.0;
     public static final double INCHES_PER_REV = (WHEEL_DIAMETER_INCHES*Math.PI);
+    public static final double ENCODER_COUNTS_PER_DEGREE = 600;
     public static final double kDriveWheelTrackWidthInches = 24.9;
     public static final double kTrackScrubFactor = 1.0;  // Tune me!
 
