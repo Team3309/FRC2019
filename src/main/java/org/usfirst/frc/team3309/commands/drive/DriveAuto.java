@@ -104,97 +104,7 @@ public class DriveAuto extends Command {
             DASSM = superState.stopped;
         }
 
-        if (DASSM == superState.drivingStraight) {
-            /*
-             * Drive Straight
-             *
-             * Accelerate until the robot has reached the maximum speed specified for that
-             * waypoint. Then remain at a constant speed until robot enters the deceleration
-             * zone. Finally, decelerate to the slowest allowed speed until destination has
-             * been reached.
-             *
-             *          │    ______________
-             *          │   /              \
-             * Velocity │  /                \
-             *          │ /                  \___
-             *          │/                       \
-             *           -------------------------
-             *                    Time
-             *
-             * Prepare to enter the logic jungle. You have been warned
-             * JK, it actually uses some pretty simple state machine logic:
-             *
-             * if state is accelerating, then
-             *     if we still need to accelerate, then
-             *         accelerate
-             *     else
-             *         set state to cruising
-             * else if state is cruising, then
-             *     if we still need to cruise, then
-             *         cruise
-             *     else
-             *         set state to decelerating
-             * else if state is decelerating, then
-             *     if we still need to decelerate, then
-             *         decelerate
-             *     else
-             *         stop the robot and increment nextWaypointIndex
-             */
-
-            if (state == travelState.stopped) {
-                ControlTimer.reset();
-                state = travelState.accelerating;
-                encoderZeroValue = encoderTicks;
-            }
-            if (state == travelState.accelerating) {
-                if (speed < nextPoint.maxLinearSpeedEncoderCountsPerSec) {
-                    speed = nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
-                    if (speed > nextPoint.maxLinearSpeedEncoderCountsPerSec) {
-                        speed = nextPoint.maxLinearSpeedEncoderCountsPerSec;
-                    }
-                } else {
-                    state = travelState.cruising;
-                }
-            }
-            if (state == travelState.cruising){
-                if (inchesBetweenWaypoints - inchesTraveled < speed * nextPoint.decelerationConstant) {
-                    speed = nextPoint.maxLinearSpeed;
-                } else {
-                    state = travelState.decelerating;
-                    ControlTimer.reset();
-                }
-            }
-            if (state == travelState.decelerating){
-                if (inchesTraveled < inchesBetweenWaypoints) {
-                    speed = nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
-                    if (speed < nextPoint.linearCreepSpeedEncoderCountsPerSec) {
-                        speed = nextPoint.linearCreepSpeed;
-                    }
-                } else {
-                    if (nextWaypointIndex == path.length - 1 && !endRollout) {
-                        //Stop robot and start moving to next waypoint
-                        speed = 0;
-                    }
-                    //nextWaypointIndex++;
-                    state = travelState.turningInPlace;
-                    Robot.drive.zeroEncoders(); //TODO: remove
-                    ControlTimer.reset();
-                }
-            }
-
-            if (speed != 0 ) {
-                Robot.drive.setArcade(ControlMode.Velocity, speed, 0);
-            } else {
-                //If speed is zero, then use PercentOutput so we don't apply brakes
-                Robot.drive.setArcade(ControlMode.PercentOutput, 0,0);
-            }
-
-        } else if (DASSM == superState.mobileTurning) {
-            state = travelState.turning;
-
-            //Turn on a circle:
-
-        } else if (DASSM == superState.spinTurning) {
+        if (DASSM == superState.spinTurning) {
             //Top level state machine for turning in place, driving straight, turning on the move (merge state enums):
             //Use. heading:
             //Change lastVelocity naming --> angular velocity (encoder velocity != angular velocity); remove
@@ -297,6 +207,98 @@ public class DriveAuto extends Command {
 
             Robot.drive.setLeftRight(ControlMode.Velocity, left, -left);
 
+        } else if (DASSM == superState.drivingStraight) {
+            /*
+             * Drive Straight
+             *
+             * Accelerate until the robot has reached the maximum speed specified for that
+             * waypoint. Then remain at a constant speed until robot enters the deceleration
+             * zone. Finally, decelerate to the slowest allowed speed until destination has
+             * been reached.
+             *
+             *          │    ______________
+             *          │   /              \
+             * Velocity │  /                \
+             *          │ /                  \___
+             *          │/                       \
+             *           -------------------------
+             *                    Time
+             *
+             * Prepare to enter the logic jungle. You have been warned
+             * JK, it actually uses some pretty simple state machine logic:
+             *
+             * if state is accelerating, then
+             *     if we still need to accelerate, then
+             *         accelerate
+             *     else
+             *         set state to cruising
+             * else if state is cruising, then
+             *     if we still need to cruise, then
+             *         cruise
+             *     else
+             *         set state to decelerating
+             * else if state is decelerating, then
+             *     if we still need to decelerate, then
+             *         decelerate
+             *     else
+             *         stop the robot and increment nextWaypointIndex
+             */
+
+            if (state == travelState.stopped) {
+                ControlTimer.reset();
+                state = travelState.accelerating;
+                encoderZeroValue = encoderTicks;
+            }
+            if (state == travelState.accelerating) {
+                if (speed < nextPoint.maxLinearSpeedEncoderCountsPerSec) {
+                    speed = nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
+                    if (speed > nextPoint.maxLinearSpeedEncoderCountsPerSec) {
+                        speed = nextPoint.maxLinearSpeedEncoderCountsPerSec;
+                    }
+                } else {
+                    state = travelState.cruising;
+                }
+            }
+            if (state == travelState.cruising){
+                if (inchesBetweenWaypoints - inchesTraveled < speed * nextPoint.decelerationConstant) {
+                    speed = nextPoint.maxLinearSpeed;
+                } else {
+                    state = travelState.decelerating;
+                    ControlTimer.reset();
+                }
+            }
+            if (state == travelState.decelerating){
+                if (inchesTraveled < inchesBetweenWaypoints) {
+                    speed = nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
+                    if (speed < nextPoint.linearCreepSpeedEncoderCountsPerSec) {
+                        speed = nextPoint.linearCreepSpeed;
+                    }
+                } else {
+                    if (nextWaypointIndex == path.length - 1 && !endRollout) {
+                        //Stop robot and start moving to next waypoint
+                        speed = 0;
+                    }
+                    //nextWaypointIndex++;
+                    state = travelState.turningInPlace;
+                    Robot.drive.zeroEncoders(); //TODO: remove
+                    ControlTimer.reset();
+                }
+            }
+
+            if (speed != 0 ) {
+                Robot.drive.setArcade(ControlMode.Velocity, speed, 0);
+            } else {
+                //If speed is zero, then use PercentOutput so we don't apply brakes
+                Robot.drive.setArcade(ControlMode.PercentOutput, 0,0);
+            }
+
+        } else if (DASSM == superState.mobileTurning) {
+            state = travelState.turning;
+
+            //Turn on a circle:
+
+        } else if (DASSM == superState.stopped) {
+            Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
         }
 
 
