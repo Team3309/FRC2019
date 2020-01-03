@@ -33,18 +33,15 @@ public class DriveAuto extends Command {
         decelerating, //decelerating to approach tweak speed
         tweaking, //speed at which final heading is corrected
     }
-
-    private double speed = 0;
-    private double turnCorrection;
+    
     private double left = 0;
     private double lastVelocity;
     Timer ControlTimer = new Timer();
 
     private superState superStateMachine;
     double encoderZeroValue;
-    double zeroedEncoderValue;
 
-    double turnCorrectionConstant = .05;
+    final double kturnCorrectionConstant = .05;
 
     private travelState state = travelState.stopped;
     private spinTurnState turnState = spinTurnState.notStarted;
@@ -215,18 +212,22 @@ public class DriveAuto extends Command {
              *         stop the robot and increment nextWaypointIndex
              */
             double encoderTicks = Robot.drive.getEncoderDistance();
-            zeroedEncoderValue = encoderTicks - encoderZeroValue;
-            double inchesTraveled = Robot.drive.encoderCountsToInches(zeroedEncoderValue);
+            double encoderTicksTraveled = encoderTicks - encoderZeroValue;
+            double inchesTraveled = Robot.drive.encoderCountsToInches(encoderTicksTraveled);
 
             heading = Robot.drive.getAngularPosition() % 360;
-            turnCorrection = (heading - headingToNextPoint) * turnCorrectionConstant;
+            double turnCorrection = (heading - headingToNextPoint) * kturnCorrectionConstant;
 
+            double speed = 0;
             if (state == travelState.stopped) {
                 ControlTimer.reset();
                 state = travelState.accelerating;
                 encoderZeroValue = encoderTicks;
             }
             if (state == travelState.accelerating) {
+                if (inchesBetweenWaypoints - inchesTraveled < speed * nextPoint.decelerationConstant) {
+                    state = travelState.decelerating;
+                }
                 if (speed < nextPoint.maxLinearSpeedEncoderCountsPerSec) {
                     speed = nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
                     if (speed > nextPoint.maxLinearSpeedEncoderCountsPerSec) {
