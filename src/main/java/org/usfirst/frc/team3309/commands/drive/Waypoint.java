@@ -6,18 +6,23 @@ public class Waypoint {
     double downfieldInches; //how far the waypoint is from the driver station
     double crossfieldInches; //lateral position of the waypoint
     double turnRadiusInches; //centered on the vertices of the straight-line path, not the guide circles
-    double maxTravelSpeed; //Inches per second
+    double maxStraightTravelSpeed; //Inches per second
     boolean reverse;  // robot backs into waypoint
 
     double creepSpeed = 5; //Inches per second
-    double accelerationDistance = 24; //Inches
+
+    //TODO: Tune these
+    double linearAcelerationRateInchesPerSec2 = 0; //Inches per second^2
+    double linearDecelerationRateInchesPerSec2 = 0; //Also in inches per second^2
+    double angularAcelerationRateDegreesPerSec2 = 0;
+    double angularDcelerationRateDegreesPerSec2 = 0;
+
     double cruiseDistance = 12; //Inches
-    double decelerationDistance = 24; //Also in inches
 
     double maxTravelSpeedEncoderCounts;
-    double accelerationDistanceEncoderCounts;
+    double linearAcelerationRateEncoderCountsPerSec2;
+    double linearDecelerationRateEncoderCountsPerSec2;
     double cruiseDistanceEncoderCounts;
-    double decelerationDistanceEncoderCounts;
     double creepSpeedEncoderCounts;
 
     public Waypoint() {
@@ -39,13 +44,13 @@ public class Waypoint {
     public Waypoint(double downfieldInches,
                     double crossfieldInches,
                     double turnRadiusInches,
-                    double maxTravelSpeed,
+                    double maxStraightTravelSpeed,
                     double creepSpeed,
                     boolean reverse) {
         this.downfieldInches = downfieldInches;
         this.crossfieldInches = crossfieldInches;
         this.turnRadiusInches = turnRadiusInches;
-        this.maxTravelSpeed = maxTravelSpeed;
+        this.maxStraightTravelSpeed = maxStraightTravelSpeed;
         this.creepSpeed = creepSpeed;
         this.reverse = reverse;
 
@@ -53,10 +58,10 @@ public class Waypoint {
     }
 
     private void initialize () {
-        maxTravelSpeedEncoderCounts = Robot.drive.inchesPerSecondToEncoderVelocity(maxTravelSpeed);
-        accelerationDistanceEncoderCounts = Robot.drive.inchesToEncoderCounts(accelerationDistance);
+        maxTravelSpeedEncoderCounts = Robot.drive.inchesPerSecondToEncoderVelocity(maxStraightTravelSpeed);
+        linearAcelerationRateEncoderCountsPerSec2 = Robot.drive.inchesPerSecondToEncoderVelocity(linearAcelerationRateInchesPerSec2);
+        linearDecelerationRateEncoderCountsPerSec2 = Robot.drive.inchesPerSecondToEncoderVelocity(linearDecelerationRateInchesPerSec2);
         cruiseDistanceEncoderCounts = Robot.drive.inchesToEncoderCounts(cruiseDistance);
-        decelerationDistanceEncoderCounts = Robot.drive.inchesToEncoderCounts(decelerationDistance);
         creepSpeedEncoderCounts = Robot.drive.inchesPerSecondToEncoderVelocity(creepSpeed);
     }
 }
