@@ -44,6 +44,7 @@ public class DriveAuto extends Command {
     double encoderZeroValue;
     double zeroedEncoderValue;
 
+    double turnCorrectionConstant = .05;
 
     private travelState state = travelState.stopped;
     private spinTurnState turnState = spinTurnState.notStarted;
@@ -219,8 +220,12 @@ public class DriveAuto extends Command {
              *     else
              *         stop the robot and increment nextWaypointIndex
              */
+            encoderTicks = Robot.drive.getEncoderDistance();
+            zeroedEncoderValue = encoderTicks - encoderZeroValue;
+            inchesTraveled = Robot.drive.encoderCountsToInches(zeroedEncoderValue);
+
             heading = Robot.drive.getAngularPosition() % 360;
-            turnCorrection = (heading - headingToNextPoint) * nextPoint.turnCorrectionConstant;
+            turnCorrection = (heading - headingToNextPoint) * turnCorrectionConstant;
 
             if (state == travelState.stopped) {
                 ControlTimer.reset();
@@ -253,6 +258,7 @@ public class DriveAuto extends Command {
                     }
                 } else {
                     if (nextWaypointIndex == path.length - 1 && !endRollout) {
+                        //We are done with following the path, we have arrived at the destination
                         //Stop the robot
                         speed = 0;
                     }
