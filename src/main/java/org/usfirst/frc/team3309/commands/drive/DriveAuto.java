@@ -177,6 +177,7 @@ public class DriveAuto extends Command {
                 turnState = spinTurnState.decelerating;
                 lastVelocity = Robot.drive.getEncoderVelocity();
                 ControlTimer.reset();
+                timerValue = 0;
             } else if (turnState == spinTurnState.decelerating &&
                     timerValue * nextPoint.angularDecelerationDegreesPerSec2 < nextPoint.angularCreepSpeed) {
                 turnState = spinTurnState.tweaking;
