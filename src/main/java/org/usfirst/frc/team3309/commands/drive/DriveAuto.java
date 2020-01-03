@@ -40,7 +40,7 @@ public class DriveAuto extends Command {
     private double lastVelocity;
     Timer ControlTimer = new Timer();
 
-    private superState superStateMachine = superState.stopped;
+    private superState superStateMachine;
     double encoderZeroValue;
     double zeroedEncoderValue;
 
@@ -77,7 +77,7 @@ public class DriveAuto extends Command {
 
         boolean debugMode = Robot.getDriveDebug();
         double heading;
-        //FIX THIS SH
+
         Waypoint priorPoint = path[nextWaypointIndex];
         Waypoint nextPoint = path[nextWaypointIndex + 1];
         double headingToNextPoint = Math.toDegrees(Math.atan2((priorPoint.downfieldInches - nextPoint.downfieldInches),
@@ -89,19 +89,6 @@ public class DriveAuto extends Command {
         double encoderTicks = Robot.drive.getEncoderDistance();
         zeroedEncoderValue = encoderTicks - encoderZeroValue;
         double inchesTraveled = Robot.drive.encoderCountsToInches(zeroedEncoderValue);
-
-        if (superStateMachine == superState.stopped) {
-            superStateMachine = superState.drivingStraight;
-        } else if (superStateMachine == superState.drivingStraight && nextPoint.turnRadiusInches != 0) {
-            superStateMachine = superState.mobileTurning;
-        } else if ((superStateMachine == superState.drivingStraight || superStateMachine == superState.mobileTurning)
-
-                && nextPoint.turnRadiusInches == 0) {
-            superStateMachine = superState.spinTurning;
-        } else {
-            Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
-            superStateMachine = superState.stopped;
-        }
 
         if (superStateMachine == superState.spinTurning) {
             //Top level state machine for turning in place, driving straight, turning on the move (merge state enums):
