@@ -276,7 +276,7 @@ public class DriveAuto extends Command {
                     }
                 } else {
                     if (nextWaypointIndex == path.length - 1 && !endRollout) {
-                        //Stop robot and start moving to next waypoint
+                        //Stop the robot
                         speed = 0;
                     }
                     nextWaypointIndex++;
@@ -289,7 +289,6 @@ public class DriveAuto extends Command {
             } else {
                 //If speed is zero, then use PercentOutput so we don't apply brakes
                 Robot.drive.setArcade(ControlMode.PercentOutput, 0,0);
-                done = true;
             }
 
         } else if (superStateMachine == superState.mobileTurning) {
@@ -300,6 +299,9 @@ public class DriveAuto extends Command {
             Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
         }
 
+        if (nextWaypointIndex == path.length) {
+            done = true;
+        }
 
         // Example output of variables for debugging purposes - adapt as needed
         if (debugMode) {
