@@ -25,19 +25,24 @@ public class DriveAuto extends Command {
     }
 
     private enum spinTurnState {
+        notStarted,
         accelerating,
         cruising,
         decelerating,
         tweaking,
-        stopped
+        stopped,
+        straightDrive
     }
 
     private double speed = 0;
     private double turn = 0;
     private double left = 0;
+    private double currentVelocity = Robot.drive.getEncoderVelocity();
+    Timer ControlTimer = new Timer();
+    double timerValue = ControlTimer.get();
 
     private travelState state = travelState.stopped;
-    private spinTurnState turnState = spinTurnState.stopped;
+    private spinTurnState turnState = spinTurnState.notStarted;
     private int nextWaypointIndex = 0;
 
     private boolean done = false;
@@ -153,46 +158,50 @@ public class DriveAuto extends Command {
             double accelConstant = 0; //by how many deg/sec the velocity will increase per second
             double cruiseConstant = 0; //constant angular velocity
             double decelConstant = 0; //by how many deg/sec velocity will decrease per second
-            double creepConstant = 0; //by how many deg/sec the robot will adjust its heading
-            double accelStop = 0; //whenever we need the robot to stop accelerating angular velocity
-            double cruiseStop = accelStop + 0; //whenever we need the robot to stop cruising
-            double decelStop = cruiseStop + 0; //whenever we need the robot to stop decelerating angular velocity
-            double tweakStop = decelStop + 0;
+            double tweakThreshold = 0.001;
             double currentVelocity = Robot.drive.getEncoderVelocity();
-            Timer STControlTimer = new Timer();
-            double controlTimerStorage = STControlTimer.get();
 
-            if (controlTimerStorage > 0 && turnState == spinTurnState.stopped) {
+            if (timerValue > 0 && turnState == spinTurnState.notStarted) {
                 turnState = spinTurnState.accelerating;
             } else if (turnState == spinTurnState.accelerating &&
-                    (controlTimerStorage + 0.001) * accelConstant > nextPoint.maxTravelSpeed) {
+                    timerValue * accelConstant > nextPoint.maxTravelSpeed) {
                 turnState = spinTurnState.cruising;
             } else if (turnState == spinTurnState.cruising &&
-                    (controlTimerStorage + 0.001) * cruiseConstant  > nextPoint.creepSpeed) {
+                    timerValue * cruiseConstant  > nextPoint.creepSpeed) {
                 turnState = spinTurnState.decelerating;
             } else if (turnState == spinTurnState.decelerating &&
-                    (controlTimerStorage+ 0.001) * decelConstant < nextPoint.creepSpeed) {
+                    timerValue * decelConstant < nextPoint.creepSpeed) {
                 turnState = spinTurnState.tweaking;
             } else {
-                turnState = spinTurnState.stopped;
-                STControlTimer.stop();
-                STControlTimer.reset();
+                turnState = spinTurnState.straightDrive;
+                ControlTimer.stop();
+                ControlTimer.reset();
+                Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
             }
 
             if (turnState == spinTurnState.accelerating) {
-                left = currentVelocity + (accelConstant * controlTimerStorage);
+                left = accelConstant * timerValue;
             } else if (turnState == spinTurnState.cruising) {
                 left = cruiseConstant;
             } else if (turnState == spinTurnState.decelerating) {
-                left = currentVelocity - decelConstant;
+                ControlTimer.reset();
+                left = currentVelocity - decelConstant*timerValue;
             } else if (spinTurn == spinTurnState.tweaking) {
-                if (Robot.drive.getAngularPosition() > headingToNextPoint) {
+                if (Robot.drive.getAngularPosition() > headingToNextPoint &&
+                        Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) > tweakThreshold) {
                     left = -nextPoint.creepSpeed;
-                } else if (Robot.drive.getAngularPosition() < headingToNextPoint) {
+                } else if (Robot.drive.getAngularPosition() < headingToNextPoint &&
+                        Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) > tweakThreshold) {
                     left = nextPoint.creepSpeed;
+                } else if (Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) < tweakThreshold) {
+                    Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
+                    ControlTimer.stop();
+                    ControlTimer.reset();
+                    state = travelState.stopped;
+                    turnState = spinTurnState.notStarted;
                 }
             } else {
-                Robot.drive.setLeftRight(ControlMode.Velocity, 0, 0);
+                Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
             }
 
             //Pseudocode
