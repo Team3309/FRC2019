@@ -38,7 +38,7 @@ public class DriveAuto extends Command {
     private superState superStateMachine = superState.spinTurning;
     double encoderZeroValue;
 
-    final double kturnCorrectionConstant = .05;
+    final double kTurnCorrectionConstant = .05;
 
     private travelState state = travelState.stopped;
     private spinTurnState turnState = spinTurnState.notStarted;
@@ -120,7 +120,7 @@ public class DriveAuto extends Command {
             }
             //checks whether we should start decelerating; we should have completed cruising phase
             else if (turnState == spinTurnState.cruising &&
-                    timerValue * nextPoint.maxAngularSpeed + heading > headingToNextPoint) {
+                    timerValue * nextPoint.maxAngularSpeed + heading - Util3309.headingError() > headingToNextPoint) {
                 turnState = spinTurnState.decelerating;
                 //separate timer to help us decelerate down from a fixed velocity
                 lastVelocity = Robot.drive.getEncoderVelocity();
@@ -134,7 +134,7 @@ public class DriveAuto extends Command {
                 turnState = spinTurnState.tweaking;
 
                 //check if correction is needed
-                if (Math.abs(heading-headingToNextPoint) < kTweakThreshold) {
+                if (Math.abs(heading-Util3309.headingError()-headingToNextPoint) < kTweakThreshold) {
                     Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
                     superStateMachine = superState.drivingStraight;
                 }
@@ -200,8 +200,7 @@ public class DriveAuto extends Command {
             double encoderTicksTraveled = encoderTicks - encoderZeroValue;
             double inchesTraveled = Robot.drive.encoderCountsToInches(encoderTicksTraveled);
 
-            heading = Robot.drive.getAngularPosition() % 360;
-            double turnCorrection = (heading - headingToNextPoint) * kturnCorrectionConstant;
+            double turnCorrection = Util3309.headingError() * kTurnCorrectionConstant;
 
             double speed = 0;
             if (state == travelState.stopped) {
