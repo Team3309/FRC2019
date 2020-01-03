@@ -14,7 +14,12 @@ import javax.naming.ldap.Control;
 
 public class DriveAuto extends Command {
 
-    private CheesyDriveHelper cheesyDrive = new CheesyDriveHelper();
+    private enum superState {
+        stopped,
+        drivingStraight,
+        spinTurning,
+        mobileTurning
+    }
 
     private enum travelState {
         stopped,
@@ -42,6 +47,7 @@ public class DriveAuto extends Command {
     private double lastVelocity;
     Timer ControlTimer = new Timer();
 
+    private superState DASSM = superState.stopped;
     private travelState state = travelState.stopped;
     private spinTurnState turnState = spinTurnState.notStarted;
     private int nextWaypointIndex = 0;
@@ -72,13 +78,12 @@ public class DriveAuto extends Command {
     protected void execute() {
 
         boolean debugMode = Robot.getDriveDebug();
-        double heading = Robot.drive.getAngularPosition() % 360;
-
+        double heading;
         Waypoint priorPoint = path[nextWaypointIndex];
         Waypoint nextPoint = path[nextWaypointIndex + 1];
         lastVelocity = Robot.drive.getAngularVelocity();
 
-        double headingToNextPoint = Math.toDegrees(Math.atan((priorPoint.downfieldInches - nextPoint.downfieldInches)/
+        double headingToNextPoint = Math.toDegrees(Math.atan2((priorPoint.downfieldInches - nextPoint.downfieldInches),
                 (priorPoint.crossfieldInches - nextPoint.crossfieldInches)));
 
         double inchesFromWaypoints = Util3309.distanceFormula(priorPoint.downfieldInches, priorPoint.crossfieldInches,
@@ -86,7 +91,23 @@ public class DriveAuto extends Command {
 
         double inchesTraveled = Robot.drive.encoderCountsToInches(Robot.drive.getEncoderDistance());
 
-        if (nextPoint.turnRadiusInches == 0) {
+        if (DASSM == superState.stopped && inchesFromWaypoints != 0) {
+            DASSM = superState.drivingStraight;
+        } else if (DASSM == superState.drivingStraight && nextPoint.turnRadiusInches != 0) {
+            DASSM = superState.mobileTurning;
+        } else if ((DASSM == superState.drivingStraight || DASSM == superState.mobileTurning)
+                && nextPoint.turnRadiusInches == 0) {
+            DASSM = superState.spinTurning;
+        } else if(DASSM == superState.spinTurning) {
+            DASSM = superState.stopped;
+            Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
+        }
+        else {
+            Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
+            DASSM = superState.stopped;
+        }
+
+        if (DASSM == superState.drivingStraight) {
             /*
              * Drive Straight
              *
@@ -153,15 +174,18 @@ public class DriveAuto extends Command {
             }
             Robot.drive.setArcade(ControlMode.Velocity, speed, turn);
 
-        } else if (nextPoint.turnRadiusInches !=0 && nextPoint.crossfieldInches + nextPoint.downfieldInches != 0) {
+        } else if (DASSM == superState.mobileTurning) {
             state = travelState.turning;
-
-            //Turn to the next point. We may be able to use the Cheesy Drive algorithm for this.
-
 
             //Turn on a circle:
 
-        } else if (nextPoint.turnRadiusInches == 0 && nextPoint.crossfieldInches + nextPoint.downfieldInches == 0) {
+        } else if (DASSM == superState.spinTurning) {
+            //Top level state machine for turning in place, driving straight, turning on the move (merge state enums):
+            //Use. heading:
+            //Change lastVelocity naming --> angular velocity (encoder velocity != angular velocity); remove
+            //first two usages:
+            //TOP LEVEL STATE MACHINE
+            // #check whether it needs to execute spin turn, turn on move, drive straight
 
             //Turn in place:
             //  Accelerate turning till we reach our turn cruising speed.
@@ -172,9 +196,9 @@ public class DriveAuto extends Command {
             //  Reset all sensors for next operation.
 
             state = travelState.turningInPlace;
-
+            heading = Robot.drive.getAngularPosition() % 360;
             double tweakThreshold = 0.001;
-            lastVelocity = Robot.drive.getEncoderVelocity();
+            lastVelocity = Robot.drive.getAngularVelocity();
             ControlTimer.start();
             double timerValue = ControlTimer.get();
 
@@ -218,22 +242,32 @@ public class DriveAuto extends Command {
             } else if (turnState == spinTurnState.decelerating) {
                 left = lastVelocity - (nextPoint.angularDecelerationDegreesPerSec2 * timerValue);
             } else if (turnState == spinTurnState.tweaking) {
-                //turn left if we overshot
-                if (Robot.drive.getAngularPosition() > headingToNextPoint &&
-                        Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) > tweakThreshold) {
-                    left = -nextPoint.angularCreepSpeed;
-                }
-                //turn right if we undershot
-                else if (Robot.drive.getAngularPosition() < headingToNextPoint &&
-                        Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) > tweakThreshold) {
-                    left = nextPoint.angularCreepSpeed;
-                }
-                //stop correcting
-                else if (Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) < tweakThreshold) {
+
+                //check if correction is
+                if (Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) < tweakThreshold) {
                     Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
                     state = travelState.stopped;
                     turnState = spinTurnState.straightDrive;
+                    DASSM = superState.drivingStraight;
                 }
+                //turn right if we undershot
+                else if (heading < headingToNextPoint &&
+                        Math.abs(heading-headingToNextPoint) > tweakThreshold) {
+                    left = nextPoint.angularCreepSpeed;
+                }
+                //turn left if we overshot
+                else if (heading > headingToNextPoint &&
+                        Math.abs(heading-headingToNextPoint) > tweakThreshold) {
+                    left = -nextPoint.angularCreepSpeed;
+                }
+
+                //default: sets up control timer and state machines for next call
+                state = travelState.stopped;
+                turnState = spinTurnState.straightDrive;
+                DASSM = superState.drivingStraight;
+                ControlTimer.stop();
+                ControlTimer.reset();
+
             } else if (turnState == spinTurnState.straightDrive) {
                 ControlTimer.stop();
                 ControlTimer.reset();
@@ -247,7 +281,6 @@ public class DriveAuto extends Command {
             }
 
             Robot.drive.setLeftRight(ControlMode.Velocity, left, -left);
-            Robot.drive.zeroNavx();
 
         }
 
@@ -259,9 +292,7 @@ public class DriveAuto extends Command {
             SmartDashboard.putNumber("Goal left encoder velocity", leftVelocity);
             SmartDashboard.putNumber("Goal right encoder velocity", RightVelocity);
         }
-
-        ControlTimer.stop();
-        ControlTimer.reset();
+        Robot.drive.zeroNavx();
     }
 
     @Override
