@@ -40,7 +40,7 @@ public class DriveAuto extends Command {
     private superState superStateMachine;
     double encoderZeroValue;
 
-    final double kturnCorrectionConstant = .05;
+    final double kTurnCorrectionConstant = .05;
 
     private travelState state = travelState.stopped;
     private spinTurnState turnState = spinTurnState.notStarted;
@@ -201,7 +201,7 @@ public class DriveAuto extends Command {
             double inchesTraveled = Robot.drive.encoderCountsToInches(encoderTicksTraveled);
 
             heading = Robot.drive.getAngularPosition() % 360;
-            double turnCorrection = (heading - headingToNextPoint) * kturnCorrectionConstant;
+            double turnCorrection = (heading - headingToNextPoint) * kTurnCorrectionConstant;
 
             double speed = 0;
             if (state == travelState.stopped) {
