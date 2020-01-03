@@ -37,9 +37,9 @@ public class DriveAuto extends Command {
     private double speed = 0;
     private double turn = 0;
     private double left = 0;
-    private double currentVelocity = Robot.drive.getEncoderVelocity();
+    private double lastVelocity;
     Timer ControlTimer = new Timer();
-    double timerValue = ControlTimer.get();
+
 
     private travelState state = travelState.stopped;
     private spinTurnState turnState = spinTurnState.notStarted;
@@ -74,6 +74,7 @@ public class DriveAuto extends Command {
 
         Waypoint priorPoint = path[nextWaypointIndex - 1];
         Waypoint nextPoint = path[nextWaypointIndex];
+        lastVelocity = Robot.drive.getAngularVelocity();
 
         double headingToNextPoint = Math.toDegrees(Math.atan((priorPoint.downfieldInches - nextPoint.downfieldInches)/
                 (priorPoint.crossfieldInches - nextPoint.crossfieldInches)));
@@ -154,12 +155,12 @@ public class DriveAuto extends Command {
             //Turn in place
             state = travelState.turningInPlace;
 
-            spinTurnState spinTurn = spinTurnState.stopped;
             double accelConstant = 0; //by how many deg/sec the velocity will increase per second
             double cruiseConstant = 0; //constant angular velocity
             double decelConstant = 0; //by how many deg/sec velocity will decrease per second
             double tweakThreshold = 0.001;
-            double currentVelocity = Robot.drive.getEncoderVelocity();
+            ControlTimer.start();
+            double timerValue = ControlTimer.get();
 
             if (timerValue > 0 && turnState == spinTurnState.notStarted) {
                 turnState = spinTurnState.accelerating;
@@ -185,8 +186,8 @@ public class DriveAuto extends Command {
                 left = cruiseConstant;
             } else if (turnState == spinTurnState.decelerating) {
                 ControlTimer.reset();
-                left = currentVelocity - decelConstant*timerValue;
-            } else if (spinTurn == spinTurnState.tweaking) {
+                left = lastVelocity - (decelConstant * timerValue);
+            } else if (turnState == spinTurnState.tweaking) {
                 if (Robot.drive.getAngularPosition() > headingToNextPoint &&
                         Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) > tweakThreshold) {
                     left = -nextPoint.creepSpeed;
