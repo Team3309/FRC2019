@@ -1,12 +1,12 @@
 package org.usfirst.frc.team3309.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.util.Util3309;
 import org.usfirst.frc.team4322.commandv2.Command;
 import edu.wpi.first.wpilibj.Timer;
-import org.usfirst.frc.team4322.configuration.RobotConfigFileReader;
 
 import javax.naming.ldap.Control;
 
@@ -32,7 +32,6 @@ public class DriveAuto extends Command {
         cruising, //angular cruising speed
         decelerating, //decelerating to approach tweak speed
         tweaking, //speed at which final heading is corrected
-        stopped,
     }
 
     private double speed = 0;
@@ -50,7 +49,7 @@ public class DriveAuto extends Command {
     private spinTurnState turnState = spinTurnState.notStarted;
     private int nextWaypointIndex = 0;
 
-    private boolean done = false;
+    private boolean done = true;
     private Waypoint[] path;
     private boolean endRollout;
 
@@ -73,9 +72,9 @@ public class DriveAuto extends Command {
 
     @Override
     protected void execute() {
-
         boolean debugMode = Robot.getDriveDebug();
         double heading;
+        //FIX THIS SH
         Waypoint priorPoint = path[nextWaypointIndex];
         Waypoint nextPoint = path[nextWaypointIndex + 1];
         double headingToNextPoint = Math.toDegrees(Math.atan2((priorPoint.downfieldInches - nextPoint.downfieldInches),
@@ -167,7 +166,6 @@ public class DriveAuto extends Command {
                 //check if correction is needed
                 if (Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) < tweakThreshold) {
                     Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
-                    state = travelState.stopped;
                     superStateMachine = superState.drivingStraight;
                 }
                 //turn right if we undershot
@@ -182,21 +180,12 @@ public class DriveAuto extends Command {
                 }
 
                 //default: sets up control timer and state machines for next call
-                state = travelState.stopped;
                 superStateMachine = superState.drivingStraight;
-                ControlTimer.stop();
-                ControlTimer.reset();
 
             } else if (superStateMachine == superState.drivingStraight) {
-                ControlTimer.stop();
-                ControlTimer.reset();
-                timerValue = 0;
-                lastVelocity = 0;
-                nextPoint.turnRadiusInches = 0;
                 turnState = spinTurnState.notStarted;
             } else {
-                Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
-                turnState = spinTurnState.stopped;
+                DriverStation.reportError("Unknown Spin Turn State.", false);
             }
 
             Robot.drive.setLeftRight(ControlMode.Velocity, left, -left);
@@ -279,7 +268,6 @@ public class DriveAuto extends Command {
                     }
                     //nextWaypointIndex++;
                     superStateMachine = superState.spinTurning;
-                    Robot.drive.zeroEncoders(); //TODO: remove
                     ControlTimer.reset();
                 }
             }
