@@ -101,33 +101,40 @@ public class DriveAuto extends Command {
              *                    Time
              *
              * Prepare to enter the logic jungle. You have been warned
+             * JK, it actually uses some pretty simple state machine logic:
+             * 
+             * if state is accelerating, then
+             *     if (condition that tells us that we are still accelerating), then
+             *         accelerate
+             *     else
+             *         set state to cruising
+             * else if state is cruising, then
+             *     if (condition that tells us that we are still cruising), then
+             *         cruise
+             *     else
+             *         set state to decelerating
+             * else if state is decelerating, then
+             *     if (condition that tells us that we are still decelerating), then
+             *         decelerate
+             *     else
+             *         stop the robot and increment nextWaypointIndex
              */
             turn = 0;
             if (state == travelState.accelerating) {
-                if (inchesTraveled < nextPoint.accelerationDistance) {
-                    //Prevent the robot from not moving by making the minimum speed the creepSpeed
-                    if (inchesTraveled / nextPoint.accelerationDistance >= nextPoint.creepSpeedEncoderCounts) {
-                        speed = inchesTraveled;
-                    } else {
-                        speed = nextPoint.creepSpeedEncoderCounts;
-                    }
+                if (true) {
+
                 } else {
                     state = travelState.cruising;
                 }
             } else if (state == travelState.cruising){
-                if (inchesTraveled < inchesFromWaypoints - nextPoint.decelerationDistance) {
-                    speed = nextPoint.maxLinearSpeed ;
+                if (true) {
+
                 } else {
                     state = travelState.decelerating;
                 }
             } else if (state == travelState.decelerating){
-                if (inchesTraveled <= inchesFromWaypoints) {
-                    //Prevent the robot from not moving by making the minimum speed the creepSpeed
-                    if (inchesTraveled / (inchesFromWaypoints - nextPoint.decelerationDistance) > nextPoint.creepSpeed) {
-                        speed = inchesTraveled / (inchesFromWaypoints - nextPoint.decelerationDistance);
-                    } else {
-                        speed = nextPoint.creepSpeedEncoderCounts;
-                    }
+                if (true) {
+
                 } else {
                     //Stop robot and start moving to next waypoint
                     speed = 0;
@@ -169,10 +176,10 @@ public class DriveAuto extends Command {
                     timerValue * accelConstant > nextPoint.maxAngularSpeed) {
                 turnState = spinTurnState.cruising;
             } else if (turnState == spinTurnState.cruising &&
-                    timerValue * cruiseConstant  > nextPoint.creepSpeedEncoderCounts) {
+                    timerValue * cruiseConstant  > nextPoint.angularCreepSpeedEncoderCountsPerSec) {
                 turnState = spinTurnState.decelerating;
             } else if (turnState == spinTurnState.decelerating &&
-                    timerValue * decelConstant < nextPoint.creepSpeedEncoderCounts) {
+                    timerValue * decelConstant < nextPoint.angularCreepSpeedEncoderCountsPerSec) {
                 turnState = spinTurnState.tweaking;
             } else {
                 turnState = spinTurnState.straightDrive;
@@ -192,10 +199,10 @@ public class DriveAuto extends Command {
             } else if (turnState == spinTurnState.tweaking) {
                 if (Robot.drive.getAngularPosition() > headingToNextPoint &&
                         Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) > tweakThreshold) {
-                    left = -nextPoint.creepSpeedEncoderCounts;
+                    left = -nextPoint.angularCreepSpeedEncoderCountsPerSec;
                 } else if (Robot.drive.getAngularPosition() < headingToNextPoint &&
                         Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) > tweakThreshold) {
-                    left = nextPoint.creepSpeedEncoderCounts;
+                    left = nextPoint.angularCreepSpeedEncoderCountsPerSec;
                 } else if (Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) < tweakThreshold) {
                     Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
                     ControlTimer.stop();
