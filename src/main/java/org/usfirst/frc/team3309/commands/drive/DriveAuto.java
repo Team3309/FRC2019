@@ -88,9 +88,10 @@ public class DriveAuto extends Command {
             /*
              * Drive Straight
              *
-             * Accelerate until the robot has traveled the acceleration distance. Then
-             * remain at a constant speed until robot enters the deceleration zone. Finally,
-             * decelerate to the slowest allowed speed until destination has been reached.
+             * Accelerate until the robot has reached the maximum speed specified for that
+             * waypoint. Then remain at a constant speed until robot enters the deceleration
+             * zone. Finally, decelerate to the slowest allowed speed until destination has
+             * been reached.
              *
              *          │    ______________
              *          │   /              \
@@ -104,17 +105,17 @@ public class DriveAuto extends Command {
              * JK, it actually uses some pretty simple state machine logic:
              *
              * if state is accelerating, then
-             *     if we are still accelerating, then
+             *     if we still need to accelerate, then
              *         accelerate
              *     else
              *         set state to cruising
              * else if state is cruising, then
-             *     if we are still cruising, then
+             *     if we still need to cruise, then
              *         cruise
              *     else
              *         set state to decelerating
              * else if state is decelerating, then
-             *     if we are still decelerating, then
+             *     if we still need to decelerate, then
              *         decelerate
              *     else
              *         stop the robot and increment nextWaypointIndex
@@ -148,6 +149,7 @@ public class DriveAuto extends Command {
                     ControlTimer.reset();
                 }
             }
+            Robot.drive.setArcade(ControlMode.Velocity, speed, turn);
 
         } else if (nextPoint.turnRadiusInches !=0 && nextPoint.crossfieldInches + nextPoint.downfieldInches != 0) {
             state = travelState.turning;
@@ -232,7 +234,6 @@ public class DriveAuto extends Command {
             Robot.drive.setLeftRight(ControlMode.Velocity, left, -left);
         }
 
-        Robot.drive.setArcade(ControlMode.Velocity, speed, turn);
 
         // Example output of variables for debugging purposes - adapt as needed
         if (debugMode) {
