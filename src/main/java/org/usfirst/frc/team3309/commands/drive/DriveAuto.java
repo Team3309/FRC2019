@@ -40,7 +40,6 @@ public class DriveAuto extends Command {
     private double lastVelocity;
     Timer ControlTimer = new Timer();
 
-
     private travelState state = travelState.stopped;
     private spinTurnState turnState = spinTurnState.notStarted;
     private int nextWaypointIndex = 0;
@@ -61,6 +60,7 @@ public class DriveAuto extends Command {
     @Override
     protected void initialize() {
         super.initialize();
+        ControlTimer.reset();
         Robot.drive.setHighGear();
         Robot.drive.reset();
         Robot.drive.setNeutralMode(NeutralMode.Brake);
@@ -102,35 +102,36 @@ public class DriveAuto extends Command {
              *
              * Prepare to enter the logic jungle. You have been warned
              * JK, it actually uses some pretty simple state machine logic:
-             * 
+             *
              * if state is accelerating, then
-             *     if (condition that tells us that we are still accelerating), then
+             *     if we are still accelerating, then
              *         accelerate
              *     else
              *         set state to cruising
              * else if state is cruising, then
-             *     if (condition that tells us that we are still cruising), then
+             *     if we are still cruising, then
              *         cruise
              *     else
              *         set state to decelerating
              * else if state is decelerating, then
-             *     if (condition that tells us that we are still decelerating), then
+             *     if we are still decelerating, then
              *         decelerate
              *     else
              *         stop the robot and increment nextWaypointIndex
              */
             turn = 0;
             if (state == travelState.accelerating) {
-                if (true) {
-
+                if (speed < nextPoint.maxLinearSpeedEncoderCountsPerSec) {
+                    speed = nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
                 } else {
                     state = travelState.cruising;
                 }
             } else if (state == travelState.cruising){
-                if (true) {
-
+                if (inchesFromWaypoints - inchesTraveled < speed * nextPoint.decelerationConstant) {
+                    speed = nextPoint.maxLinearSpeed;
                 } else {
                     state = travelState.decelerating;
+                    ControlTimer.reset();
                 }
             } else if (state == travelState.decelerating){
                 if (true) {
@@ -138,9 +139,10 @@ public class DriveAuto extends Command {
                 } else {
                     //Stop robot and start moving to next waypoint
                     speed = 0;
-                    nextWaypointIndex++;
-                    state = travelState.stopped;
+                    //nextWaypointIndex++;
+                    state = travelState.turningInPlace;
                     Robot.drive.zeroEncoders();
+                    ControlTimer.reset();
                 }
             }
 
