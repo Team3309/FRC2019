@@ -120,7 +120,7 @@ public class DriveAuto extends Command {
             }
             //checks whether we should start decelerating; we should have completed cruising phase
             else if (turnState == spinTurnState.cruising &&
-                    timerValue * nextPoint.maxAngularSpeed + heading - Util3309.headingError() > headingToNextPoint) {
+                    timerValue * nextPoint.maxAngularSpeed + heading - Util3309.headingError(headingToNextPoint) > headingToNextPoint) {
                 turnState = spinTurnState.decelerating;
                 //separate timer to help us decelerate down from a fixed velocity
                 lastVelocity = Robot.drive.getEncoderVelocity();
