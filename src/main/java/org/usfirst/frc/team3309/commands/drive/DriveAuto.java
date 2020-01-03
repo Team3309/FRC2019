@@ -162,9 +162,6 @@ public class DriveAuto extends Command {
             //Turn in place
             state = travelState.turningInPlace;
 
-            double accelConstant = 0; //by how many deg/sec the velocity will increase per second
-            double cruiseConstant = 0; //constant angular velocity
-            double decelConstant = 0; //by how many deg/sec velocity will decrease per second
             double tweakThreshold = 0.001;
             lastVelocity = Robot.drive.getEncoderVelocity();
             ControlTimer.start();
@@ -173,13 +170,15 @@ public class DriveAuto extends Command {
             if (timerValue > 0 && turnState == spinTurnState.notStarted) {
                 turnState = spinTurnState.accelerating;
             } else if (turnState == spinTurnState.accelerating &&
-                    timerValue * accelConstant > nextPoint.maxAngularSpeed) {
+                    timerValue * nextPoint.angularAccelerationDegreesPerSec2 > nextPoint.maxAngularSpeed) {
                 turnState = spinTurnState.cruising;
             } else if (turnState == spinTurnState.cruising &&
-                    timerValue * cruiseConstant  > nextPoint.angularCreepSpeedEncoderCountsPerSec) {
+                    timerValue * nextPoint.maxAngularSpeed  > nextPoint.maxAngularSpeed) {
                 turnState = spinTurnState.decelerating;
+                lastVelocity = Robot.drive.getEncoderVelocity();
+                ControlTimer.reset();
             } else if (turnState == spinTurnState.decelerating &&
-                    timerValue * decelConstant < nextPoint.angularCreepSpeed) {
+                    timerValue * nextPoint.angularDecelerationDegreesPerSec2 < nextPoint.angularCreepSpeed) {
                 turnState = spinTurnState.tweaking;
             } else {
                 turnState = spinTurnState.straightDrive;
@@ -193,9 +192,7 @@ public class DriveAuto extends Command {
             } else if (turnState == spinTurnState.cruising) {
                 left = nextPoint.maxAngularSpeed;
             } else if (turnState == spinTurnState.decelerating) {
-                ControlTimer.reset();
-                double decelInitVelocity = Robot.drive.getEncoderVelocity();
-                left = decelInitVelocity - (nextPoint.angularAccelerationDegreesPerSec2 * timerValue);
+                left = lastVelocity - (nextPoint.angularDecelerationDegreesPerSec2 * timerValue);
             } else if (turnState == spinTurnState.tweaking) {
                 if (Robot.drive.getAngularPosition() > headingToNextPoint &&
                         Math.abs(Robot.drive.getAngularPosition()-headingToNextPoint) > tweakThreshold) {
@@ -238,6 +235,9 @@ public class DriveAuto extends Command {
             SmartDashboard.putNumber("Goal left encoder velocity", leftVelocity);
             SmartDashboard.putNumber("Goal right encoder velocity", RightVelocity);
         }
+
+        ControlTimer.stop();
+        ControlTimer.reset();
     }
 
     @Override
