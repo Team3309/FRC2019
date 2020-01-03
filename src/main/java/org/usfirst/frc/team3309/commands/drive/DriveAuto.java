@@ -134,12 +134,12 @@ public class DriveAuto extends Command {
                 turnState = spinTurnState.tweaking;
 
                 //check if correction is needed
-                if (Math.abs(heading-Util3309.headingError()-headingToNextPoint) < kTweakThreshold) {
+                if (Math.abs(Util3309.headingError(headingToNextPoint)) < kTweakThreshold) {
                     Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
                     superStateMachine = superState.drivingStraight;
                 }
                 //turn right if we undershot
-                else if (heading < headingToNextPoint) {
+                else if (Util3309.headingError(headingToNextPoint) > 0) {
                     left = nextPoint.angularCreepSpeed;
                 }
                 //turn left if we overshot
