@@ -32,6 +32,8 @@ public class DriveAuto extends Command {
         tweaking, //speed at which final heading is corrected
     }
 
+    double speed = 0;
+
     private double lastVelocity;
     Timer ControlTimer = new Timer();
 
@@ -168,7 +170,6 @@ public class DriveAuto extends Command {
              * been reached.
              *
              *          │    ______________
-             *
              *          │   /              \
              * Velocity │  /                \
              *          │ /                  \___
@@ -204,22 +205,14 @@ public class DriveAuto extends Command {
 
             double turnCorrection = Util3309.headingError(headingToNextPoint) * kTurnCorrectionConstant;
 
-            double speed = 0;
             if (state == travelState.stopped) {
                 ControlTimer.reset();
                 state = travelState.accelerating;
                 encoderZeroValue = encoderTicks;
             }
             if (state == travelState.accelerating) {
-                if (inchesBetweenWaypoints - inchesTraveled < speed * nextPoint.decelerationConstant) {
-                    state = travelState.decelerating;
-                }
-                if (speed < nextPoint.maxLinearSpeedEncoderCountsPerSec) {
-                    speed = nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
-                    if (speed > nextPoint.maxLinearSpeedEncoderCountsPerSec) {
-                        speed = nextPoint.maxLinearSpeedEncoderCountsPerSec;
-                    }
-                } else {
+                speed = nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
+                if (speed > nextPoint.maxLinearSpeedEncoderCountsPerSec) {
                     state = travelState.cruising;
                 }
             }
@@ -244,7 +237,7 @@ public class DriveAuto extends Command {
                         speed = 0;
                     }
                     nextWaypointIndex++;
-                    superStateMachine = superState.spinTurning;
+                    superStateMachine = superState.stopped;
                 }
             }
 
