@@ -3,6 +3,7 @@ package org.usfirst.frc.team3309.commands.drive;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.util.Util3309;
 import org.usfirst.frc.team4322.commandv2.Command;
@@ -161,6 +162,7 @@ public class DriveAuto extends Command {
                 }
             }
 
+            left *= Constants.ENCODER_COUNTS_PER_DEGREE;
             if (superStateMachine == superState.spinTurning ) {
                 Robot.drive.setLeftRight(ControlMode.Velocity, left, -left);
             }
