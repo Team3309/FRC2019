@@ -20,7 +20,6 @@ import org.usfirst.frc.team4322.commandv2.CommandV2Robot;
 import org.usfirst.frc.team4322.commandv2.Scheduler;
 import org.usfirst.frc.team4322.logging.RobotLogger;
 
-import static org.usfirst.frc.team3309.VisionHelper.driverOverride;
 import static org.usfirst.frc.team3309.VisionHelper.forceVisionOff;
 
 /*
