@@ -97,6 +97,7 @@ public class Robot extends CommandV2Robot {
         OI.getLeftJoystick().getYAxis().setRampFunction((x) -> (-x));
 
         elevator.zeroEncoder();
+        VisionHelper.init();
 
         drive.initDefaultCommand();
     }

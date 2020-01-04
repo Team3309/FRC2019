@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3309;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.lib.Limelight;
@@ -34,12 +35,12 @@ public class VisionHelper {
     private static Limelight.LEDMode curLed;
     private static boolean isStopCrawl;
     private static boolean visionOn = false;
-    private static boolean  visionThrottleEnabled = true;
-    private static boolean  visionTurningEnabled = true;
+    private static boolean visionThrottleEnabled = true;
+    private static boolean visionTurningEnabled = true;
     private static final String visionThrottleKey = "Vision throttle enabled";
     private static final String visionTurningKey = "Vision turning enabled";
 
-    static {
+    public static void init() {
         if (isTuning) {
             turnController.outputToDashboard();
             SmartDashboard.putBoolean(visionThrottleKey, visionThrottleEnabled);
@@ -47,8 +48,7 @@ public class VisionHelper {
         }
         if (forceVisionOn) {
             enableVision();
-        }
-        else {
+        } else {
             disableVision();
         }
         setCamMode(Limelight.CamMode.VisionProcessor);
