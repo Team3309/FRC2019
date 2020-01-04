@@ -36,6 +36,8 @@ public class DriveAuto extends Command {
         private spinTurnState(int val) {this.val = val;}
     }
 
+    double speed = 0;
+
     private double lastVelocity;
     Timer ControlTimer = new Timer();
 
@@ -119,16 +121,15 @@ public class DriveAuto extends Command {
             }
             //checks whether we should start cruising; we should have finished our acceleration phase
             //and we should be approaching our cruise velocity
-            else if (turnState == spinTurnState.accelerating &&
-                    timerValue * nextPoint.angularAccelerationDegreesPerSec2 > nextPoint.maxAngularSpeed) {
+            if (turnState == spinTurnState.accelerating &&
+                    left > nextPoint.maxAngularSpeed) {
                 turnState = spinTurnState.cruising;
             }
             if (turnState == spinTurnState.cruising) {
                 left = nextPoint.maxAngularSpeed;
             }
             //checks whether we should start decelerating; we should have completed cruising phase
-            else if (turnState == spinTurnState.cruising &&
-                    timerValue * nextPoint.maxAngularSpeed + heading - Util3309.headingError(headingToNextPoint) > headingToNextPoint) {
+            if (timerValue * nextPoint.maxAngularSpeed > Util3309.headingError(headingToNextPoint)) {
                 turnState = spinTurnState.decelerating;
                 //separate timer to help us decelerate down from a fixed velocity
                 lastVelocity = Robot.drive.getEncoderVelocity();
@@ -139,12 +140,10 @@ public class DriveAuto extends Command {
                 left = lastVelocity - (nextPoint.angularDecelerationDegreesPerSec2 * timerValue);
             }
             //checks that we have completed deceleration phase and are approaching our tweaking speed
-            else if (turnState == spinTurnState.decelerating &&
-                    timerValue * nextPoint.angularDecelerationDegreesPerSec2 < nextPoint.angularCreepSpeed) {
+            if (turnState == spinTurnState.decelerating && left < nextPoint.angularCreepSpeed) {
                 turnState = spinTurnState.tweaking;
             }
             if (turnState == spinTurnState.tweaking) {
-
                 //check if correction is needed
                 if (Math.abs(Util3309.headingError(headingToNextPoint)) < kTweakThreshold) {
                     //spin Turn complete
@@ -217,22 +216,14 @@ public class DriveAuto extends Command {
 
             double turnCorrection = Util3309.headingError(headingToNextPoint) * kTurnCorrectionConstant;
 
-            double speed = 0;
             if (state == travelState.stopped) {
                 ControlTimer.reset();
                 state = travelState.accelerating;
                 encoderZeroValue = encoderTicks;
             }
             if (state == travelState.accelerating) {
-                if (inchesBetweenWaypoints - inchesTraveled < speed * nextPoint.decelerationConstant) {
-                    state = travelState.decelerating;
-                }
-                if (speed < nextPoint.maxLinearSpeedEncoderCountsPerSec) {
-                    speed = nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
-                    if (speed > nextPoint.maxLinearSpeedEncoderCountsPerSec) {
-                        speed = nextPoint.maxLinearSpeedEncoderCountsPerSec;
-                    }
-                } else {
+                speed = nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
+                if (speed > nextPoint.maxLinearSpeedEncoderCountsPerSec) {
                     state = travelState.cruising;
                 }
             }
@@ -257,7 +248,7 @@ public class DriveAuto extends Command {
                         speed = 0;
                     }
                     nextWaypointIndex++;
-                    superStateMachine = superState.spinTurning;
+                    superStateMachine = superState.stopped;
                 }
             }
 
