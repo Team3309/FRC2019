@@ -25,11 +25,14 @@ public class DriveAuto extends Command {
     }
 
     private enum spinTurnState {
-        notStarted,
-        accelerating, //accelerating to angular cruise speed
-        cruising, //angular cruising speed
-        decelerating, //decelerating to approach tweak speed
-        tweaking, //speed at which final heading is corrected
+        notStarted(0),
+        accelerating(1), //accelerating to angular cruise speed
+        cruising(2), //angular cruising speed
+        decelerating(3), //decelerating to approach tweak speed
+        tweaking(4); //speed at which final heading is corrected
+
+        int val;
+        private spinTurnState(int val) {this.val = val;}
     }
 
     double speed = 0;
@@ -109,34 +112,37 @@ public class DriveAuto extends Command {
             //checks that this is the start of auto; timer should be started and robot should not have
             //been previously started
             if (turnState == spinTurnState.notStarted) {
+                ControlTimer.reset();
                 turnState = spinTurnState.accelerating;
-                left = nextPoint.angularAccelerationDegreesPerSec2 * timerValue;
+            }
+            if (turnState == spinTurnState.accelerating)   {
+                 left = nextPoint.angularAccelerationDegreesPerSec2 * timerValue;
             }
             //checks whether we should start cruising; we should have finished our acceleration phase
             //and we should be approaching our cruise velocity
-            else if (turnState == spinTurnState.accelerating &&
-                    timerValue * nextPoint.angularAccelerationDegreesPerSec2 > nextPoint.maxAngularSpeed) {
+            if (turnState == spinTurnState.accelerating &&
+                    left > nextPoint.maxAngularSpeed) {
                 turnState = spinTurnState.cruising;
+            }
+            if (turnState == spinTurnState.cruising) {
                 left = nextPoint.maxAngularSpeed;
             }
             //checks whether we should start decelerating; we should have completed cruising phase
-            else if (turnState == spinTurnState.cruising &&
-                    timerValue * nextPoint.maxAngularSpeed + heading - Util3309.headingError(headingToNextPoint) > headingToNextPoint) {
+            if (timerValue * nextPoint.maxAngularSpeed > Util3309.headingError(headingToNextPoint)) {
                 turnState = spinTurnState.decelerating;
                 //separate timer to help us decelerate down from a fixed velocity
                 lastVelocity = Robot.drive.getEncoderVelocity();
                 ControlTimer.reset();
                 timerValue = 0;
+            }
+            if (turnState == spinTurnState.decelerating) {
                 left = lastVelocity - (nextPoint.angularDecelerationDegreesPerSec2 * timerValue);
             }
             //checks that we have completed deceleration phase and are approaching our tweaking speed
-            else if (turnState == spinTurnState.decelerating &&
-                    timerValue * nextPoint.angularDecelerationDegreesPerSec2 < nextPoint.angularCreepSpeed) {
+            if (turnState == spinTurnState.decelerating && left < nextPoint.angularCreepSpeed) {
                 turnState = spinTurnState.tweaking;
             }
-
             if (turnState == spinTurnState.tweaking) {
-
                 //check if correction is needed
                 if (Math.abs(Util3309.headingError(headingToNextPoint)) < kTweakThreshold) {
                     //spin Turn complete
@@ -152,14 +158,17 @@ public class DriveAuto extends Command {
                 else {
                     left = -nextPoint.angularCreepSpeed;
                 }
-
-
             }
 
-            if (superStateMachine == superState.spinTurning) {
+            if (superStateMachine == superState.spinTurning ) {
                 Robot.drive.setLeftRight(ControlMode.Velocity, left, -left);
             }
 
+            if (debugMode) {
+                SmartDashboard.putNumber("Single-motor velocity:", left);
+                SmartDashboard.putNumber("Heading error:", Util3309.headingError(headingToNextPoint));
+                SmartDashboard.putNumber("Spin turn state:", turnState.val);
+            }
     } else if (superStateMachine == superState.drivingStraight) {
             /*
              * Drive Straight
@@ -261,12 +270,7 @@ public class DriveAuto extends Command {
         }
 
         // Example output of variables for debugging purposes - adapt as needed
-        if (debugMode) {
-            double leftVelocity = 0;
-            double RightVelocity = 0;
-            SmartDashboard.putNumber("Goal left encoder velocity", leftVelocity);
-            SmartDashboard.putNumber("Goal right encoder velocity", RightVelocity);
-        }
+
     }
 
     @Override
