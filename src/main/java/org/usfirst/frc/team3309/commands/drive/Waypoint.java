@@ -10,13 +10,13 @@ public class Waypoint {
 
     //TODO: Tune these
     double linearCreepSpeed = 5; //Inches per second
-    double angularCreepSpeed = 5;
+    double angularCreepSpeed = 1;
     double maxLinearSpeed = 180; //Inches per second
-    double maxAngularSpeed = 50; //Degrees per second
+    double maxAngularSpeed = 15; //Degrees per second
     double linearAccelerationInchesPerSec2 = 10; //Inches per second^2
     double linearDecelerationInchesPerSec2 = 10; //Also in inches per second^2
-    double angularAccelerationDegreesPerSec2 = 10;
-    double angularDecelerationDegreesPerSec2 = 10;
+    double angularAccelerationDegreesPerSec2 = 4;
+    double angularDecelerationDegreesPerSec2 = 4;
     double decelerationConstant = .01;
 
     double maxLinearSpeedEncoderCountsPerSec;
