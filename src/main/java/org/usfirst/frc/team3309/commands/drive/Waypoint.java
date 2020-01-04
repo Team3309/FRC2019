@@ -10,14 +10,13 @@ public class Waypoint {
 
     //TODO: Tune these
     double linearCreepSpeed = 5; //Inches per second
-    double angularCreepSpeed = 1;
-    double maxLinearSpeed = 180; //Inches per second
-    double maxAngularSpeed = 15; //Degrees per second
-    double linearAccelerationInchesPerSec2 = 10; //Inches per second^2
-    double linearDecelerationInchesPerSec2 = 10; //Also in inches per second^2
-    double angularAccelerationDegreesPerSec2 = 4;
-    double angularDecelerationDegreesPerSec2 = 4;
-    double decelerationConstant = .01;
+    double angularCreepSpeed = 23;
+    double maxLinearSpeed = 40; //Inches per second
+    double maxAngularSpeed = 50; //Degrees per second
+    double linearAccelerationInchesPerSec2 = 80; //Inches per second^2
+    double linearDecelerationInchesPerSec2 = 160; //Also in inches per second^2
+    double angularAccelerationDegreesPerSec2 = 70;
+    double angularDecelerationDegreesPerSec2 = 70;
 
     double maxLinearSpeedEncoderCountsPerSec;
     double linearAccelerationEncoderCountsPerSec2;
@@ -51,7 +50,6 @@ public class Waypoint {
                     double maxAngularSpeed,
                     double linearCreepSpeed,
                     double angularCreepSpeed,
-                    double decelerationConstant,
                     boolean reverse) {
         this.downfieldInches = downfieldInches;
         this.crossfieldInches = crossfieldInches;
@@ -60,7 +58,6 @@ public class Waypoint {
         this.maxAngularSpeed = maxAngularSpeed;
         this.linearCreepSpeed = linearCreepSpeed;
         this.angularCreepSpeed = angularCreepSpeed;
-        this.decelerationConstant = decelerationConstant;
         this.reverse = reverse;
 
         initialize();

@@ -36,7 +36,9 @@ fun DrivePath3(): Command {
 
     val path = arrayOf<Waypoint>(
             Waypoint(),
-            Waypoint(120.0, 0.0, 0.0, false))
+            Waypoint(36.0, 0.0, 0.0, false),
+            Waypoint(36.0, 36.0, 0.0, false),
+            Waypoint(0.0, 36.0, 0.0, false))
 
     return group {
         sequential {

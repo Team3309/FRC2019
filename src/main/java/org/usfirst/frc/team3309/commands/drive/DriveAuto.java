@@ -45,6 +45,7 @@ public class DriveAuto extends Command {
     double encoderZeroValue;
 
     final double kTurnCorrectionConstant = .05;
+    final double kDecelerationConstant = 0.1;
 
     private travelState state = travelState.stopped;
     private spinTurnState turnState = spinTurnState.notStarted;
@@ -107,7 +108,7 @@ public class DriveAuto extends Command {
             //  Allow the robot to drive again.
             //  Reset all sensors for next operation.
 
-            final double kTweakThreshold = 0.001;
+            final double kTweakThreshold = 2.0;
             double timerValue = ControlTimer.get();
             double left = 0;
             //checks that this is the start of auto; timer should be started and robot should not have
@@ -132,7 +133,7 @@ public class DriveAuto extends Command {
             if (timerValue * nextPoint.maxAngularSpeed > Util3309.headingError(headingToNextPoint)) {
                 turnState = spinTurnState.decelerating;
                 //separate timer to help us decelerate down from a fixed velocity
-                lastVelocity = Robot.drive.getEncoderVelocity();
+                lastVelocity = Robot.drive.getLeftEncoderVelocity() / Constants.ENCODER_COUNTS_PER_DEGREE;
                 ControlTimer.reset();
                 timerValue = 0;
             }
@@ -228,7 +229,7 @@ public class DriveAuto extends Command {
                 }
             }
             if (state == travelState.cruising){
-                if (inchesBetweenWaypoints - inchesTraveled < speed * nextPoint.decelerationConstant) {
+                if (inchesBetweenWaypoints - inchesTraveled < speed * kDecelerationConstant) {
                     speed = nextPoint.maxLinearSpeed;
                 } else {
                     state = travelState.decelerating;
