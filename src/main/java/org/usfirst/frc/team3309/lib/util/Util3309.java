@@ -126,10 +126,11 @@ public class Util3309 {
 
     public static double headingError(double desiredHeading) {
 
-        double heading = ((180 - Robot.drive.getAngularPosition()) % 360) - 180;
+        double heading = 180 - ((Robot.drive.getAngularPosition() + 180) % 360);
         double headingError = desiredHeading - heading;
         if (headingError < -180) {
             headingError += 360;
+
         }
         else if (headingError > 180) {
             headingError -= 360;
