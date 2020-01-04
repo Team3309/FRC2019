@@ -82,9 +82,9 @@ public class DriveAuto extends Command {
 
         Waypoint priorPoint = path[nextWaypointIndex];
         Waypoint nextPoint = path[nextWaypointIndex + 1];
-        double headingToNextPoint = Math.toDegrees(Math.atan2(priorPoint.downfieldInches - nextPoint.downfieldInches,
-                priorPoint.crossfieldInches - nextPoint.crossfieldInches));
-        if (headingToNextPoint > 180) {
+        double headingToNextPoint = Math.toDegrees(Math.atan2(nextPoint.downfieldInches - priorPoint.downfieldInches,
+                nextPoint.crossfieldInches - priorPoint.crossfieldInches)) - 90;
+        if (headingToNextPoint < -180) {
             headingToNextPoint += 360;
         }
 
@@ -152,7 +152,7 @@ public class DriveAuto extends Command {
                     turnState = spinTurnState.notStarted;
                 }
                 //turn right if we undershot
-                else if (Util3309.headingError(headingToNextPoint) > 0) {
+                else if (Util3309.headingError(headingToNextPoint) < 0) {
                     left = nextPoint.angularCreepSpeed;
                 }
                 //turn left if we overshot
