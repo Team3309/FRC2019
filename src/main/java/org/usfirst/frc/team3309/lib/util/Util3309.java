@@ -121,12 +121,12 @@ public class Util3309 {
         return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
     }
 
-    //take argument of desiredHeading (btwn -180 and 180) downfield = 0
+    //take argument of desiredHeading (btwn -180 and 180) directly downfield = 0
     //read NavX, return value of how far off current heading is from desired heading (btwn -180 and 180)
 
     public static double headingError(double desiredHeading) {
 
-        double heading = ((180 + Robot.drive.getAngularPosition()) % 360) - 180;
+        double heading = ((180 - Robot.drive.getAngularPosition()) % 360) - 180;
         double headingError = desiredHeading - heading;
         if (headingError < -180) {
             headingError += 360;
