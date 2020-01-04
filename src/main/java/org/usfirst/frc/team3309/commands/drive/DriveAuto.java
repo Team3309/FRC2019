@@ -118,16 +118,15 @@ public class DriveAuto extends Command {
             }
             //checks whether we should start cruising; we should have finished our acceleration phase
             //and we should be approaching our cruise velocity
-            else if (turnState == spinTurnState.accelerating &&
-                    timerValue * nextPoint.angularAccelerationDegreesPerSec2 > nextPoint.maxAngularSpeed) {
+            if (turnState == spinTurnState.accelerating &&
+                    left > nextPoint.maxAngularSpeed) {
                 turnState = spinTurnState.cruising;
             }
             if (turnState == spinTurnState.cruising) {
                 left = nextPoint.maxAngularSpeed;
             }
             //checks whether we should start decelerating; we should have completed cruising phase
-            else if (turnState == spinTurnState.cruising &&
-                    timerValue * nextPoint.maxAngularSpeed + heading - Util3309.headingError(headingToNextPoint) > headingToNextPoint) {
+            if (timerValue * nextPoint.maxAngularSpeed > Util3309.headingError(headingToNextPoint)) {
                 turnState = spinTurnState.decelerating;
                 //separate timer to help us decelerate down from a fixed velocity
                 lastVelocity = Robot.drive.getEncoderVelocity();
@@ -138,12 +137,10 @@ public class DriveAuto extends Command {
                 left = lastVelocity - (nextPoint.angularDecelerationDegreesPerSec2 * timerValue);
             }
             //checks that we have completed deceleration phase and are approaching our tweaking speed
-            else if (turnState == spinTurnState.decelerating &&
-                    timerValue * nextPoint.angularDecelerationDegreesPerSec2 < nextPoint.angularCreepSpeed) {
+            if (turnState == spinTurnState.decelerating && left < nextPoint.angularCreepSpeed) {
                 turnState = spinTurnState.tweaking;
             }
             if (turnState == spinTurnState.tweaking) {
-
                 //check if correction is needed
                 if (Math.abs(Util3309.headingError(headingToNextPoint)) < kTweakThreshold) {
                     //spin Turn complete
