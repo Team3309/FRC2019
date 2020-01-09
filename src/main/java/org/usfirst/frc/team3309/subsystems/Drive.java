@@ -231,8 +231,8 @@ public class Drive extends Subsystem {
     }
 
     public void setRight(ControlMode mode,
-                         double right, DemandType demandType,
-                         double rightFeedforward) {
+                          double right, DemandType demandType,
+                          double rightFeedforward) {
         driveRightMaster.set(mode, -right, demandType, -rightFeedforward);
     }
 

@@ -85,6 +85,13 @@ object OI {
         leftJoystick.trigger.whenPressed(DriveSetLowGear())
         leftJoystick.trigger.whenReleased(DriveSetHighGear())
 
+
+
+        rightJoystickLeftClusterGroup.whenPressed(FlyWheelTest())
+
+
+
+
         rightJoystickRightClusterGroup.whenPressed(router {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
