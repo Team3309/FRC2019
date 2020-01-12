@@ -9,10 +9,6 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team3309.commands.Elevate;
-import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
-import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeManual;
-import org.usfirst.frc.team3309.commands.panelholder.PanelHolderManual;
 import org.usfirst.frc.team3309.lib.util.Util3309;
 import org.usfirst.frc.team3309.subsystems.*;
 import org.usfirst.frc.team4322.commandv2.Command;
@@ -33,12 +29,6 @@ public class Robot extends CommandV2Robot {
     private static final boolean demoMode = false;
 
     public static Drive drive;
-    public static Elevator elevator;
-    public static CargoIntake cargoIntake;
-    public static PanelIntake panelIntake;
-    public static CargoHolder cargoHolder;
-    public static PanelHolder panelHolder;
-    public static Climber climber;
     public static Vision vision;
     public static PowerDistributionPanel pdp;
 
@@ -61,12 +51,6 @@ public class Robot extends CommandV2Robot {
         super.robotInit();
         LiveWindow.disableAllTelemetry();
         drive = new Drive();
-        elevator = new Elevator();
-        cargoIntake = new CargoIntake();
-        panelIntake = new PanelIntake();
-        cargoHolder = new CargoHolder();
-        panelHolder = new PanelHolder();
-        climber = new Climber();
         vision = new Vision();
         pdp = new PowerDistributionPanel();
 
@@ -95,7 +79,6 @@ public class Robot extends CommandV2Robot {
         OI.getRightJoystick().getXAxis().setRampFunction((x) -> (-x));
         OI.getLeftJoystick().getYAxis().setRampFunction((x) -> (-x));
 
-        elevator.zeroEncoder();
         VisionHelper.init();
 
         drive.initDefaultCommand();
@@ -123,12 +106,10 @@ public class Robot extends CommandV2Robot {
         Scheduler.killAllCommands();
         drive.reset();
         drive.setHighGear();
-        elevator.zeroEncoder();
         autoCommand = AutoModeExecutor.getAutoSelected();
         if (autoCommand != null) {
             autoCommand.start();
         }
-        new Elevate(Elevate.Level.Home).start();
     }
 
     /*
@@ -190,31 +171,9 @@ public class Robot extends CommandV2Robot {
         if (getDriveDebug()) {
             drive.outputToDashboard();
         }
-        if (SmartDashboard.getBoolean(elevatorDashboardKey, false)) {
-            elevator.outputToDashboard();
-        }
-        if (SmartDashboard.getBoolean(panelHolderDashboardKey, false)) {
-            panelHolder.outputToDashboard();
-        }
-        if (SmartDashboard.getBoolean(cargoIntakeDashboardKey, false)) {
-            cargoIntake.outputToDashboard();
-        }
-        if (SmartDashboard.getBoolean(cargoHolderDashboardKey, false)) {
-            cargoHolder.outputToDashboard();
-        }
-        if (SmartDashboard.getBoolean(climberDashboardKey, false)) {
-            climber.outputToDashboard();
-        }
         if (SmartDashboard.getBoolean(visionDashboardKey, false)) {
             VisionHelper.outputToDashboard();
         }
-    }
-
-    public static boolean hasCargoInIntakeZone() {
-        return cargoHolder.hasCargo()
-                && Util3309.within(elevator.getCarriagePercentage(),
-                Constants.CARGO_INTAKE_ZONE_MIN,
-                Constants.CARGO_INTAKE_ZONE_MAX);
     }
 
     public static boolean isDemo() {
