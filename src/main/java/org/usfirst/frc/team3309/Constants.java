@@ -64,7 +64,7 @@ public class Constants {
     public static final int DRIVE_LEFT_SLAVE_FALCON_ID = 8;
 
     // This is the PCM solenoid port that the gearbox shifter is connected
-    public static final int DRIVE_SHIFTER_PCM_PORT = 10;
+    public static final int DRIVE_SHIFTER_PCM_PORT = 7;
 
     /**
      * Elevator Mappings
