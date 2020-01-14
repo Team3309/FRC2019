@@ -45,12 +45,6 @@ public class Drive extends Subsystem {
         configMaster(driveRightMaster);
         configSlave(driveRightSlave1, driveRightMaster);
         configSlave(driveRightSlave2, driveRightMaster);
-
-        // auto output for NetworkTables
-        addChild(driveLeftMaster);
-        addChild(driveRightMaster);
-        addChild(shifter);
-        addChild(navx);
     }
 
     private void configMaster(WPI_TalonSRX talon) {
@@ -66,7 +60,6 @@ public class Drive extends Subsystem {
         talon.setNeutralMode(NeutralMode.Brake);
         talon.setInverted(true);
         talon.setSensorPhase(false);
-        addChild(talon);
     }
 
     private void setPid(int slot) {
@@ -79,7 +72,6 @@ public class Drive extends Subsystem {
         slave.follow(master);
         slave.setNeutralMode(NeutralMode.Brake);
         slave.setInverted(InvertType.FollowMaster);
-        addChild(slave);
     }
 
     public double encoderCountsToInches(double counts) {

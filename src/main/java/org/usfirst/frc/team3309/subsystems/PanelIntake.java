@@ -29,11 +29,6 @@ public class PanelIntake extends Subsystem {
 
         intakeMotor.configFactoryDefault();
         intakeMotor.setInverted(true);
-
-        addChild(sharpSensor);
-        addChild(bannerSensor);
-        addChild(intakeMotor);
-        addChild(solenoid);
     }
 
     public void setPosition(PanelIntakePosition position) {

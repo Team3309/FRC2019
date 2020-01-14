@@ -23,7 +23,7 @@ public class Climber extends Subsystem {
     }
 
     public void outputToDashboard() {
-        SmartDashboard.putNumber("Climber current", winchMotor.getOutputCurrent());
+        SmartDashboard.putNumber("Climber current", winchMotor.getSupplyCurrent());
         SmartDashboard.putNumber("Climber position", winchMotor.getSelectedSensorPosition());
         SmartDashboard.putBoolean("Climber raw latch postion", latchingSolenoid.get());
     }

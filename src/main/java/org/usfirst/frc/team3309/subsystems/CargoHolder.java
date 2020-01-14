@@ -21,9 +21,6 @@ public class CargoHolder extends Subsystem {
 
         motor.configFactoryDefault();
         motor.setNeutralMode(NeutralMode.Brake);
-
-        addChild(bumperSensor);
-        addChild(motor);
     }
 
     @Override
