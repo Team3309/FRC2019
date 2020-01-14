@@ -26,9 +26,6 @@ public class CargoIntake extends Subsystem {
         intakeMotor.configFactoryDefault();
         intakeMotor.setInverted(true);
         intakeMotor.setNeutralMode(NeutralMode.Brake);
-
-        addChild(intakeMotor);
-        addChild(solenoid);
         solenoidValue = solenoid.get();
     }
 

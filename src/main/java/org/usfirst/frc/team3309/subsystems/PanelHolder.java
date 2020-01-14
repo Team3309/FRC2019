@@ -34,8 +34,6 @@ public class PanelHolder extends Subsystem {
         victor.configOpenloopRamp(0.3);
         victor.setNeutralMode(NeutralMode.Brake);
         extendingSolenoid = new Solenoid(Constants.PANEL_HOLDER_TELESCOPING_SOLENOID_ID);
-        addChild(victor);
-        addChild(extendingSolenoid);
     }
 
     @Override

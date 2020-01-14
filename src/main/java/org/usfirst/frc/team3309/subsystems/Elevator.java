@@ -32,7 +32,6 @@ public class Elevator extends Subsystem {
         liftSlave.setInverted(InvertType.FollowMaster);
 
         limitSwitch = new DigitalInput(2);
-        addChild(limitSwitch);
     }
 
     private void configTalon(WPI_TalonSRX talon) {
@@ -56,7 +55,6 @@ public class Elevator extends Subsystem {
         talon.setNeutralMode(NeutralMode.Brake);
         // talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
         // talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
-        addChild(talon);
     }
 
     public void zeroEncoder() {
