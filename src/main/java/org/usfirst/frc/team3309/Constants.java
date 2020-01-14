@@ -57,20 +57,19 @@ public class Constants {
      * Drive mappings
      * */
     // These are the CAN IDs for the Drive motor controllers.
-    public static final int DRIVE_RIGHT_MASTER_TALON_ID = 1;
-    public static final int DRIVE_RIGHT_SLAVE_VICTOR_1_ID = 2;
-    public static final int DRIVE_RIGHT_SLAVE_VICTOR_2_ID = 3;
-    public static final int DRIVE_LEFT_MASTER_TALON_ID = 7;
-    public static final int DRIVE_LEFT_SLAVE_VICTOR_1_ID = 8;
-    public static final int DRIVE_LEFT_SLAVE_VICTOR_2_ID = 9;
+
+    public static final int DRIVE_RIGHT_MASTER_FALCON_ID = 5;
+    public static final int DRIVE_RIGHT_SLAVE_FALCON_ID = 7;
+    public static final int DRIVE_LEFT_MASTER_FALCON_ID = 6;
+    public static final int DRIVE_LEFT_SLAVE_FALCON_ID = 8;
 
     // This is the PCM solenoid port that the gearbox shifter is connected
-    public static final int DRIVE_SHIFTER_PCM_PORT = 7;
+    public static final int DRIVE_SHIFTER_PCM_PORT = 10;
 
     /**
      * Elevator Mappings
      */
-    public static final int ELEVATOR_MASTER_TALON_ID = 6;
+    public static final int ELEVATOR_MASTER_TALON_ID = 60;
     public static final int ELEVATOR_SLAVE_VICTOR_ID = 10;
 
     public static final double ELEVATOR_P = 0.35;
@@ -93,7 +92,7 @@ public class Constants {
     /**
      * Cargo intake mappings
      */
-    public static final int CARGO_INTAKE_VICTOR_ID = 5;
+    public static final int CARGO_INTAKE_VICTOR_ID = 50;
     public static final int CARGO_INTAKE_SOLENOID_ID = 6;
 
     public static final double CARGO_INTAKE_ROLLERS_MIN_POWER = 0.15;
