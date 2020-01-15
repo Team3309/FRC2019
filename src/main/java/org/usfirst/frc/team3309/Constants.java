@@ -122,11 +122,11 @@ public class Constants {
     public static final double kPanelHolderBiasInchesX = 0;  // negative value biases placement to the right
 
     // PDP channels
-    public static final int kPdpChannelDriveLeft1 = 1;
+    public static final int kPdpChannelDriveLeft1 = 13;
     public static final int kPdpChannelDriveLeft2 = 2;
     public static final int kPdpChannelDriveLeft3 = 0;
-    public static final int kPdpChannelDriveRight7 = 13;
-    public static final int kPdpChannelDriveRight8 = 14;
+    public static final int kPdpChannelDriveRight7 = 14;
+    public static final int kPdpChannelDriveRight8 = 1;
     public static final int kPdpChannelDriveRight9 = 15;
     public static final int kPdpChannelLift10 = 12;
     public static final int kPdpChannelLift6 = 3;
