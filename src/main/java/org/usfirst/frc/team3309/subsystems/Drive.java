@@ -24,6 +24,9 @@ public class Drive extends Subsystem {
 
     private AHRS navx;
 
+    private double driveLeftPower;
+    private double driveRightPower;
+
     public Drive() {
 
         driveLeftMaster = new WPI_TalonFX(Constants.DRIVE_LEFT_MASTER_FALCON_ID);
@@ -35,11 +38,11 @@ public class Drive extends Subsystem {
 
         //Configure Left Side of Drive
         configMaster(driveLeftMaster);
-        //configSlave(driveLeftSlave, driveLeftMaster);
+        configSlave(driveLeftSlave, driveLeftMaster);
 
         //Configure Right Side of Drive
         configMaster(driveRightMaster);
-        //configSlave(driveRightSlave, driveRightMaster);
+        configSlave(driveRightSlave, driveRightMaster);
     }
 
     private void configMaster(WPI_TalonFX talon) {
@@ -152,20 +155,22 @@ public class Drive extends Subsystem {
     public double getVelocityY() { return navx.getVelocityY(); }
 
     public void setHighGear() {
-        shifter.set(true);
+        //shifter.set(true);
     }
 
     public void setLowGear() {
-        shifter.set(false);
+        //shifter.set(false);
     }
 
     public boolean inHighGear() {
-        return !shifter.get();
+        return true; //!shifter.get();
     }
 
     public void setLeftRight(ControlMode mode, double left, double right) {
         driveLeftMaster.set(mode, left);
         driveRightMaster.set(mode, -right);
+        driveLeftPower = left;
+        driveRightPower = right;
     }
 
     public void setArcade(ControlMode mode, double speed, double turn) {
@@ -202,6 +207,8 @@ public class Drive extends Subsystem {
     }
 
     public void outputToDashboard() {
+        SmartDashboard.putNumber("Drive left power set", driveLeftPower);
+        SmartDashboard.putNumber("Drive right power set", driveRightPower);
         SmartDashboard.putNumber("Drive left power get", driveLeftMaster.getMotorOutputPercent());
         SmartDashboard.putNumber("Drive right power get", driveRightMaster.getMotorOutputPercent());
         SmartDashboard.putNumber("Raw angle", getAngularPosition());

@@ -54,6 +54,7 @@ public class Robot extends CommandV2Robot {
         vision = new Vision();
         pdp = new PowerDistributionPanel();
 
+        /*
         UsbCamera cam0 = CameraServer.getInstance().startAutomaticCapture(0);
         cam0.setFPS(10);
         cam0.setResolution(320, 240);
@@ -63,6 +64,8 @@ public class Robot extends CommandV2Robot {
         cam1.setFPS(10);
         cam1.setResolution(320/2, 240/2);
         cam1.setPixelFormat(VideoMode.PixelFormat.kYUYV);
+
+         */
         AutoModeExecutor.displayAutos();
 
         RobotLogger.INSTANCE.setCurrentLogLevel(RobotLogger.LogLevel.ERR);

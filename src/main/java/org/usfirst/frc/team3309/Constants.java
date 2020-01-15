@@ -57,9 +57,9 @@ public class Constants {
      * Drive mappings
      * */
     // These are the CAN IDs for the Drive motor controllers.
-    public static final int DRIVE_RIGHT_MASTER_FALCON_ID = 2;
+    public static final int DRIVE_RIGHT_MASTER_FALCON_ID = 5;
     public static final int DRIVE_RIGHT_SLAVE_FALCON_ID = 7;
-    public static final int DRIVE_LEFT_MASTER_FALCON_ID = 3;
+    public static final int DRIVE_LEFT_MASTER_FALCON_ID = 6;
     public static final int DRIVE_LEFT_SLAVE_FALCON_ID = 8;
     public static final int DRIVE_SHIFTER_PCM_PORT = 7;
 
