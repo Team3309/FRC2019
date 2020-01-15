@@ -3,10 +3,7 @@ package org.usfirst.frc.team3309;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.lib.util.Util3309;
@@ -53,6 +50,8 @@ public class Robot extends CommandV2Robot {
         drive = new Drive();
         vision = new Vision();
         pdp = new PowerDistributionPanel();
+        Compressor compressor = new Compressor();
+        compressor.stop();
 
         /*
         UsbCamera cam0 = CameraServer.getInstance().startAutomaticCapture(0);

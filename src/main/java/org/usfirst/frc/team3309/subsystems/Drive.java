@@ -38,11 +38,11 @@ public class Drive extends Subsystem {
 
         //Configure Left Side of Drive
         configMaster(driveLeftMaster);
-        configSlave(driveLeftSlave, driveLeftMaster);
+        //configSlave(driveLeftSlave, driveLeftMaster);
 
         //Configure Right Side of Drive
         configMaster(driveRightMaster);
-        configSlave(driveRightSlave, driveRightMaster);
+        //configSlave(driveRightSlave, driveRightMaster);
     }
 
     private void configMaster(WPI_TalonFX talon) {
