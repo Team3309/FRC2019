@@ -61,7 +61,7 @@ public class Constants {
     public static final int DRIVE_RIGHT_SLAVE_FALCON_ID = 7;
     public static final int DRIVE_LEFT_MASTER_FALCON_ID = 6;
     public static final int DRIVE_LEFT_SLAVE_FALCON_ID = 8;
-    public static final int DRIVE_SHIFTER_PCM_PORT = 10;
+    public static final int DRIVE_SHIFTER_PCM_PORT = 7;
 
     /**
      * Elevator Mappings
