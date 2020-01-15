@@ -30,9 +30,9 @@ public class Drive extends Subsystem {
     public Drive() {
 
         driveLeftMaster = new WPI_TalonFX(Constants.DRIVE_LEFT_MASTER_FALCON_ID);
-        WPI_TalonFX driveLeftSlave = new WPI_TalonFX(Constants.DRIVE_LEFT_SLAVE_FALCON_ID);
+        //WPI_TalonFX driveLeftSlave = new WPI_TalonFX(Constants.DRIVE_LEFT_SLAVE_FALCON_ID);
         driveRightMaster = new WPI_TalonFX(Constants.DRIVE_RIGHT_MASTER_FALCON_ID);
-        WPI_TalonFX driveRightSlave = new WPI_TalonFX(Constants.DRIVE_RIGHT_SLAVE_FALCON_ID);
+        //WPI_TalonFX driveRightSlave = new WPI_TalonFX(Constants.DRIVE_RIGHT_SLAVE_FALCON_ID);
         shifter = new Solenoid(Constants.DRIVE_SHIFTER_PCM_PORT);
         navx = new AHRS(SPI.Port.kMXP);
 
@@ -55,8 +55,8 @@ public class Drive extends Subsystem {
         talon.config_kD(0, Constants.kDriveVelocityD, 10);
         talon.config_kF(0, Constants.kDriveVelocityF, 10);
 
-        talon.setNeutralMode(NeutralMode.Brake);
-        talon.setInverted(true);
+        talon.setNeutralMode(NeutralMode.Coast);
+        talon.setInverted(false);
         talon.setSensorPhase(false);
     }
 
