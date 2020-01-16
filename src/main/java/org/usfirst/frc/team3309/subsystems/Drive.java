@@ -51,6 +51,8 @@ public class Drive extends Subsystem {
         talon.configOpenloopRamp(Constants.DRIVE_OPEN_LOOP_RAMP_RATE, 10);
 
         talon.config_kP(0, Constants.kDriveVelocityP, 10);
+        talon.config_kI(0, Constants.kDriveVelocityI, 10);
+        talon.config_IntegralZone(0, Constants.kDriveVelocityIZone, 10);
         talon.config_kD(0, Constants.kDriveVelocityD, 10);
         talon.config_kF(0, Constants.kDriveVelocityF, 10);
 
