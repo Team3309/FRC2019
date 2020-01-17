@@ -44,7 +44,6 @@ public class Drive extends Subsystem {
 
     private void configMaster(WPI_TalonFX talon) {
         talon.configFactoryDefault();
-        talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
         talon.configClosedloopRamp(Constants.DRIVE_CLOSED_LOOP_RAMP_RATE);
         talon.configOpenloopRamp(Constants.DRIVE_OPEN_LOOP_RAMP_RATE, 10);
 
