@@ -35,11 +35,6 @@ public class Robot extends CommandV2Robot {
     private Command autoCommand;
 
     private static final String driveDashboardKey = "Display Drive Values";
-    private static final String elevatorDashboardKey = "Display Elevator Values";
-    private static final String panelHolderDashboardKey = "Display Panel Holder Values";
-    private static final String cargoIntakeDashboardKey = "Display Cargo Intake Values";
-    private static final String cargoHolderDashboardKey = "Display Cargo Holder Values";
-    private static final String climberDashboardKey = "Display Climber Values";
     private static final String visionDashboardKey = "Display Vision Values";
 
     /*
@@ -68,12 +63,6 @@ public class Robot extends CommandV2Robot {
         RobotLogger.INSTANCE.setCurrentLogLevel(RobotLogger.LogLevel.ERR);
 
         SmartDashboard.putBoolean(driveDashboardKey, false);
-        SmartDashboard.putBoolean(elevatorDashboardKey, false);
-        SmartDashboard.putBoolean(panelHolderDashboardKey, false);
-        SmartDashboard.putBoolean(cargoIntakeDashboardKey, false);
-        SmartDashboard.putBoolean(cargoHolderDashboardKey, false);
-        SmartDashboard.putBoolean(climberDashboardKey, false);
-        SmartDashboard.putBoolean(visionDashboardKey, false);
 
         // invert turning joystick's left to right
         OI.getRightJoystick().getXAxis().setRampFunction((x) -> (-x));
