@@ -48,8 +48,9 @@ public class DriveManual extends Command {
             leftPower *= 0.4;
             rightPower *= 0.4;
         }
-        
-        Robot.drive.setLeftRight(ControlMode.PercentOutput, leftPower, rightPower);
+
+        final int kMaxVelocity = 18000;
+        Robot.drive.setLeftRight(ControlMode.Velocity, leftPower * kMaxVelocity, rightPower * kMaxVelocity);
     }
 
     @Override

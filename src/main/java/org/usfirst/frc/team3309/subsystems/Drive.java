@@ -43,6 +43,9 @@ public class Drive extends Subsystem {
         //Configure Right Side of Drive
         configMaster(driveRightMaster);
         //configSlave(driveRightSlave, driveRightMaster);
+
+        // tweak for higher drag on right motor
+        driveRightMaster.config_kF(0, Constants.kDriveVelocityF * 1.1, 10);
     }
 
     private void configMaster(WPI_TalonFX talon) {
