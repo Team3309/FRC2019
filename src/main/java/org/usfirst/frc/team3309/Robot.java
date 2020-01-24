@@ -33,7 +33,7 @@ public class Robot extends CommandV2Robot {
     private static final boolean demoMode = false;
 
     // compile flag to enable auto modes
-    private static final boolean autoEnabled = false;
+    private static final boolean autoEnabled = true;
 
     public static Drive drive;
     public static Elevator elevator;
