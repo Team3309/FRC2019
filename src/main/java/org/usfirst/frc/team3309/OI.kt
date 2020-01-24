@@ -115,7 +115,7 @@ object OI {
 
         // For tuning drive velocity mode PIDF controller
         leftJoystick.rightCluster.topLeft.whenPressed(router {
-            if (DriverStation.getInstance().isDisabled) {
+            if (DriverStation.getInstance().isDisabled || !Robot.isAutoEnabled()) {
                 Command.empty
             } else {
                 DriveConstant(ControlMode.Velocity,12000.0, 12000.0)
@@ -128,7 +128,7 @@ object OI {
 
         // For tuning drive velocity mode PIDF controller
         leftJoystick.rightCluster.topCenter.whenPressed(router {
-            if (DriverStation.getInstance().isDisabled) {
+            if (DriverStation.getInstance().isDisabled || !Robot.isAutoEnabled()) {
                 Command.empty
             } else {
                 DriveConstant(ControlMode.Velocity, 20000.0, 20000.0)
@@ -141,7 +141,7 @@ object OI {
 
         // For tuning drive velocity mode PIDF controller
         leftJoystick.rightCluster.topRight.whenPressed(router {
-            if (DriverStation.getInstance().isDisabled) {
+            if (DriverStation.getInstance().isDisabled || !Robot.isAutoEnabled()) {
                 Command.empty
             } else {
                 DriveConstant(ControlMode.Velocity,30000.0, 30000.0)
@@ -153,7 +153,7 @@ object OI {
         })
 
         leftJoystick.rightCluster.bottomLeft.whenPressed(router {
-            if (DriverStation.getInstance().isDisabled) {
+            if (DriverStation.getInstance().isDisabled || !Robot.isAutoEnabled()) {
                 Command.empty
             } else {
                 DrivePath1()
@@ -165,7 +165,7 @@ object OI {
         })
 
         leftJoystick.rightCluster.bottomCenter.whenPressed(router {
-            if (DriverStation.getInstance().isDisabled) {
+            if (DriverStation.getInstance().isDisabled || !Robot.isAutoEnabled()) {
                 Command.empty
             } else {
                 DrivePath2()
@@ -177,7 +177,7 @@ object OI {
         })
 
         leftJoystick.rightCluster.bottomRight.whenPressed(router {
-            if (DriverStation.getInstance().isDisabled) {
+            if (DriverStation.getInstance().isDisabled || !Robot.isAutoEnabled()) {
                 Command.empty
             } else {
                 DrivePath3()

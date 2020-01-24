@@ -32,6 +32,9 @@ public class Robot extends CommandV2Robot {
     // compile flag to activate demo mode
     private static final boolean demoMode = false;
 
+    // compile flag to enable auto modes
+    private static final boolean autoEnabled = false;
+
     public static Drive drive;
     public static Elevator elevator;
     public static CargoIntake cargoIntake;
@@ -219,6 +222,10 @@ public class Robot extends CommandV2Robot {
 
     public static boolean isDemo() {
         return demoMode;
+    }
+
+    public static boolean isAutoEnabled() {
+        return autoEnabled;
     }
 
     private static boolean guestDriverMode = false;
