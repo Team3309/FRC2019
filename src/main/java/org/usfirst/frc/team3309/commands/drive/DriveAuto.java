@@ -260,6 +260,13 @@ public class DriveAuto extends Command {
                 Robot.drive.setArcade(ControlMode.PercentOutput, 0,0);
             }
 
+            if (debugMode) {
+                SmartDashboard.putString("State:", String.valueOf(state));
+                SmartDashboard.putNumber("Heading error:", Util3309.headingError(headingToNextPoint));
+                SmartDashboard.putNumber("Throttle:", speed);
+            }
+
+            //End of Drive straight code
         } else if (superStateMachine == superState.mobileTurning) {
 
             //Turn on a circle:
