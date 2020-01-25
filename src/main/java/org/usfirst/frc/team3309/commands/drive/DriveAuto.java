@@ -237,7 +237,7 @@ public class DriveAuto extends Command {
                 }
             }
             if (state == travelState.decelerating){
-                if (inchesTraveled < inchesBetweenWaypoints) {
+                if (inchesTraveled < inchesBetweenWaypoints - nextPoint.linearToleranceInches) {
                     speed = nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
                     if (speed < nextPoint.linearCreepSpeedEncoderCountsPerSec) {
                         speed = nextPoint.linearCreepSpeed;
@@ -247,6 +247,9 @@ public class DriveAuto extends Command {
                         //We are done with following the path, we have arrived at the destination
                         //Stop the robot
                         speed = 0;
+                    }
+                    if (inchesTraveled > inchesBetweenWaypoints + nextPoint.linearToleranceInches) {
+                        DriverStation.reportError("Traveled too far", true);
                     }
                     nextWaypointIndex++;
                     superStateMachine = superState.stopped;
