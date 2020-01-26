@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
+import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.commands.cargoholder.CargoHolderManual;
 import org.usfirst.frc.team4322.commandv2.Subsystem;
 
@@ -32,6 +33,7 @@ public class CargoHolder extends Subsystem {
         SmartDashboard.putBoolean("CH bumper sensor", hasCargo());
         SmartDashboard.putNumber("CH motor power", motor.getMotorOutputPercent());
         SmartDashboard.putNumber("CH motor voltage", motor.getMotorOutputVoltage());
+        SmartDashboard.putNumber("CH motor current", Robot.pdp.getCurrent(Constants.kPdpCargoHolder));
     }
 
     public void setPower(double power) {

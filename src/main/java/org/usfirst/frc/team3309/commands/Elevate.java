@@ -11,6 +11,7 @@ import org.usfirst.frc.team4322.commandv2.Command;
 public class Elevate extends Command {
 
     private Level level;
+    private boolean deployedCargoIntake = false;
 
     private Elevator.CarriagePosition carriageGoalPosition;
 
@@ -53,6 +54,14 @@ public class Elevate extends Command {
                         carriageGoalPosition = Elevator.CarriagePosition.CargoLow;
                     } else {
                         carriageGoalPosition = Elevator.CarriagePosition.PanelLow;
+                        if (Robot.cargoIntake.getPosition() == CargoIntake.CargoIntakePosition.Stowed &&
+                                !Util3309.within(Robot.elevator.getCarriagePercentage(),
+                                        Constants.CARGO_INTAKE_ZONE_MIN,
+                                        Constants.CARGO_INTAKE_ZONE_MAX)) {
+                            // make way so elevator doesn't hit cargo intake as it comes down
+                            Robot.cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Extended);
+                            deployedCargoIntake = true;
+                        }
                     }
                     break;
                 case Middle:
@@ -75,6 +84,18 @@ public class Elevate extends Command {
                 case PanelClearingPanelIntake:
                     carriageGoalPosition = Elevator.CarriagePosition.PanelClearingPanelIntake;
                     break;
+            }
+
+            // Check if we need to clear the cargo intake when going up
+            if (carriageGoalPosition != Elevator.CarriagePosition.Home &&
+                    carriageGoalPosition != Elevator.CarriagePosition.PanelLow &&
+                    Util3309.within(Robot.elevator.getCarriagePercentage(),
+                            Constants.CARGO_INTAKE_ZONE_MIN,
+                            Constants.CARGO_INTAKE_ZONE_MAX) &&
+                    Robot.cargoIntake.getPosition() == CargoIntake.CargoIntakePosition.Stowed) {
+                // make way so elevator doesn't hit cargo intake as it goes up
+                Robot.cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Extended);
+                deployedCargoIntake = true;
             }
         }
     }
@@ -111,6 +132,11 @@ public class Elevate extends Command {
             // Don't overheat the motors holding the elevator 1mm above the home position while we
             // wait for the PID controller i value to finally hit zero.
             Robot.elevator.setPower(0.0);
+        }
+
+        // If we deployed the cargo intake to make way for the elevator, retract it now that we're done
+        if (deployedCargoIntake) {
+            Robot.cargoIntake.setPosition(CargoIntake.CargoIntakePosition.Stowed);
         }
     }
 
