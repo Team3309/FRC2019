@@ -151,15 +151,15 @@ public class Drive extends Subsystem {
     public double getVelocityY() { return navx.getVelocityY(); }
 
     public void setHighGear() {
-        shifter.set(true);
+        //shifter.set(true);
     }
 
     public void setLowGear() {
-        shifter.set(false);
+        //shifter.set(false);
     }
 
     public boolean inHighGear() {
-        return !shifter.get();
+        return true; //!shifter.get();
     }
 
     public void setLeftRight(ControlMode mode, double left, double right) {
