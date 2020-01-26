@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3309.commands.drive;
 
+import com.ctre.phoenix.Util;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -8,6 +9,7 @@ import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.util.Util3309;
 import org.usfirst.frc.team4322.commandv2.Command;
 import edu.wpi.first.wpilibj.Timer;
+import org.usfirst.frc.team3309.lib.util.Util3309;
 
 public class DriveAuto extends Command {
 
@@ -37,23 +39,23 @@ public class DriveAuto extends Command {
     }
 
     double speed = 0;
-
     private double lastVelocity;
     Timer ControlTimer = new Timer();
 
     private superState superStateMachine = superState.spinTurning;
-    double encoderZeroValue;
-
-    final double kTurnCorrectionConstant = .05;
-    final double kDecelerationConstant = 0.1;
-
     private travelState state = travelState.stopped;
     private spinTurnState turnState = spinTurnState.notStarted;
-    private int nextWaypointIndex = 0;
+    double encoderZeroValue;
+
+    final double kTurnCorrectionConstant = 0.1;
+    final double kDecelerationConstant = 0.1;
 
     private boolean done = false;
     private Waypoint[] path;
+    private int nextWaypointIndex = 0;
     private boolean endRollout;
+    private double[] transformationVector;
+    private Waypoint[] workingPath = new Waypoint[2];
 
     // for autonomous path following
     public DriveAuto(Waypoint[] path, boolean endRollOut) {
@@ -79,46 +81,49 @@ public class DriveAuto extends Command {
 
         boolean debugMode = Robot.getDriveDebug();
 
-        double heading = 0;
-
-        Waypoint priorPoint = path[nextWaypointIndex];
+        Waypoint currentPoint = path[nextWaypointIndex];
         Waypoint nextPoint = path[nextWaypointIndex + 1];
-        double headingToNextPoint = Math.toDegrees(Math.atan2(nextPoint.downfieldInches - priorPoint.downfieldInches,
-                nextPoint.crossfieldInches - priorPoint.crossfieldInches)) - 90;
+
+        //transforms nextPoint so that
+        workingPath[0] = new Waypoint(currentPoint.xFieldInches-transformationVector[0],
+                currentPoint.downFieldInches-transformationVector[1],
+                currentPoint.turnRadiusInches,
+                currentPoint.reverse);
+        workingPath[1] = new Waypoint(nextPoint.xFieldInches - transformationVector[0],
+                nextPoint.downFieldInches-transformationVector[1], nextPoint.turnRadiusInches,
+                nextPoint.reverse);
+        double headingToNextPoint = Util3309.getHeadingToPoint(workingPath[0], workingPath[1]);
+        double error = Util3309.headingError(headingToNextPoint);
+
         if (headingToNextPoint < -180) {
             headingToNextPoint += 360;
         }
+        if (headingToNextPoint > 180) {
+            headingToNextPoint -= 360;
+        }
 
-        double inchesBetweenWaypoints = Util3309.distanceFormula(priorPoint.downfieldInches, priorPoint.crossfieldInches,
-                nextPoint.downfieldInches, nextPoint.crossfieldInches);
+        double inchesBetweenWaypoints =
+                Util3309.distanceFormula(currentPoint.xFieldInches, currentPoint.downFieldInches,
+        nextPoint.xFieldInches, nextPoint.downFieldInches);
 
+        transformationVector[0] = nextPoint.xFieldInches - currentPoint.xFieldInches;
+        transformationVector[1] = nextPoint.downFieldInches - currentPoint.downFieldInches;
         if (superStateMachine == superState.spinTurning) {
-            //Top level state machine for turning in place, driving straight, turning on the move (merge state enums):
-            //Use. heading:
-            //Change lastVelocity naming --> angular velocity (encoder velocity != angular velocity); remove
-            //first two usages:
-            //TOP LEVEL STATE MACHINE
-            // #check whether it needs to execute spin turn, turn on move, drive straight
 
-            //Turn in place:
-            //  Accelerate turning till we reach our turn cruising speed.
-            //  Turn at cruising speed till we approach
-            //  Decelerate turning speed till we reach tweaking speed.
-            //  Tweak heading until it is within a healthy margin of error.
-            //  Allow the robot to drive again.
-            //  Reset all sensors for next operation.
-
+            Robot.drive.zeroNavx();
             final double kTweakThreshold = 2.0;
             double timerValue = ControlTimer.get();
             double left = 0;
+            double turnError;
             //checks that this is the start of auto; timer should be started and robot should not have
             //been previously started
             if (turnState == spinTurnState.notStarted) {
                 ControlTimer.reset();
                 turnState = spinTurnState.accelerating;
             }
+
             if (turnState == spinTurnState.accelerating)   {
-                 left = nextPoint.angularAccelerationDegreesPerSec2 * timerValue;
+                 left = nextPoint.angAccelerationDegsPer100ms2 * timerValue;
             }
             //checks whether we should start cruising; we should have finished our acceleration phase
             //and we should be approaching our cruise velocity
@@ -130,15 +135,17 @@ public class DriveAuto extends Command {
                 left = nextPoint.maxAngularSpeed;
             }
             //checks whether we should start decelerating; we should have completed cruising phase
-            if (timerValue * nextPoint.maxAngularSpeed > Util3309.headingError(headingToNextPoint)) {
+            if (timerValue * nextPoint.maxAngularSpeed > error) {
                 turnState = spinTurnState.decelerating;
                 //separate timer to help us decelerate down from a fixed velocity
                 lastVelocity = Robot.drive.getLeftEncoderVelocity() / Constants.ENCODER_COUNTS_PER_DEGREE;
                 ControlTimer.reset();
                 timerValue = 0;
             }
+
+            //
             if (turnState == spinTurnState.decelerating) {
-                left = lastVelocity - (nextPoint.angularDecelerationDegreesPerSec2 * timerValue);
+                left = lastVelocity - (nextPoint.angDecelerationDegsPer100ms2 * timerValue);
             }
             //checks that we have completed deceleration phase and are approaching our tweaking speed
             if (turnState == spinTurnState.decelerating && left < nextPoint.angularCreepSpeed) {
@@ -146,32 +153,32 @@ public class DriveAuto extends Command {
             }
             if (turnState == spinTurnState.tweaking) {
                 //check if correction is needed
-                if (Math.abs(Util3309.headingError(headingToNextPoint)) < kTweakThreshold) {
+                if (Math.abs(error) < kTweakThreshold) {
                     //spin Turn complete
                     Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
                     superStateMachine = superState.drivingStraight;
                     turnState = spinTurnState.notStarted;
                 }
                 //turn right if we undershot
-                else if (Util3309.headingError(headingToNextPoint) < 0) {
+                else if (error < 0) {
                     left = nextPoint.angularCreepSpeed;
                 }
-                //turn left if we overshot
-                else {
+                else if (error > 0) {
                     left = -nextPoint.angularCreepSpeed;
+                    SmartDashboard.putNumber("Overshot:", error);
                 }
             }
 
             left *= Constants.ENCODER_COUNTS_PER_DEGREE;
-            if (superStateMachine == superState.spinTurning ) {
-                Robot.drive.setLeftRight(ControlMode.Velocity, left, -left);
-            }
+            Robot.drive.setLeftRight(ControlMode.Velocity, left, -left);
+
 
             if (debugMode) {
                 SmartDashboard.putNumber("Single-motor velocity:", left);
-                SmartDashboard.putNumber("Heading error:", Util3309.headingError(headingToNextPoint));
+                SmartDashboard.putNumber("Heading error:", error);
                 SmartDashboard.putNumber("Spin turn state:", turnState.val);
             }
+
     } else if (superStateMachine == superState.drivingStraight) {
             /*
              * Drive Straight
@@ -223,8 +230,8 @@ public class DriveAuto extends Command {
                 encoderZeroValue = encoderTicks;
             }
             if (state == travelState.accelerating) {
-                speed = nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
-                if (speed > nextPoint.maxLinearSpeedEncoderCountsPerSec) {
+                speed = nextPoint.linAccelerationEncoderCtsPer100ms2 * ControlTimer.get();
+                if (speed > nextPoint.maxLinSpeedEncoderCtsPer100ms) {
                     state = travelState.cruising;
                 }
             }
@@ -237,9 +244,15 @@ public class DriveAuto extends Command {
                 }
             }
             if (state == travelState.decelerating){
-                if (inchesTraveled < inchesBetweenWaypoints) {
+<<<<<<< HEAD
+                if (inchesTraveled < inchesBetweenWaypoints - nextPoint.linearToleranceInches) {
                     speed = nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
                     if (speed < nextPoint.linearCreepSpeedEncoderCountsPerSec) {
+=======
+                if (inchesTraveled < inchesBetweenWaypoints) {
+                    speed = nextPoint.linAccelerationEncoderCtsPer100ms2 * ControlTimer.get();
+                    if (speed < nextPoint.linCreepSpeedEncoderCtsPer100ms) {
+>>>>>>> origin/temp
                         speed = nextPoint.linearCreepSpeed;
                     }
                 } else {
@@ -247,6 +260,9 @@ public class DriveAuto extends Command {
                         //We are done with following the path, we have arrived at the destination
                         //Stop the robot
                         speed = 0;
+                    }
+                    if (inchesTraveled > inchesBetweenWaypoints + nextPoint.linearToleranceInches) {
+                        DriverStation.reportError("Traveled too far", true);
                     }
                     nextWaypointIndex++;
                     superStateMachine = superState.stopped;
@@ -260,6 +276,13 @@ public class DriveAuto extends Command {
                 Robot.drive.setArcade(ControlMode.PercentOutput, 0,0);
             }
 
+            if (debugMode) {
+                SmartDashboard.putString("State:", String.valueOf(state));
+                SmartDashboard.putNumber("Heading error:", Util3309.headingError(headingToNextPoint));
+                SmartDashboard.putNumber("Throttle:", speed);
+            }
+
+            //End of Drive straight code
         } else if (superStateMachine == superState.mobileTurning) {
 
             //Turn on a circle:

@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309.lib.util;
 
 import org.usfirst.frc.team3309.Robot;
+import org.usfirst.frc.team3309.commands.drive.Waypoint;
 
 import java.util.List;
 
@@ -119,6 +120,12 @@ public class Util3309 {
 
     public static double distanceFormula(double x1, double y1, double x2, double y2) {
         return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+    }
+
+
+    public static double getHeadingToPoint (Waypoint priorPoint, Waypoint nextPoint) {
+        return Math.toDegrees(Math.atan2(nextPoint.downFieldInches - priorPoint.downFieldInches,
+                nextPoint.xFieldInches - priorPoint.xFieldInches)) - 90;
     }
 
     //take argument of desiredHeading (btwn -180 and 180) directly downfield = 0
