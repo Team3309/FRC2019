@@ -57,10 +57,10 @@ public class Constants {
      * Drive mappings
      * */
     // These are the CAN IDs for the Drive motor controllers.
-    public static final int DRIVE_RIGHT_MASTER_FALCON_ID = 5;
-    public static final int DRIVE_RIGHT_SLAVE_FALCON_ID = 7;
-    public static final int DRIVE_LEFT_MASTER_FALCON_ID = 6;
-    public static final int DRIVE_LEFT_SLAVE_FALCON_ID = 8;
+    public static final int DRIVE_RIGHT_MASTER_FALCON_ID = 15;
+    public static final int DRIVE_RIGHT_SLAVE_FALCON_ID = 1;
+    public static final int DRIVE_LEFT_MASTER_FALCON_ID = 4;
+    public static final int DRIVE_LEFT_SLAVE_FALCON_ID = 16;
     public static final int DRIVE_SHIFTER_PCM_PORT = 7;
 
     /**
@@ -122,12 +122,12 @@ public class Constants {
     public static final double kPanelHolderBiasInchesX = 0;  // negative value biases placement to the right
 
     // PDP channels
-    public static final int kPdpChannelDriveLeft1 = 1;
-    public static final int kPdpChannelDriveLeft2 = 2;
-    public static final int kPdpChannelDriveLeft3 = 0;
-    public static final int kPdpChannelDriveRight7 = 13;
-    public static final int kPdpChannelDriveRight8 = 14;
-    public static final int kPdpChannelDriveRight9 = 15;
+    public static final int kPdpChannelDriveLeft1 = 14;
+    public static final int kPdpChannelDriveLeft2 = 15;
+    public static final int kPdpChannelDriveLeft3 = 13;
+    public static final int kPdpChannelDriveRight7 = 0;
+    public static final int kPdpChannelDriveRight8 = 1;
+    public static final int kPdpChannelDriveRight9 = 2;
     public static final int kPdpChannelLift10 = 12;
     public static final int kPdpChannelLift6 = 3;
 
