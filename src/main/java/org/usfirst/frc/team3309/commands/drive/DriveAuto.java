@@ -237,7 +237,7 @@ public class DriveAuto extends Command {
                 }
             }
             if (state == travelState.decelerating){
-                if (inchesTraveled < inchesBetweenWaypoints) {
+                if (inchesTraveled < inchesBetweenWaypoints - nextPoint.linearToleranceInches) {
                     speed = nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
                     if (speed < nextPoint.linearCreepSpeedEncoderCountsPerSec) {
                         speed = nextPoint.linearCreepSpeed;
@@ -247,6 +247,9 @@ public class DriveAuto extends Command {
                         //We are done with following the path, we have arrived at the destination
                         //Stop the robot
                         speed = 0;
+                    }
+                    if (inchesTraveled > inchesBetweenWaypoints + nextPoint.linearToleranceInches) {
+                        DriverStation.reportError("Traveled too far", true);
                     }
                     nextWaypointIndex++;
                     superStateMachine = superState.stopped;
@@ -260,6 +263,13 @@ public class DriveAuto extends Command {
                 Robot.drive.setArcade(ControlMode.PercentOutput, 0,0);
             }
 
+            if (debugMode) {
+                SmartDashboard.putString("State:", String.valueOf(state));
+                SmartDashboard.putNumber("Heading error:", Util3309.headingError(headingToNextPoint));
+                SmartDashboard.putNumber("Throttle:", speed);
+            }
+
+            //End of Drive straight code
         } else if (superStateMachine == superState.mobileTurning) {
 
             //Turn on a circle:

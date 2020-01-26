@@ -18,6 +18,8 @@ public class Waypoint {
     double angularAccelerationDegreesPerSec2 = 70;
     double angularDecelerationDegreesPerSec2 = 70;
 
+    double linearToleranceInches = .5;
+
     double maxLinearSpeedEncoderCountsPerSec;
     double linearAccelerationEncoderCountsPerSec2;
     double linearDecelerationEncoderCountsPerSec2;
@@ -26,6 +28,8 @@ public class Waypoint {
     double angularAccelerationEncoderCountsPerSec2;
     double angularDecelerationEncoderCountsPerSec2;
     double angularCreepSpeedEncoderCountsPerSec;
+
+    double linearToleranceEncoderCounts;
 
     public Waypoint() {
         initialize();
@@ -50,6 +54,7 @@ public class Waypoint {
                     double maxAngularSpeed,
                     double linearCreepSpeed,
                     double angularCreepSpeed,
+                    double linearToleranceInches,
                     boolean reverse) {
         this.downfieldInches = downfieldInches;
         this.crossfieldInches = crossfieldInches;
@@ -72,5 +77,6 @@ public class Waypoint {
         angularAccelerationEncoderCountsPerSec2 = Robot.drive.degreesPerSecondToEncoderVelocity(angularAccelerationDegreesPerSec2);
         angularDecelerationEncoderCountsPerSec2 = Robot.drive.degreesPerSecondToEncoderVelocity(angularDecelerationDegreesPerSec2);
         angularCreepSpeedEncoderCountsPerSec = Robot.drive.degreesPerSecondToEncoderVelocity(angularCreepSpeed);
+        linearToleranceEncoderCounts = Robot.drive.inchesToEncoderCounts(linearToleranceInches);
     }
 }
