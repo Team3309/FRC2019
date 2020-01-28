@@ -114,7 +114,6 @@ public class DriveAuto extends Command {
             final double kTweakThreshold = 2.0;
             double timerValue = ControlTimer.get();
             double left = 0;
-            double turnError;
             //checks that this is the start of auto; timer should be started and robot should not have
             //been previously started
             if (turnState == spinTurnState.notStarted) {
@@ -169,9 +168,9 @@ public class DriveAuto extends Command {
                     left = nextPoint.angCreepSpeed;
                 }
                 //turn left if we overshot
-                else {
+                else if (Util3309.headingError(headingToNextPoint) < 0){
                     left = -nextPoint.angCreepSpeed;
-
+                    DriverStation.reportError("Overshot.", false);
                 }
             }
 
