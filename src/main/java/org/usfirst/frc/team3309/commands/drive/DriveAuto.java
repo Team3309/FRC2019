@@ -1,7 +1,6 @@
 package org.usfirst.frc.team3309.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team3309.Constants;
 import org.usfirst.frc.team3309.Robot;
@@ -83,23 +82,22 @@ public class DriveAuto extends Command {
 
         Waypoint priorPoint = path[nextWaypointIndex];
         Waypoint nextPoint = path[nextWaypointIndex + 1];
-        double headingToNextPoint = Math.toDegrees(Math.atan2(nextPoint.downfieldInches - priorPoint.downfieldInches,
-                nextPoint.crossfieldInches - priorPoint.crossfieldInches)) - 90;
+        double[] pathDataArray = {priorPoint.xFieldInches, nextPoint.xFieldInches,
+                priorPoint.downfieldInches, nextPoint.downfieldInches};
+        double headingToNextPoint = 90-Math.toDegrees(Math.atan2(nextPoint.downfieldInches - priorPoint.downfieldInches,
+                nextPoint.xFieldInches - priorPoint.xFieldInches));
         if (headingToNextPoint < -180) {
             headingToNextPoint += 360;
         }
 
-        double inchesBetweenWaypoints = Util3309.distanceFormula(priorPoint.downfieldInches, priorPoint.crossfieldInches,
-                nextPoint.downfieldInches, nextPoint.crossfieldInches);
+        if (headingToNextPoint > 180) {
+            headingToNextPoint -= 360;
+        }
+
+        double inchesBetweenWaypoints = Util3309.distanceFormula(pathDataArray[2], pathDataArray[0],
+                pathDataArray[3], pathDataArray[1]);
 
         if (superStateMachine == superState.spinTurning) {
-            //Top level state machine for turning in place, driving straight, turning on the move (merge state enums):
-            //Use. heading:
-            //Change lastVelocity naming --> angular velocity (encoder velocity != angular velocity); remove
-            //first two usages:
-            //TOP LEVEL STATE MACHINE
-            // #check whether it needs to execute spin turn, turn on move, drive straight
-
             //Turn in place:
             //  Accelerate turning till we reach our turn cruising speed.
             //  Turn at cruising speed till we approach
@@ -118,7 +116,7 @@ public class DriveAuto extends Command {
                 turnState = spinTurnState.accelerating;
             }
             if (turnState == spinTurnState.accelerating)   {
-                 left = nextPoint.angularAccelerationDegreesPerSec2 * timerValue;
+                 left = nextPoint.angAccelerationDegsPerSec2 * timerValue;
             }
             //checks whether we should start cruising; we should have finished our acceleration phase
             //and we should be approaching our cruise velocity
@@ -138,10 +136,10 @@ public class DriveAuto extends Command {
                 timerValue = 0;
             }
             if (turnState == spinTurnState.decelerating) {
-                left = lastVelocity - (nextPoint.angularDecelerationDegreesPerSec2 * timerValue);
+                left = lastVelocity - (nextPoint.angDecelerationDegsPerSec2 * timerValue);
             }
             //checks that we have completed deceleration phase and are approaching our tweaking speed
-            if (turnState == spinTurnState.decelerating && left < nextPoint.angularCreepSpeed) {
+            if (turnState == spinTurnState.decelerating && left < nextPoint.angCreepSpeed) {
                 turnState = spinTurnState.tweaking;
             }
             if (turnState == spinTurnState.tweaking) {
@@ -154,11 +152,11 @@ public class DriveAuto extends Command {
                 }
                 //turn right if we undershot
                 else if (Util3309.headingError(headingToNextPoint) < 0) {
-                    left = nextPoint.angularCreepSpeed;
+                    left = nextPoint.angCreepSpeed;
                 }
                 //turn left if we overshot
                 else {
-                    left = -nextPoint.angularCreepSpeed;
+                    left = -nextPoint.angCreepSpeed;
                 }
             }
 
@@ -223,8 +221,8 @@ public class DriveAuto extends Command {
                 encoderZeroValue = encoderTicks;
             }
             if (state == travelState.accelerating) {
-                speed = nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
-                if (speed > nextPoint.maxLinearSpeedEncoderCountsPerSec) {
+                speed = nextPoint.linAccelerationEncoderCtsPerSec2 * ControlTimer.get();
+                if (speed > nextPoint.maxLinSpeedEncoderCtsPerSec) {
                     state = travelState.cruising;
                 }
             }
@@ -238,9 +236,9 @@ public class DriveAuto extends Command {
             }
             if (state == travelState.decelerating){
                 if (inchesTraveled < inchesBetweenWaypoints) {
-                    speed = nextPoint.linearAccelerationEncoderCountsPerSec2 * ControlTimer.get();
-                    if (speed < nextPoint.linearCreepSpeedEncoderCountsPerSec) {
-                        speed = nextPoint.linearCreepSpeed;
+                    speed = nextPoint.linAccelerationEncoderCtsPerSec2 * ControlTimer.get();
+                    if (speed < nextPoint.linCreepSpeedEncoderCtsPerSec) {
+                        speed = nextPoint.linCreepSpeed;
                     }
                 } else {
                     if (nextWaypointIndex == path.length - 1 && !endRollout) {
