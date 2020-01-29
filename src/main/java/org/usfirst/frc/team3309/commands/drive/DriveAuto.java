@@ -1,6 +1,5 @@
 package org.usfirst.frc.team3309.commands.drive;
 
-import com.ctre.phoenix.Util;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -9,7 +8,6 @@ import org.usfirst.frc.team3309.Robot;
 import org.usfirst.frc.team3309.lib.util.Util3309;
 import org.usfirst.frc.team4322.commandv2.Command;
 import edu.wpi.first.wpilibj.Timer;
-import org.usfirst.frc.team3309.lib.util.Util3309;
 
 public class DriveAuto extends Command {
 
@@ -35,7 +33,7 @@ public class DriveAuto extends Command {
         tweaking(4); //speed at which final heading is corrected
 
         int val;
-        private spinTurnState(int val) {this.val = val;}
+        spinTurnState(int val) {this.val = val;}
     }
 
     double speed = 0;
@@ -54,7 +52,7 @@ public class DriveAuto extends Command {
     private Waypoint[] path;
     private int nextWaypointIndex = 0;
     private boolean endRollout;
-    private double[] transformationVector;
+    private double[] transformationVector = new double[2];
     private Waypoint[] workingPath = new Waypoint[2];
 
     // for autonomous path following
@@ -84,7 +82,7 @@ public class DriveAuto extends Command {
         Waypoint currentPoint = path[nextWaypointIndex];
         Waypoint nextPoint = path[nextWaypointIndex + 1];
 
-        //transforms nextPoint so that
+        //transforms nextPoint so that the code operates from the correct frame of reference.
         workingPath[0] = new Waypoint(currentPoint.xFieldInches-transformationVector[0],
                 currentPoint.downFieldInches-transformationVector[1],
                 currentPoint.turnRadiusInches,
@@ -278,7 +276,7 @@ public class DriveAuto extends Command {
 
             //End of Drive straight code
         } else if (superStateMachine == superState.mobileTurning) {
-
+            return;
             //Turn on a circle:
 
         } else if (superStateMachine == superState.stopped) {

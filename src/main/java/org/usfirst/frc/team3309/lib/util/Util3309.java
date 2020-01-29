@@ -73,7 +73,6 @@ public class Util3309 {
         }
         return result;
     }
-
     public static double sum(double[] arr) {
         double total = 0.0;
         for (double i : arr) {
