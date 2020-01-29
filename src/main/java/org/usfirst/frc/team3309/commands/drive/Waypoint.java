@@ -3,68 +3,63 @@ package org.usfirst.frc.team3309.commands.drive;
 import org.usfirst.frc.team3309.Robot;
 
 public class Waypoint {
+    public double downFieldInches = 0; //how far the waypoint is from the driver station
+    public double xFieldInches = 0; //lateral position of the waypoint
+    public double turnRadiusInches = 0; //centered on the vertices of the straight-line path, not the guide circles
+    public boolean reverse = false;  // robot backs into waypoint
 
-    //All the positional data of each waypoint.
-    public double xFieldInches;
-    public double downFieldInches;
-    double turnRadiusInches = 0; //centered on the vertices of the straight-line path, not the guide circles
-    boolean reverse = false;  // robot backs into waypoint
+    //TODO: Tune these
+    public double linCreepSpeed = 5; //Inches per second
+    public double angCreepSpeed = 23;
+    public double maxLinearSpeed = 40; //Inches per 100 milliseconds
+    public double maxAngularSpeed = 50; //Degrees per 100 milliseconds
+    public double linAccelerationInchesPer100ms2 = 80; //Inches per 100 milliseconds^2
+    public double linDecelerationInchesPer100ms2 = 160; //Also in inches per 100 milliseconds^2
+    public double angAccelerationDegsPer100ms2 = 70;
+    public double angDecelerationDegsPer100ms2 = 70;
+    public double linToleranceEncoderCounts;
+    public double linToleranceInches;
 
-    //TODO: Tune these.
-    //Velocity data for Waypoint objects. Non-encoder values in inches/sec for linear motion, and in degrees per
-    //second for angular motion.
-    double maxLinearSpeed = 40;
-    double maxAngularSpeed = 50;
-    double linearCreepSpeed = 5;
-    double angularCreepSpeed = 23;
     double maxLinSpeedEncoderCtsPer100ms;
-    double maxAngSpeedEncoderCtsPer100ms;
-    double linCreepSpeedEncoderCtsPer100ms;
-    double angCreepSpeedEncoderCtsPer100ms;
-
-    //Acceleration data for Waypoint objects.
-    double linAccelerationInsPer100ms2 = 80; //Inches per second^2
-    double linDecelerationInsPer100ms2 = 160; //Also in inches per second^2
-    double angAccelerationDegsPer100ms2 = 70;
-    double angDecelerationDegsPer100ms2 = 70;
-    double linearToleranceInches = 0.5;
     double linAccelerationEncoderCtsPer100ms2;
     double linDecelerationEncoderCtsPer100ms2;
+    double linCreepSpeedEncoderCtsPer100ms;
+    double maxAngSpeedEncoderCtsPer100ms;
     double angAccelerationEncoderCtsPer100ms2;
     double angDecelerationEncoderCtsPer100ms2;
-    double linearToleranceEncoderCounts;
+    double angCreepSpeedEncoderCtsPer100ms;
 
     public Waypoint() {
         initialize();
     }
 
-    public Waypoint(double xFieldInches,
-                    double downFieldInches,
+    public Waypoint(double downFieldInches,
+                    double xFieldInches,
                     double turnRadiusInches,
                     boolean reverse) {
-        this.xFieldInches = xFieldInches;
         this.downFieldInches = downFieldInches;
+        this.xFieldInches = xFieldInches;
         this.turnRadiusInches = turnRadiusInches;
         this.reverse = reverse;
 
         initialize();
     }
 
-    public Waypoint(double xFieldInches,
-                    double downFieldInches,
+    public Waypoint(double downFieldInches,
+                    double xFieldInches,
                     double turnRadiusInches,
                     double maxLinearSpeed,
                     double maxAngularSpeed,
-                    double linearCreepSpeed,
+                    double linCreepSpeed,
                     double angularCreepSpeed,
                     boolean reverse) {
-        this.xFieldInches = xFieldInches;
         this.downFieldInches = downFieldInches;
+        this.xFieldInches = xFieldInches;
         this.turnRadiusInches = turnRadiusInches;
         this.maxLinearSpeed = maxLinearSpeed;
         this.maxAngularSpeed = maxAngularSpeed;
-        this.linearCreepSpeed = linearCreepSpeed;
-        this.angularCreepSpeed = angularCreepSpeed;
+        this.linCreepSpeed = linCreepSpeed;
+        this.angCreepSpeed = angularCreepSpeed;
         this.reverse = reverse;
 
         initialize();
@@ -72,13 +67,12 @@ public class Waypoint {
 
     private void initialize () {
         maxLinSpeedEncoderCtsPer100ms = Robot.drive.inchesPerSecondToEncoderVelocity(maxLinearSpeed);
-        linAccelerationEncoderCtsPer100ms2 = Robot.drive.inchesPerSecondToEncoderVelocity(linAccelerationInsPer100ms2);
-        linDecelerationEncoderCtsPer100ms2 = Robot.drive.inchesPerSecondToEncoderVelocity(linDecelerationInsPer100ms2);
-        linCreepSpeedEncoderCtsPer100ms = Robot.drive.inchesPerSecondToEncoderVelocity(linearCreepSpeed);
+        linAccelerationEncoderCtsPer100ms2 = Robot.drive.inchesPerSecondToEncoderVelocity(linAccelerationInchesPer100ms2);
+        linDecelerationEncoderCtsPer100ms2 = Robot.drive.inchesPerSecondToEncoderVelocity(linDecelerationInchesPer100ms2);
+        linCreepSpeedEncoderCtsPer100ms = Robot.drive.inchesPerSecondToEncoderVelocity(linCreepSpeed);
         maxAngSpeedEncoderCtsPer100ms = Robot.drive.degreesPerSecondToEncoderVelocity(maxAngularSpeed);
         angAccelerationEncoderCtsPer100ms2 = Robot.drive.degreesPerSecondToEncoderVelocity(angAccelerationDegsPer100ms2);
         angDecelerationEncoderCtsPer100ms2 = Robot.drive.degreesPerSecondToEncoderVelocity(angDecelerationDegsPer100ms2);
-        angCreepSpeedEncoderCtsPer100ms = Robot.drive.degreesPerSecondToEncoderVelocity(angularCreepSpeed);
-        linearToleranceEncoderCounts = Robot.drive.inchesToEncoderCounts(linearToleranceInches);
+        angCreepSpeedEncoderCtsPer100ms = Robot.drive.degreesPerSecondToEncoderVelocity(angCreepSpeed);
     }
 }

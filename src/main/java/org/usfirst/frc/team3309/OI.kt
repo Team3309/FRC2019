@@ -3,11 +3,7 @@ package org.usfirst.frc.team3309
 import com.ctre.phoenix.motorcontrol.ControlMode
 import edu.wpi.first.wpilibj.DriverStation
 import org.usfirst.frc.team3309.commands.*
-import org.usfirst.frc.team3309.commands.cargointake.CargoIntakeActuate
-import org.usfirst.frc.team3309.commands.climber.ClimberManual
 import org.usfirst.frc.team3309.commands.drive.*
-import org.usfirst.frc.team3309.subsystems.CargoIntake
-import org.usfirst.frc.team3309.subsystems.PanelHolder
 import org.usfirst.frc.team4322.commandv2.Command
 import org.usfirst.frc.team4322.commandv2.Trigger
 import org.usfirst.frc.team4322.commandv2.router
@@ -78,36 +74,6 @@ object OI {
     init {
         leftJoystick.trigger.whenPressed(DriveSetLowGear())
         leftJoystick.trigger.whenReleased(DriveSetHighGear())
-
-        rightJoystickRightClusterGroup.whenPressed(router {
-            if (DriverStation.getInstance().isDisabled) {
-                Command.empty
-            } else if (!Robot.cargoHolder.hasCargo() && Robot.panelHolder.hasPanel()) {
-                PlacePanel()
-            } else {
-                Command.empty
-            }
-        })
-
-        rightJoystickRightClusterGroup.whenReleased(router {
-            if (DriverStation.getInstance().isDisabled) {
-                Command.empty
-            } else if (Robot.panelHolder.extendedPosition == PanelHolder.ExtendedPosition.ExtendedOutwards) {
-                RemoveFinger()
-            } else {
-                Command.empty
-            }
-        })
-
-        leftJoystickLeftClusterGroup.whenPressed(router {
-            if (DriverStation.getInstance().isDisabled || Robot.isGuestDriver()) {
-                Command.empty
-            } else if (Robot.panelHolder.hasPanel()) {
-                DriveVisionPlace()
-            } else {
-                DriveVisionLoad()
-            }
-        })
 
         leftJoystickLeftClusterGroup.whenReleased(router {
             DriveConstant(ControlMode.PercentOutput, 0.0, 0.0)
@@ -187,40 +153,10 @@ object OI {
         leftJoystick.rightCluster.bottomRight.whenReleased(router {
             DriveConstant(ControlMode.PercentOutput, 0.0, 0.0)
         })
-        operatorController.dPad.down.whenPressed(Elevate(Elevate.Level.Low))
-        operatorController.dPad.right.whenPressed(Elevate(Elevate.Level.Middle))
-        operatorController.dPad.up.whenPressed(Elevate(Elevate.Level.High))
-        operatorController.dPad.left.whenPressed(Elevate(Elevate.Level.CargoShipCargo))
-
-        operatorPanelIntakeButton.whenPressed(IntakePanelFromStation())
         // When the button is released, the intake command is cancelled, which can
         // briefly allow a return to holding power due to the default command
         // sneaking in before the retract command begins. This is now well
         // managed by PanelHolder() even though it can generate an extra ramp down cycle.
-        operatorPanelIntakeButton.whenReleased(RetractFingerFromFeederStation())
-
-        operatorCargoIntakeButton.whenPressed(IntakeCargoNear())
-        operatorCargoIntakeButton.whenReleased(Command.lambda {
-            if (!Robot.cargoHolder.hasCargo()) {
-                CargoIntakeActuate(CargoIntake.CargoIntakePosition.Stowed)
-            }
-        })
-
-        operatorController.b.whenPressed(Command.lambda {
-            Robot.cargoIntake.position = CargoIntake.CargoIntakePosition.Extended
-        })
-
-        operatorController.a.whenPressed(Command.lambda {
-            Robot.cargoIntake.position = CargoIntake.CargoIntakePosition.Stowed
-        })
-
-        operatorController.leftStick.whenPressed(router {
-            if (operatorController.rightStick.get()) {
-                ClimberManual()
-            } else {
-                Command.empty
-            }
-        })
     }
 
 }

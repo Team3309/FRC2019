@@ -81,14 +81,14 @@ public class DriveAuto extends Command {
 
         Waypoint currentPoint = path[nextWaypointIndex];
         Waypoint nextPoint = path[nextWaypointIndex + 1];
-
+        
         //transforms nextPoint so that the code operates from the correct frame of reference.
         workingPath[0] = new Waypoint(currentPoint.xFieldInches-transformationVector[0],
-                currentPoint.downFieldInches-transformationVector[1],
+                currentPoint.downFieldInches -transformationVector[1],
                 currentPoint.turnRadiusInches,
                 currentPoint.reverse);
         workingPath[1] = new Waypoint(nextPoint.xFieldInches - transformationVector[0],
-                nextPoint.downFieldInches-transformationVector[1], nextPoint.turnRadiusInches,
+                nextPoint.downFieldInches -transformationVector[1], nextPoint.turnRadiusInches,
                 nextPoint.reverse);
         double headingToNextPoint = Util3309.getHeadingToPoint(workingPath[0], workingPath[1]);
         double error = Util3309.headingError(headingToNextPoint);
@@ -108,11 +108,11 @@ public class DriveAuto extends Command {
         transformationVector[1] = nextPoint.downFieldInches - currentPoint.downFieldInches;
         if (superStateMachine == superState.spinTurning) {
 
+
             Robot.drive.zeroNavx();
             final double kTweakThreshold = 2.0;
             double timerValue = ControlTimer.get();
             double left = 0;
-            double turnError;
             //checks that this is the start of auto; timer should be started and robot should not have
             //been previously started
             if (turnState == spinTurnState.notStarted) {
@@ -121,7 +121,9 @@ public class DriveAuto extends Command {
             }
 
             if (turnState == spinTurnState.accelerating)   {
+
                  left = nextPoint.angAccelerationDegsPer100ms2 * timerValue;
+
             }
             //checks whether we should start cruising; we should have finished our acceleration phase
             //and we should be approaching our cruise velocity
@@ -143,10 +145,12 @@ public class DriveAuto extends Command {
 
             //
             if (turnState == spinTurnState.decelerating) {
+
                 left = lastVelocity - (nextPoint.angDecelerationDegsPer100ms2 * timerValue);
+
             }
             //checks that we have completed deceleration phase and are approaching our tweaking speed
-            if (turnState == spinTurnState.decelerating && left < nextPoint.angularCreepSpeed) {
+            if (turnState == spinTurnState.decelerating && left < nextPoint.angCreepSpeed) {
                 turnState = spinTurnState.tweaking;
             }
             if (turnState == spinTurnState.tweaking) {
@@ -158,12 +162,14 @@ public class DriveAuto extends Command {
                     turnState = spinTurnState.notStarted;
                 }
                 //turn right if we undershot
-                else if (error < 0) {
-                    left = nextPoint.angularCreepSpeed;
+
+                else if (Util3309.headingError(headingToNextPoint) < 0) {
+                    left = nextPoint.angCreepSpeed;
                 }
-                else if (error > 0) {
-                    left = -nextPoint.angularCreepSpeed;
-                    SmartDashboard.putNumber("Overshot:", error);
+                //turn left if we overshot
+                else if (Util3309.headingError(headingToNextPoint) < 0){
+                    left = -nextPoint.angCreepSpeed;
+                    DriverStation.reportError("Overshot.", false);
                 }
             }
 
@@ -230,6 +236,8 @@ public class DriveAuto extends Command {
             if (state == travelState.accelerating) {
                 speed = nextPoint.linAccelerationEncoderCtsPer100ms2 * ControlTimer.get();
                 if (speed > nextPoint.maxLinSpeedEncoderCtsPer100ms) {
+
+
                     state = travelState.cruising;
                 }
             }
@@ -242,10 +250,12 @@ public class DriveAuto extends Command {
                 }
             }
             if (state == travelState.decelerating){
-                if (inchesTraveled < inchesBetweenWaypoints - nextPoint.linearToleranceInches) {
+
+                if (inchesTraveled < inchesBetweenWaypoints - nextPoint.linToleranceInches) {
                     speed = nextPoint.linAccelerationEncoderCtsPer100ms2 * ControlTimer.get();
                     if (speed < nextPoint.linCreepSpeedEncoderCtsPer100ms) {
-                        speed = nextPoint.linearCreepSpeed;
+                        speed = nextPoint.linCreepSpeed;
+
                     }
                 } else {
                     if (nextWaypointIndex == path.length - 1 && !endRollout) {
@@ -253,7 +263,7 @@ public class DriveAuto extends Command {
                         //Stop the robot
                         speed = 0;
                     }
-                    if (inchesTraveled > inchesBetweenWaypoints + nextPoint.linearToleranceInches) {
+                    if (inchesTraveled > inchesBetweenWaypoints + nextPoint.linToleranceInches) {
                         DriverStation.reportError("Traveled too far", true);
                     }
                     nextWaypointIndex++;

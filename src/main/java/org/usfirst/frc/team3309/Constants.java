@@ -57,26 +57,15 @@ public class Constants {
      * Drive mappings
      * */
     // These are the CAN IDs for the Drive motor controllers.
-    public static final int DRIVE_RIGHT_MASTER_TALON_ID = 1;
-    public static final int DRIVE_RIGHT_SLAVE_VICTOR_1_ID = 2;
-    public static final int DRIVE_RIGHT_SLAVE_VICTOR_2_ID = 3;
-    public static final int DRIVE_LEFT_MASTER_TALON_ID = 7;
-    public static final int DRIVE_LEFT_SLAVE_VICTOR_1_ID = 8;
-    public static final int DRIVE_LEFT_SLAVE_VICTOR_2_ID = 9;
-
-    // This is the PCM solenoid port that the gearbox shifter is connected
+    public static final int DRIVE_RIGHT_MASTER_FALCON_ID = 15;
+    public static final int DRIVE_RIGHT_SLAVE_FALCON_ID = 1;
+    public static final int DRIVE_LEFT_MASTER_FALCON_ID = 4;
+    public static final int DRIVE_LEFT_SLAVE_FALCON_ID = 16;
     public static final int DRIVE_SHIFTER_PCM_PORT = 7;
 
     /**
      * Elevator Mappings
      */
-    public static final int ELEVATOR_MASTER_TALON_ID = 6;
-    public static final int ELEVATOR_SLAVE_VICTOR_ID = 10;
-
-    public static final double ELEVATOR_P = 0.35;
-    public static final double ELEVATOR_I = 3.54972071e-05;
-    public static final double ELEVATOR_D = 15;
-
     // max position used for conversions (encoder counts)
     public static final double ELEVATOR_ENCODER_COUNTS_FOR_MAX_HEIGHT = 116000;
 
@@ -87,55 +76,26 @@ public class Constants {
     public static final double ELEVATOR_PANEL_DROP_DISTANCE = 0.02;
 
     // these can NEVER be the same
-    public static final double CARGO_INTAKE_ZONE_MIN = -0.1;
-    public static final double CARGO_INTAKE_ZONE_MAX = 0.24;
 
     /**
      * Cargo intake mappings
      */
-    public static final int CARGO_INTAKE_VICTOR_ID = 5;
-    public static final int CARGO_INTAKE_SOLENOID_ID = 6;
-
-    public static final double CARGO_INTAKE_ROLLERS_MIN_POWER = 0.15;
-    public static final double CARGO_INTAKE_ROLLERS_MAX_POWER = 0.45;
 
     /**
      * Panel intake mappings
      */
-    public static final int PANEL_INTAKE_VICTOR_ID = 11;
-    public static final int PANEL_INTAKE_SOLENOID_ID = 2;
-    public static final int PANEL_INTAKE_SHARP_SENSOR_PORT = 2;
-    public static final int PANEL_INTAKE_BANNER_SENSOR_PORT = 3;
-
-    public static final double PANEL_INTAKE_MIN_POWER = 0.1;
 
     /**
      * Cargo launcher mappings
      */
-    public static final int CARGO_HOLDER_VICTOR_ID = 4;
-    public static final int CARGO_HOLDER_BUMPER_PORT = 1;
-
-    public static final double CARGO_LAUNCHER_ROLLERS_MIN_POWER = 0.1;
 
     /**
      * Panel placer mappings
      */
-    public static final int PANEL_HOLDER_VICTOR_ID = 13;
-    public static final int PANEL_HOLDER_TELESCOPING_SOLENOID_ID = 4;
-    public static final int PANEL_HOLDER_BUMPER_SENSOR_PORT = 0;
-    public static final double PANEL_HOLDER_PANEL_DETECT_CURRENT = 2.6;
-    public static final double PANEL_HOLDER_MAX_CURRENT = 25;
-    public static final double PANEL_HOLDER_HOLDING_POWER = -0.2;
-    public static final double PANEL_HOLDER_INTAKE_POWER = -0.75;
-    public static final double PANEL_HOLDER_REDUCED_INTAKE_POWER = -0.6;
-    public static final double PANEL_HOLDER_EJECT_POWER = 0.65;
-    public static final double PANEL_HOLDER_REDUCED_EJECT_POWER = 0.48;
 
     /**
      * Climber mappings
      * */
-    public static final int CLIMBER_TALON_ID = 12;
-    public static final int CLIMBER_LATCHING_SOLENOID_ID = 5;
 
     // Pipeline mappings
     public static final int kVisionCenterPipeline = 0;
@@ -162,12 +122,12 @@ public class Constants {
     public static final double kPanelHolderBiasInchesX = 0;  // negative value biases placement to the right
 
     // PDP channels
-    public static final int kPdpChannelDriveLeft1 = 0;
-    public static final int kPdpChannelDriveLeft2 = 1;
-    public static final int kPdpChannelDriveLeft3 = 2;
-    public static final int kPdpChannelDriveRight7 = 15;
-    public static final int kPdpChannelDriveRight8 = 14;
-    public static final int kPdpChannelDriveRight9 = 13;
+    public static final int kPdpChannelDriveLeft1 = 14;
+    public static final int kPdpChannelDriveLeft2 = 15;
+    public static final int kPdpChannelDriveLeft3 = 13;
+    public static final int kPdpChannelDriveRight7 = 0;
+    public static final int kPdpChannelDriveRight8 = 1;
+    public static final int kPdpChannelDriveRight9 = 2;
     public static final int kPdpChannelLift10 = 12;
     public static final int kPdpChannelLift6 = 3;
     public static final int kPdpCargoHolder = 4;

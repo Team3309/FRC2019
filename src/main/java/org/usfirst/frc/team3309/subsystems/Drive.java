@@ -1,8 +1,7 @@
 package org.usfirst.frc.team3309.subsystems;
 
 import com.ctre.phoenix.motorcontrol.*;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -19,7 +18,7 @@ import org.usfirst.frc.team4322.commandv2.Subsystem;
  */
 public class Drive extends Subsystem {
 
-    private WPI_TalonSRX driveLeftMaster, driveRightMaster;
+    private WPI_TalonFX driveLeftMaster, driveRightMaster;
 
     private Solenoid shifter;
 
@@ -27,29 +26,24 @@ public class Drive extends Subsystem {
 
     public Drive() {
 
-        driveLeftMaster = new WPI_TalonSRX(Constants.DRIVE_LEFT_MASTER_TALON_ID);
-        WPI_VictorSPX driveLeftSlave1 = new WPI_VictorSPX(Constants.DRIVE_LEFT_SLAVE_VICTOR_1_ID);
-        WPI_VictorSPX driveLeftSlave2 = new WPI_VictorSPX(Constants.DRIVE_LEFT_SLAVE_VICTOR_2_ID);
-        driveRightMaster = new WPI_TalonSRX(Constants.DRIVE_RIGHT_MASTER_TALON_ID);
-        WPI_VictorSPX driveRightSlave1 = new WPI_VictorSPX(Constants.DRIVE_RIGHT_SLAVE_VICTOR_1_ID);
-        WPI_VictorSPX driveRightSlave2 = new WPI_VictorSPX(Constants.DRIVE_RIGHT_SLAVE_VICTOR_2_ID);
+        driveLeftMaster = new WPI_TalonFX(Constants.DRIVE_LEFT_MASTER_FALCON_ID);
+        WPI_TalonFX driveLeftSlave = new WPI_TalonFX(Constants.DRIVE_LEFT_SLAVE_FALCON_ID);
+        driveRightMaster = new WPI_TalonFX(Constants.DRIVE_RIGHT_MASTER_FALCON_ID);
+        WPI_TalonFX driveRightSlave = new WPI_TalonFX(Constants.DRIVE_RIGHT_SLAVE_FALCON_ID);
         shifter = new Solenoid(Constants.DRIVE_SHIFTER_PCM_PORT);
         navx = new AHRS(SPI.Port.kMXP);
 
         //Configure Left Side of Drive
         configMaster(driveLeftMaster);
-        configSlave(driveLeftSlave1, driveLeftMaster);
-        configSlave(driveLeftSlave2, driveLeftMaster);
+        configSlave(driveLeftSlave, driveLeftMaster);
 
         //Configure Right Side of Drive
         configMaster(driveRightMaster);
-        configSlave(driveRightSlave1, driveRightMaster);
-        configSlave(driveRightSlave2, driveRightMaster);
+        configSlave(driveRightSlave, driveRightMaster);
     }
 
-    private void configMaster(WPI_TalonSRX talon) {
+    private void configMaster(WPI_TalonFX talon) {
         talon.configFactoryDefault();
-        talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
         talon.configClosedloopRamp(Constants.DRIVE_CLOSED_LOOP_RAMP_RATE);
         talon.configOpenloopRamp(Constants.DRIVE_OPEN_LOOP_RAMP_RATE, 10);
 
@@ -67,7 +61,7 @@ public class Drive extends Subsystem {
         driveRightMaster.selectProfileSlot(slot, 0);
     }
 
-    private void configSlave(WPI_VictorSPX slave, WPI_TalonSRX master) {
+    private void configSlave(WPI_TalonFX slave, WPI_TalonFX master) {
         slave.configFactoryDefault();
         slave.follow(master);
         slave.setNeutralMode(NeutralMode.Brake);
@@ -157,15 +151,15 @@ public class Drive extends Subsystem {
     public double getVelocityY() { return navx.getVelocityY(); }
 
     public void setHighGear() {
-        shifter.set(true);
+        //shifter.set(true);
     }
 
     public void setLowGear() {
-        shifter.set(false);
+        //shifter.set(false);
     }
 
     public boolean inHighGear() {
-        return !shifter.get();
+        return true; //!shifter.get();
     }
 
     public void setLeftRight(ControlMode mode, double left, double right) {
