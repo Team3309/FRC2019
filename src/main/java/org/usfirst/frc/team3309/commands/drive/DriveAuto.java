@@ -12,17 +12,23 @@ import edu.wpi.first.wpilibj.Timer;
 public class DriveAuto extends Command {
 
     private enum superState {
-        stopped,
-        drivingStraight,
-        spinTurning,
-        mobileTurning
+        stopped(0),
+        drivingStraight(1),
+        spinTurning(2),
+        mobileTurning(3);
+
+        int superVal;
+        superState(int val) {superVal = val;}
     }
 
     private enum travelState {
-        stopped,
-        accelerating, //accelerating to cruise speed
-        cruising, //Moving at a set speed
-        decelerating //decelerating to approach desired point
+        stopped(0),
+        accelerating(1), //accelerating to cruise speed
+        cruising(2), //Moving at a set speed
+        decelerating(3); //decelerating to approach desired point
+
+        int travelVal;
+        travelState(int val) {travelVal = val;}
     }
 
     private enum spinTurnState {
@@ -32,8 +38,8 @@ public class DriveAuto extends Command {
         decelerating(3), //decelerating to approach tweak speed
         tweaking(4); //speed at which final heading is corrected
 
-        int val;
-        spinTurnState(int val) {this.val = val;}
+        int spinVal;
+        spinTurnState(int val) {spinVal = val;}
     }
 
     double speed = 0;
@@ -53,7 +59,7 @@ public class DriveAuto extends Command {
     private int nextWaypointIndex = 0;
     private boolean endRollout;
     private double[] transformationVector = new double[2];
-    private Waypoint[] workingPath = new Waypoint[2];
+    private Waypoint[] workingPath = new Waypoint[3];
 
     // for autonomous path following
     public DriveAuto(Waypoint[] path, boolean endRollOut) {
@@ -81,7 +87,9 @@ public class DriveAuto extends Command {
 
         Waypoint currentPoint = path[nextWaypointIndex];
         Waypoint nextPoint = path[nextWaypointIndex + 1];
-        
+        Waypoint farPoint = path[nextWaypointIndex + 2];
+
+
         //transforms nextPoint so that the code operates from the correct frame of reference.
         workingPath[0] = new Waypoint(currentPoint.xFieldInches-transformationVector[0],
                 currentPoint.downFieldInches -transformationVector[1],
@@ -90,6 +98,9 @@ public class DriveAuto extends Command {
         workingPath[1] = new Waypoint(nextPoint.xFieldInches - transformationVector[0],
                 nextPoint.downFieldInches -transformationVector[1], nextPoint.turnRadiusInches,
                 nextPoint.reverse);
+        workingPath[2] = new Waypoint(farPoint.xFieldInches - transformationVector[0],
+                farPoint.downFieldInches - transformationVector[1],
+                farPoint.turnRadiusInches, farPoint.reverse);
         double headingToNextPoint = Util3309.getHeadingToPoint(workingPath[0], workingPath[1]);
         double error = Util3309.headingError(headingToNextPoint);
 
@@ -180,7 +191,7 @@ public class DriveAuto extends Command {
             if (debugMode) {
                 SmartDashboard.putNumber("Single-motor velocity:", left);
                 SmartDashboard.putNumber("Heading error:", error);
-                SmartDashboard.putNumber("Spin turn state:", turnState.val);
+                SmartDashboard.putNumber("Spin turn state:", turnState.spinVal);
             }
 
     } else if (superStateMachine == superState.drivingStraight) {
@@ -286,8 +297,14 @@ public class DriveAuto extends Command {
 
             //End of Drive straight code
         } else if (superStateMachine == superState.mobileTurning) {
-            return;
             //Turn on a circle:
+            //Find the length of the arc defined by turnRadiusInches, and determine
+            //what the velocity the robot will have based on its current velocity.
+            //Assume that the arc velocity is the average of the velocity of the two wheels.
+            //Find out what velocity each wheel will have to maintain to achieve this arc velocity.
+            //Set each wheel's velocity to these values.
+            double arcLengthInInches = nextPoint.turnRadiusInches * (180-headingToNextPoint);
+            //find velocity at which the robot will travel while on the arc.
 
         } else if (superStateMachine == superState.stopped) {
             Robot.drive.setLeftRight(ControlMode.PercentOutput, 0, 0);
