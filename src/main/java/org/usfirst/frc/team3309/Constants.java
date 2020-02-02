@@ -136,7 +136,7 @@ public class Constants {
     public static final double kDriveVelocityI = 0.00015;
     public static final int kDriveVelocityIZone = 250;
     public static final double kDriveVelocityD = 0.0;
-    public static final double kDriveVelocityF = 0.055;
+    public static final double kDriveVelocityF = 0.0605;
     public static final double DRIVE_CLOSED_LOOP_RAMP_RATE = 0.0;
     public static final double DRIVE_OPEN_LOOP_RAMP_RATE = 0.15; // don't go below 0.15, due to rebound power in cheezy
 
