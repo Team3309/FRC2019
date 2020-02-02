@@ -84,7 +84,7 @@ object OI {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
             } else {
-                DriveConstant(ControlMode.Velocity,5500.0, 5500.0)
+                DriveConstant(ControlMode.Velocity,14000.0, 4800.0)
             }
         })
 
@@ -97,7 +97,7 @@ object OI {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
             } else {
-                DriveConstant(ControlMode.Velocity, 16000.0, 16000.0)
+                DriveConstant(ControlMode.Velocity, 14000.0, 5500.0)
             }
         })
 
@@ -110,7 +110,7 @@ object OI {
             if (DriverStation.getInstance().isDisabled) {
                 Command.empty
             } else {
-                DriveConstant(ControlMode.Velocity,18000.0, 16000.0)
+                DriveConstant(ControlMode.Velocity,13000.0, 7000.0)
             }
         })
 
